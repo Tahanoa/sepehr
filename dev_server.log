@@ -1,0 +1,11 @@
+
+> polaris@0.1.0 dev
+> vite
+
+
+  VITE v5.4.21  ready in 280 ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: use --host to expose
+9:34:24 PM [vite] page reload src/components/dashboard/sidebar.ts
+9:34:33 PM [vite] page reload src/components/dashboard/layout.ts

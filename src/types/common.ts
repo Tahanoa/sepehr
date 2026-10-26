@@ -1,14 +1,16 @@
 /**
  * POLARIS COMMON TYPES
- * Core domain types for metrics, table columns, status badges, and user sessions.
+ * Domain types for metrics, table columns, status badges, and user UI representations.
  */
 
-export type UserRole = 'admin' | 'teacher' | 'student' | 'parent' | 'counselor' | 'institute';
+import { Role } from './auth';
+
+export type UserRole = Role | 'admin' | 'teacher' | 'student' | 'parent' | 'counselor' | 'institute';
 
 export interface UserProfile {
   id: string;
   name: string;
-  role: UserRole;
+  role: Role | UserRole;
   roleLabel: string;
   avatarUrl?: string;
   email: string;
@@ -52,4 +54,5 @@ export interface NotificationItem {
   message: string;
   type: 'success' | 'warning' | 'error' | 'info';
   timestamp: string;
+  read?: boolean;
 }

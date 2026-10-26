@@ -1,20 +1,37 @@
 /**
  * POLARIS NAVIGATION TYPES
- * Navigation items, sidebar structure, and routing types.
+ * Strongly typed navigation configurations and route metadata.
  */
 
-import { UserRole } from './common';
+import { Role, Permission } from './auth';
+import { OrganizationType } from './organization';
 
-export interface NavItem {
+export interface NavigationItem {
   id: string;
   title: string;
   path: string;
+  sectionKey?: string;
   icon: string;
   badge?: string | number;
-  roles?: UserRole[];
+  roles?: Role[];
+  allowedOrgTypes?: OrganizationType[];
+  requiredPermission?: Permission;
 }
 
-export interface NavGroup {
+export interface NavigationGroup {
   groupTitle?: string;
-  items: NavItem[];
+  items: NavigationItem[];
 }
+
+export interface DashboardRouteMetadata {
+  title: string;
+  description?: string;
+  sectionKey: string;
+  requiredPermission?: Permission;
+  roles?: Role[];
+  allowedOrgTypes?: OrganizationType[];
+}
+
+// Backward compatibility type aliases
+export type NavItem = NavigationItem;
+export type NavGroup = NavigationGroup;
