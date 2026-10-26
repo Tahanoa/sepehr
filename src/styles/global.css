@@ -1,93 +1,35 @@
 /**
- * POLARIS GLOBAL STYLES & RESET
- * CSS reset, RTL defaults, base typography, accessibility, focus state, reduced motion
+ * POLARIS GLOBAL STYLES & TAILWIND INTEGRATION
  */
 
 @import './theme.css';
 
-/* CSS Reset & Box Sizing */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Base Body and Smooth Scrolling */
 html {
-  font-family: var(--font-family-base);
-  font-size: 16px;
-  line-height: var(--line-height-normal);
   direction: rtl;
   text-align: right;
-  -webkit-text-size-adjust: 100%;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
   background-color: var(--color-background);
   color: var(--color-text);
-  scroll-behavior: smooth;
+  font-family: var(--font-family-base);
 }
 
 body {
   min-height: 100vh;
   margin: 0;
-  background-color: var(--color-background);
-  color: var(--color-text);
   overflow-x: hidden;
-}
-
-/* Typography Hierarchy */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--color-primary);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  margin-bottom: var(--spacing-3);
-}
-
-h1 { font-size: var(--font-size-3xl); }
-h2 { font-size: var(--font-size-2xl); }
-h3 { font-size: var(--font-size-xl); }
-h4 { font-size: var(--font-size-lg); }
-h5 { font-size: var(--font-size-md); }
-h6 { font-size: var(--font-size-base); }
-
-p {
-  margin-bottom: var(--spacing-4);
-  color: var(--color-text);
-}
-
-p:last-child {
-  margin-bottom: 0;
-}
-
-a {
-  color: var(--color-primary);
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-a:hover {
-  color: var(--color-accent);
-}
-
-/* Interactive Elements & Accessible Focus Ring */
-button, input, select, textarea {
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-}
-
-:focus {
-  outline: none;
+  background-color: #F8F7FA;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-focus-ring);
+  outline: 2px solid #E98A15;
   outline-offset: 2px;
-  border-radius: var(--radius-sm);
 }
 
-/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -97,26 +39,4 @@ button, input, select, textarea {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* Base Utility Classes for Layout */
-.container {
-  width: 100%;
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--spacing-4);
-  padding-right: var(--spacing-4);
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }

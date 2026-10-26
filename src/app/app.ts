@@ -1,44 +1,60 @@
 /**
- * POLARIS APPLICATION INITIALIZER
- * Initializes AppShell, Router, and global event bindings.
+ * POLARIS APPLICATION INITIALIZER FOR PUBLIC & PROTECTED ROUTES
  */
 
-import { AppShell } from '../components/app-shell';
 import { Router } from './router';
-import { getTitleForPath } from './navigation';
-import { createHomePage, createGenericPage } from '../pages/home/home-page';
+import { createPublicHeader } from '../components/public/public-header';
+import { createPublicFooter } from '../components/public/public-footer';
+import { createLandingPage } from '../pages/public/home-page';
+import { createPlansOverviewPage, createPlanDetailPage } from '../pages/public/plans-pages';
+import { createAboutPage, createPrivacyPage, createTermsPage, createNotFoundPage } from '../pages/public/info-pages';
+import { createContactPage, createLoginPage, createRegisterPage, createForgotPasswordPage } from '../pages/public/auth-forms';
+import { createElement, clearElement } from '../utils/dom';
 
-export function initializeApp(): AppShell {
-  const appShell = new AppShell();
+export function initializeApp(): { getRootElement: () => HTMLElement } {
+  const root = createElement('div', { className: 'min-h-screen flex flex-col bg-gray-50 text-gray-900 font-sans' });
+
+  const headerContainer = createElement('div', { id: 'public-header-container' });
+  const contentContainer = createElement('main', { id: 'public-content-container', className: 'flex-1' });
+  const footerContainer = createElement('div', { id: 'public-footer-container' });
+
+  root.appendChild(headerContainer);
+  root.appendChild(contentContainer);
+  root.appendChild(footerContainer);
+
   const router = new Router();
 
-  // Register routes
-  router.addRoute('/', () => createHomePage());
-  router.addRoute('/students', () =>
-    createGenericPage('مدیریت دانش‌آموزان', 'ماژول کامل مدیریت دانش‌آموزان در گام‌های بعدی پیاده‌سازی خواهد شد.')
-  );
-  router.addRoute('/courses', () =>
-    createGenericPage('دوره‌های آموزشی', 'مدیریت کلاس‌ها و دوره‌های آموزشی پولاریس.')
-  );
-  router.addRoute('/grades', () =>
-    createGenericPage('کارنامه‌ها و نمرات', 'سیستم ثبت و مشاهده کارنامه‌های دانش‌آموزی.')
-  );
-  router.addRoute('/reports', () =>
-    createGenericPage('گزارش‌های تحلیلی', 'گزارش‌های جامع عملکرد آموزشی و هوش سازمانی.')
-  );
-  router.addRoute('/settings', () =>
-    createGenericPage('تنظیمات سیستم', 'تنظیمات عمومی سامانه پولاریس و سطح دسترسی‌ها.')
-  );
+  // Register Public Routes
+  router.addRoute('/', () => createLandingPage());
+  router.addRoute('/plans', () => createPlansOverviewPage());
+  router.addRoute('/plans/elementary', () => createPlanDetailPage('elementary'));
+  router.addRoute('/plans/secondary', () => createPlanDetailPage('secondary'));
+  router.addRoute('/plans/institute', () => createPlanDetailPage('institute'));
+  router.addRoute('/about', () => createAboutPage());
+  router.addRoute('/contact', () => createContactPage());
+  router.addRoute('/login', () => createLoginPage());
+  router.addRoute('/register', (_, queryParams) => createRegisterPage(queryParams?.plan));
+  router.addRoute('/forgot-password', () => createForgotPasswordPage());
+  router.addRoute('/privacy', () => createPrivacyPage());
+  router.addRoute('/terms', () => createTermsPage());
 
-  // Router listener
+  router.setNotFoundHandler(() => createNotFoundPage());
+
   router.onRoute((path, content) => {
-    appShell.setActivePath(path);
-    appShell.setContent(content, getTitleForPath(path));
-  });
+    // Update Header
+    clearElement(headerContainer);
+    headerContainer.appendChild(createPublicHeader(path));
 
-  // Navigation handlers
-  appShell.setOnNavigate((path) => {
-    router.navigate(path);
+    // Update Content
+    clearElement(contentContainer);
+    contentContainer.appendChild(content);
+
+    // Update Footer
+    clearElement(footerContainer);
+    footerContainer.appendChild(createPublicFooter());
+
+    // Scroll to top
+    window.scrollTo(0, 0);
   });
 
   window.addEventListener('polaris-navigate', ((e: CustomEvent) => {
@@ -47,8 +63,10 @@ export function initializeApp(): AppShell {
     }
   }) as EventListener);
 
-  // Initial load
-  router.navigate('/');
+  // Initial routing
+  router.handleCurrentUrl();
 
-  return appShell;
+  return {
+    getRootElement: () => root,
+  };
 }
