@@ -1,0 +1,231 @@
+/**
+ * POLARIS LAYOUT STYLES
+ * Application Shell Grid, Header, Sidebar, Responsive Drawer
+ */
+
+/* Shell Container */
+.polaris-app-shell {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-background);
+}
+
+/* Sidebar */
+.polaris-sidebar {
+  width: var(--sidebar-width-px);
+  background-color: var(--color-evergreen);
+  color: var(--color-neutral-0);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+  transition: width var(--transition-normal), transform var(--transition-normal);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-lg);
+}
+
+.polaris-sidebar--collapsed {
+  width: var(--sidebar-collapsed-width-px);
+}
+
+.polaris-sidebar-header {
+  height: var(--header-height-px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.polaris-brand-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  text-decoration: none;
+  color: var(--color-neutral-0);
+}
+
+.polaris-brand-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--color-amber-earth), var(--color-deep-purple));
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+  color: #FFFFFF;
+  box-shadow: var(--shadow-sm);
+}
+
+.polaris-brand-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+  color: var(--color-lavender-mist);
+  white-space: nowrap;
+}
+
+.polaris-sidebar-nav {
+  flex: 1;
+  padding: var(--spacing-4) var(--spacing-2);
+  overflow-y: auto;
+}
+
+.polaris-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.polaris-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  color: var(--color-lavender-mist);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.polaris-nav-item:hover {
+  background-color: var(--color-dark-green);
+  color: #FFFFFF;
+}
+
+.polaris-nav-item--active {
+  background-color: var(--color-amber-earth);
+  color: var(--color-evergreen);
+  font-weight: var(--font-weight-bold);
+}
+
+.polaris-nav-item--active:hover {
+  background-color: var(--color-amber-earth);
+  color: var(--color-evergreen);
+}
+
+.polaris-nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sidebar Footer / User Profile snippet */
+.polaris-sidebar-footer {
+  padding: var(--spacing-4);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+/* Main Content Area */
+.polaris-main-wrapper {
+  flex: 1;
+  margin-right: var(--sidebar-width-px);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: margin-right var(--transition-normal);
+}
+
+.polaris-app-shell--collapsed .polaris-main-wrapper {
+  margin-right: var(--sidebar-collapsed-width-px);
+}
+
+/* Header */
+.polaris-header {
+  height: var(--header-height-px);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-6);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  box-shadow: var(--shadow-sm);
+}
+
+.polaris-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.polaris-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+/* Breadcrumbs */
+.polaris-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.polaris-breadcrumb-item {
+  color: var(--color-muted);
+}
+
+.polaris-breadcrumb-item--active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.polaris-breadcrumb-separator {
+  color: var(--color-border);
+}
+
+/* Page Content Body */
+.polaris-content {
+  padding: var(--spacing-6);
+  flex: 1;
+}
+
+/* Backdrop for Mobile Sidebar */
+.polaris-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-overlay);
+  z-index: 95;
+  backdrop-filter: blur(2px);
+}
+
+/* Responsive Mobile Layout */
+@media (max-width: 1024px) {
+  .polaris-sidebar {
+    transform: translateX(100%);
+  }
+
+  .polaris-sidebar--mobile-open {
+    transform: translateX(0);
+  }
+
+  .polaris-sidebar-backdrop--visible {
+    display: block;
+  }
+
+  .polaris-main-wrapper,
+  .polaris-app-shell--collapsed .polaris-main-wrapper {
+    margin-right: 0;
+  }
+}
