@@ -33,10 +33,20 @@ export const org103: Organization = {
   academicYear: 'ترم بهار ۱۴۰۳',
 };
 
+export const org104: Organization = {
+  id: 'org-104',
+  name: 'مجتمع آموزشی جامع حکمت',
+  type: 'general_school',
+  code: 'SCH-104',
+  description: 'مجتمع آموزشی همه مقاطع تحصیلی - منطقه ۲ تهران',
+  academicYear: '۱۴۰۳ - ۱۴۰۲',
+};
+
 export const DEMO_ORGANIZATIONS: Record<string, Organization> = {
   'org-101': org101,
   'org-102': org102,
   'org-103': org103,
+  'org-104': org104,
 };
 
 export const DEMO_USERS: User[] = [
@@ -54,8 +64,8 @@ export const DEMO_USERS: User[] = [
         organization: org101,
         role: 'school_admin',
         status: 'active',
-        title: 'مدیر کل مجتمع آموزشی',
-        department: 'مدیریت ارشد',
+        title: 'مدیر دبیرستان البرز',
+        department: 'مدیریت دبیرستان',
         isPrimary: true,
       },
       {
@@ -65,8 +75,18 @@ export const DEMO_USERS: User[] = [
         organization: org102,
         role: 'school_admin',
         status: 'active',
-        title: 'سرپرست دبستان آفتاب',
-        department: 'شورای نظارت',
+        title: 'مدیر دبستان آفتاب',
+        department: 'مدیریت دبستان',
+      },
+      {
+        id: 'mem-admin-104',
+        userId: 'usr-admin',
+        organizationId: 'org-104',
+        organization: org104,
+        role: 'school_admin',
+        status: 'active',
+        title: 'مدیر مجتمع آموزشی حکمت',
+        department: 'مدیریت کل مجتمع',
       },
     ],
   },

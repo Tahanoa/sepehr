@@ -9,7 +9,7 @@ import { AccessPolicy } from '../services/access-policy';
 import { getNavigationForRoleAndOrg, getDashboardSectionTitles } from '../config/navigation-config';
 import { DashboardLayout } from '../components/dashboard/layout';
 import { getRoleLabel } from '../components/dashboard/icons';
-import { createAdminOverviewPage } from '../pages/dashboard/admin-overview';
+import { renderSchoolAdminSection } from '../pages/dashboard/admin/admin-router';
 import {
   createFeaturePlaceholderPage,
   createAccessDeniedPage,
@@ -116,8 +116,8 @@ export function initializeApp(): { getRootElement: () => HTMLElement } {
 
     let viewContent: HTMLElement;
 
-    if (sectionKey === 'overview' && membership.role === 'school_admin') {
-      viewContent = createAdminOverviewPage(membership);
+    if (membership.role === 'school_admin') {
+      viewContent = renderSchoolAdminSection(sectionKey, membership);
     } else {
       // Intentional feature placeholder for unfinished role feature routes
       viewContent = createFeaturePlaceholderPage({
