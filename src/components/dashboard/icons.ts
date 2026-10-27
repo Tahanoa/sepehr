@@ -102,6 +102,8 @@ export function getOrgTypeLabel(type: string): string {
       return 'دبستان';
     case 'secondary_school':
       return 'دبیرستان';
+    case 'general_school':
+      return 'مجتمع آموزشی';
     case 'independent_institute':
       return 'آموزشگاه آزاد';
     default:
