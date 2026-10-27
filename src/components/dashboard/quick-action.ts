@@ -18,7 +18,7 @@ export interface QuickActionItem {
 export function createQuickAction(item: QuickActionItem): HTMLElement {
   const card = createElement('a', {
     className:
-      'group relative bg-white border border-gray-200/80 hover:border-[#012622] rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 flex items-start gap-3.5 focus:outline-none focus:ring-2 focus:ring-[#E98A15] h-full',
+      'group relative bg-white border border-gray-200/80 hover:border-[#012622]/40 rounded-2xl p-4 sm:p-4.5 shadow-2xs hover:shadow-md transition-all duration-200 flex items-start gap-3.5 focus:outline-none focus:ring-2 focus:ring-[#E98A15] min-h-[88px] h-full',
     attributes: { href: item.path },
   });
 
@@ -29,7 +29,7 @@ export function createQuickAction(item: QuickActionItem): HTMLElement {
 
   const iconContainer = createElement('div', {
     className:
-      'p-3 rounded-lg bg-[#ECE5F0]/70 text-[#012622] group-hover:bg-[#012622] group-hover:text-white transition-all duration-200 shrink-0',
+      'p-3 rounded-xl bg-[#ECE5F0]/80 text-[#012622] group-hover:bg-[#012622] group-hover:text-white transition-all duration-200 shrink-0 shadow-2xs mt-0.5',
     innerHTML: getDashboardIcon(item.iconName, 'w-5 h-5'),
   });
 
@@ -37,7 +37,7 @@ export function createQuickAction(item: QuickActionItem): HTMLElement {
 
   const titleRow = createElement('div', { className: 'flex items-center justify-between gap-1 mb-1' });
   const title = createElement('h4', {
-    className: 'text-sm font-bold text-gray-900 group-hover:text-[#012622] transition-colors truncate',
+    className: 'text-xs sm:text-sm font-black text-gray-900 group-hover:text-[#012622] transition-colors truncate tracking-tight',
     textContent: item.title,
   });
 
@@ -50,7 +50,7 @@ export function createQuickAction(item: QuickActionItem): HTMLElement {
   titleRow.appendChild(arrow);
 
   const desc = createElement('p', {
-    className: 'text-xs text-gray-500 line-clamp-2 leading-relaxed',
+    className: 'text-xs text-gray-500 line-clamp-2 leading-relaxed font-normal',
     textContent: item.description,
   });
 

@@ -63,7 +63,7 @@ export function createUserMenu(options: UserMenuOptions): HTMLElement {
   // Dropdown Menu
   const menu = createElement('div', {
     className:
-      'hidden absolute end-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-200/80 z-50 py-2 divide-y divide-gray-100 text-xs dir-rtl',
+      'hidden absolute end-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-200/80 z-50 py-2 divide-y divide-gray-100 text-xs dir-rtl animate-pop-in',
   });
 
   const closeMenu = () => {
@@ -165,7 +165,7 @@ export function createNotificationButton(): HTMLElement {
   // Notification Popover
   const popover = createElement('div', {
     className:
-      'hidden absolute end-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-200 z-50 p-4 text-right text-xs dir-rtl',
+      'hidden absolute end-0 top-full mt-2 w-80 max-w-[90vw] bg-white rounded-2xl shadow-xl border border-gray-200 z-50 p-4 text-right text-xs dir-rtl animate-pop-in',
   });
 
   const closePopover = () => {

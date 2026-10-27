@@ -210,16 +210,22 @@ export function createMobileNavigationDrawer(
   isOpen: boolean,
   onClose: () => void
 ): HTMLElement {
-  const backdrop = createElement('div', {
-    className: `fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity duration-300 lg:hidden ${
-      isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-    }`,
-  });
+  // Prevent background body scrolling when drawer is active
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+
+  const handleClose = () => {
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', handleKeyDown);
+    onClose();
+  };
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && isOpen) {
-      onClose();
-      document.removeEventListener('keydown', handleKeyDown);
+      handleClose();
     }
   };
 
@@ -227,24 +233,35 @@ export function createMobileNavigationDrawer(
     document.addEventListener('keydown', handleKeyDown);
   }
 
-  const drawer = createElement('div', {
-    className: `fixed top-0 start-0 bottom-0 w-80 bg-[#012622] text-white z-50 transition-transform duration-300 transform lg:hidden flex flex-col shadow-2xl ${
-      isOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full'
+  const backdrop = createElement('div', {
+    className: `fixed inset-0 bg-black/60 backdrop-blur-xs z-50 transition-opacity duration-300 lg:hidden ${
+      isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
     }`,
   });
 
+  const drawer = createElement('div', {
+    className: `fixed top-0 start-0 bottom-0 w-80 max-w-[85vw] bg-[#012622] text-white z-50 transition-transform duration-300 ease-out transform lg:hidden flex flex-col shadow-2xl ${
+      isOpen ? 'translate-x-0' : 'translate-x-full'
+    }`,
+    attributes: {
+      role: 'dialog',
+      'aria-modal': 'true',
+      'aria-label': 'منوی ناوبری همراه',
+    },
+  });
+
   const closeBtn = createElement('button', {
-    className: 'absolute top-4 end-4 p-2 text-gray-300 hover:text-white rounded-lg bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+    className: 'absolute top-3.5 end-3.5 p-2.5 text-gray-300 hover:text-white rounded-xl bg-white/10 hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15] z-10 min-w-[44px] min-h-[44px] flex items-center justify-center',
     attributes: { 'aria-label': 'بستن منو' },
     innerHTML: getDashboardIcon('close', 'w-5 h-5'),
   });
-  closeBtn.addEventListener('click', onClose);
+  closeBtn.addEventListener('click', handleClose);
 
   const sidebarContent = createSidebar({
     ...options,
     isCollapsed: false,
     onNavigate: (path) => {
-      onClose();
+      handleClose();
       if (options.onNavigate) options.onNavigate(path);
     },
   });
@@ -255,7 +272,7 @@ export function createMobileNavigationDrawer(
   backdrop.appendChild(drawer);
 
   backdrop.addEventListener('click', (e) => {
-    if (e.target === backdrop) onClose();
+    if (e.target === backdrop) handleClose();
   });
 
   return backdrop;

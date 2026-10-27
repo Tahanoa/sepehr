@@ -16,6 +16,7 @@ html {
   background-color: var(--color-background);
   color: var(--color-text);
   font-family: var(--font-family-base);
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -23,11 +24,96 @@ body {
   margin: 0;
   overflow-x: hidden;
   background-color: #F8F7FA;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 :focus-visible {
   outline: 2px solid #E98A15;
   outline-offset: 2px;
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(1, 38, 34, 0.03);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(1, 38, 34, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(1, 38, 34, 0.35);
+}
+
+/* Animations & Transitions */
+@keyframes polaris-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes polaris-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes polaris-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes polaris-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-polaris-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.6) 0%,
+    rgba(241, 245, 249, 0.9) 50%,
+    rgba(226, 232, 240, 0.6) 100%
+  );
+  background-size: 200% 100%;
+  animation: polaris-shimmer 1.8s infinite linear;
+}
+
+.animate-fade-in-up {
+  animation: polaris-fade-in-up 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: polaris-fade-in 200ms ease-out forwards;
+}
+
+.animate-pop-in {
+  animation: polaris-pop-in 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -38,5 +124,9 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .animate-polaris-shimmer {
+    animation: none !important;
+    background: rgba(226, 232, 240, 0.8) !important;
   }
 }

@@ -67,7 +67,7 @@ export function createOrganizationSwitcher(
   // Dropdown menu
   const menu = createElement('div', {
     className:
-      'hidden absolute top-full start-0 mt-2 w-full bg-white rounded-xl shadow-xl border border-gray-200 z-50 py-1.5 divide-y divide-gray-100 dir-rtl',
+      'hidden absolute top-full start-0 mt-2 w-full bg-white rounded-xl shadow-xl border border-gray-200 z-50 py-1.5 divide-y divide-gray-100 dir-rtl animate-pop-in',
   });
 
   const closeMenu = () => {
