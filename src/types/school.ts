@@ -170,3 +170,194 @@ export interface SchoolSettings {
   autoAttendanceAlerts: boolean;
   passingScore: number;
 }
+
+// --- Homework & Assignments ---
+export interface Assignment {
+  id: string;
+  organizationId: string;
+  classId: string;
+  className: string;
+  subjectId?: string;
+  subjectName?: string;
+  title: string;
+  description: string;
+  dueDate: string;
+  assignedByTeacherId: string;
+  assignedByTeacherName: string;
+  maxScore: number;
+}
+
+export interface HomeworkSubmission {
+  id: string;
+  assignmentId: string;
+  organizationId: string;
+  studentId: string;
+  studentName: string;
+  submissionDate: string;
+  textContent: string;
+  fileName?: string;
+  fileSize?: string;
+  status: 'submitted' | 'graded' | 'late';
+  score?: number;
+  feedback?: string;
+}
+
+// --- Learning Materials ---
+export interface LearningMaterial {
+  id: string;
+  organizationId: string;
+  classId?: string;
+  className?: string;
+  subjectId?: string;
+  subjectName?: string;
+  title: string;
+  description: string;
+  category: string;
+  fileType: string;
+  fileSize: string;
+  fileName: string;
+  uploadedBy: string;
+  uploadDate: string;
+}
+
+// --- Assessment Questions & AI Grading ---
+export interface QuestionOption {
+  id: string;
+  text: string;
+}
+
+export interface RubricCriterion {
+  id: string;
+  title: string;
+  maxPoints: number;
+  description: string;
+}
+
+export interface ExamQuestion {
+  id: string;
+  examId: string;
+  type: 'mcq' | 'descriptive';
+  prompt: string;
+  points: number;
+  options?: QuestionOption[];
+  correctOptionId?: string;
+  referenceAnswer?: string;
+  rubricCriteria?: RubricCriterion[];
+}
+
+export interface AIGradingSuggestion {
+  proposedScore: number;
+  criteriaBreakdown: { criterionTitle: string; scoreGiven: number; maxPoints: number; feedback: string }[];
+  reasoningSummary: string;
+}
+
+export interface StudentExamAttempt {
+  id: string;
+  organizationId: string;
+  examId: string;
+  studentId: string;
+  studentName: string;
+  submittedAt: string;
+  mcqAnswers: Record<string, string>;
+  descriptiveAnswers: Record<string, string>;
+  mcqScore?: number;
+  descriptiveScore?: number;
+  totalScore?: number;
+  status: 'in_progress' | 'submitted' | 'graded';
+  aiGradingSuggestions?: Record<string, AIGradingSuggestion>;
+  teacherFeedback?: string;
+}
+
+// --- Institute Applications & Tuition Invoices ---
+export type ApplicationStatus = 'pending' | 'approved' | 'rejected' | 'enrolled';
+
+export interface InstituteApplication {
+  id: string;
+  organizationId: string;
+  applicantName: string;
+  applicantPhone: string;
+  applicantEmail: string;
+  nationalId: string;
+  courseId: string;
+  courseName: string;
+  classId?: string;
+  className?: string;
+  submissionDate: string;
+  status: ApplicationStatus;
+  refCode: string;
+  tuitionFee: number;
+  isPaid: boolean;
+  notes?: string;
+}
+
+export type InvoiceStatus = 'unpaid' | 'paid' | 'partially_paid' | 'overdue';
+
+export interface PaymentTransaction {
+  id: string;
+  paymentDate: string;
+  amount: number;
+  method: 'online_demo' | 'card_transfer' | 'cash';
+  refCode: string;
+  receiptNumber: string;
+}
+
+export interface TuitionInvoice {
+  id: string;
+  organizationId: string;
+  studentId: string;
+  studentName: string;
+  title: string;
+  totalAmount: number;
+  paidAmount: number;
+  dueDate: string;
+  status: InvoiceStatus;
+  issuedDate: string;
+  transactions: PaymentTransaction[];
+}
+
+// --- Messaging, SMS Logs & Developer Support ---
+export interface DirectMessage {
+  id: string;
+  organizationId: string;
+  senderId: string;
+  senderName: string;
+  senderRole: string;
+  recipientId: string;
+  recipientName: string;
+  recipientRole: string;
+  subject: string;
+  content: string;
+  sentAt: string;
+  isRead: boolean;
+  isPrivate: boolean;
+  isCounselingNote?: boolean;
+  visibleToStudent?: boolean;
+  visibleToParent?: boolean;
+}
+
+export interface SMSNotificationLog {
+  id: string;
+  organizationId: string;
+  recipientName: string;
+  recipientPhone: string;
+  templateName: string;
+  messageText: string;
+  sentAt: string;
+  status: 'simulated_sent' | 'delivered' | 'failed';
+  triggerReason: string;
+}
+
+export interface SupportTicket {
+  id: string;
+  organizationId: string;
+  userId: string;
+  userName: string;
+  userRole: string;
+  category: 'technical' | 'academic' | 'billing' | 'feature_request';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  title: string;
+  description: string;
+  createdAt: string;
+  status: 'open' | 'in_progress' | 'resolved';
+  responseNotes?: string;
+}

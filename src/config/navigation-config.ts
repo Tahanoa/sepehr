@@ -428,6 +428,43 @@ const MASTER_NAVIGATION: NavigationConfigEntry[] = [
     icon: 'book',
     roles: ['instructor'],
   },
+
+  // Prospective Applicant
+  {
+    id: 'applicant-overview',
+    title: 'معرفی آموزشگاه',
+    sectionKey: 'overview',
+    icon: 'dashboard',
+    roles: ['applicant'],
+  },
+  {
+    id: 'applicant-courses',
+    title: 'کاتالوگ دوره‌ها',
+    sectionKey: 'courses',
+    icon: 'book',
+    roles: ['applicant'],
+  },
+  {
+    id: 'applicant-registration',
+    title: 'ثبت‌نام آنلاین',
+    sectionKey: 'registration',
+    icon: 'assignment',
+    roles: ['applicant'],
+  },
+  {
+    id: 'applicant-status',
+    title: 'پیگیری وضعیت',
+    sectionKey: 'status',
+    icon: 'attendance',
+    roles: ['applicant'],
+  },
+  {
+    id: 'applicant-payments',
+    title: 'شهریه و رسید',
+    sectionKey: 'payments',
+    icon: 'payment',
+    roles: ['applicant'],
+  },
 ];
 
 export function getNavigationForRoleAndOrg(
@@ -453,7 +490,7 @@ export function getNavigationForRoleAndOrg(
 export function getDashboardSectionTitles(): Record<string, string> {
   return {
     overview: 'پیش‌خوان و نگاه کلی',
-    students: 'مدیریت دانش‌آموزان',
+    students: 'مدیریت دانش‌آموزان و فراگیران',
     teachers: 'مدیریت معلمان و کادر آموزشی',
     instructors: 'اساتید و مدرسین',
     classes: 'مدیریت کلاس‌ها و برنامه‌ها',
@@ -472,6 +509,8 @@ export function getDashboardSectionTitles(): Record<string, string> {
     payments: 'شهریه‌ها و امور مالی',
     schedule: 'برنامه هفتگی و زمان‌بندی',
     settings: 'تنظیمات مرکز',
+    registration: 'ثبت‌نام و درخواست پذیرش',
+    status: 'پیگیری وضعیت درخواست',
   };
 }
 

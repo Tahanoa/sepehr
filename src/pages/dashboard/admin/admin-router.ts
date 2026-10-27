@@ -17,6 +17,7 @@ import { createCounselingPage } from './counseling-page';
 import { createAnnouncementsPage } from './announcements-page';
 import { createReportsPage } from './reports-page';
 import { createSettingsPage } from './settings-page';
+import { createInstitutePaymentsPage } from './payments-page';
 import { createDashboardNotFoundPage } from '../../../components/dashboard/route-pages';
 
 export function renderSchoolAdminSection(sectionKey: string, membership: OrganizationMembership): HTMLElement {
@@ -28,8 +29,10 @@ export function renderSchoolAdminSection(sectionKey: string, membership: Organiz
     case 'students':
       return createStudentsPage(membership);
     case 'classes':
+    case 'courses':
       return createClassesPage(membership);
     case 'teachers':
+    case 'instructors':
       return createTeachersPage(membership);
     case 'attendance':
       return createAttendancePage(membership);
@@ -45,6 +48,8 @@ export function renderSchoolAdminSection(sectionKey: string, membership: Organiz
       return createAnnouncementsPage(membership);
     case 'reports':
       return createReportsPage(membership);
+    case 'payments':
+      return createInstitutePaymentsPage(membership);
     case 'settings':
       return createSettingsPage(membership);
     default:

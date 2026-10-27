@@ -127,6 +127,8 @@ export function getRoleLabel(role: string): string {
       return 'مدیر آموزشگاه';
     case 'instructor':
       return 'استاد / مدرس';
+    case 'applicant':
+      return 'کاربر عادی / متقاضی';
     default:
       return role;
   }

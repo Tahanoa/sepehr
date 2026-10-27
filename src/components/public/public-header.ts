@@ -3,6 +3,7 @@
  */
 
 import { createElement } from '../../utils/dom';
+import { createDemoSwitcherModal } from '../dashboard/demo-switcher-modal';
 
 export interface NavItem {
   label: string;
@@ -75,13 +76,24 @@ export function createPublicHeader(currentPath: string): HTMLElement {
     nav.appendChild(link);
   });
 
-  // Auth Buttons
-  const actionsContainer = createElement('div', { className: 'hidden md:flex items-center gap-3' });
+  // Auth & Demo Buttons
+  const actionsContainer = createElement('div', { className: 'hidden md:flex items-center gap-2.5' });
+
+  const demoBtn = createElement('button', {
+    className: 'px-3.5 py-2 rounded-xl text-xs font-extrabold bg-[#012622] hover:bg-[#003B36] text-white shadow-sm transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+    innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg> <span>ورود به نسخه دمو</span>`,
+  });
+  demoBtn.addEventListener('click', () => {
+    const modal = createDemoSwitcherModal(() => {
+      if (document.body.contains(modal)) document.body.removeChild(modal);
+    });
+    document.body.appendChild(modal);
+  });
 
   const loginBtn = createElement('a', {
     attributes: { href: '/login' },
-    className: 'px-4 py-2 text-sm font-semibold text-brand-evergreen hover:text-brand-darkgreen transition-colors',
-    textContent: 'ورود به سامانه',
+    className: 'px-3 py-2 text-xs font-semibold text-brand-evergreen hover:text-brand-darkgreen transition-colors',
+    textContent: 'ورود',
   });
   loginBtn.addEventListener('click', (e) => {
     e.preventDefault();
@@ -90,14 +102,15 @@ export function createPublicHeader(currentPath: string): HTMLElement {
 
   const registerBtn = createElement('a', {
     attributes: { href: '/register' },
-    className: 'px-5 py-2.5 rounded-xl text-sm font-bold bg-brand-amber hover:bg-amber-600 text-white shadow-sm hover:shadow transition-all transform hover:-translate-y-0.5',
-    textContent: 'ثبت‌نام و مشاوره',
+    className: 'px-4 py-2 rounded-xl text-xs font-bold bg-brand-amber hover:bg-amber-600 text-white shadow-sm hover:shadow transition-all transform hover:-translate-y-0.5',
+    textContent: 'ثبت‌نام',
   });
   registerBtn.addEventListener('click', (e) => {
     e.preventDefault();
     window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: '/register' }));
   });
 
+  actionsContainer.appendChild(demoBtn);
   actionsContainer.appendChild(loginBtn);
   actionsContainer.appendChild(registerBtn);
 

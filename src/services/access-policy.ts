@@ -112,6 +112,10 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'send_messages',
     'view_schedule',
   ],
+  applicant: [
+    'view_courses',
+    'view_payments',
+  ],
 };
 
 export class AccessPolicy {
@@ -236,6 +240,15 @@ export class AccessPolicy {
           'exams',
           'grades',
           'materials',
+        ].includes(sectionKey);
+
+      case 'applicant':
+        return [
+          'overview',
+          'courses',
+          'registration',
+          'status',
+          'payments',
         ].includes(sectionKey);
 
       default:
