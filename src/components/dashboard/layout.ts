@@ -103,10 +103,19 @@ export class DashboardLayout {
     this.pageTitle = pageTitle;
     this.content = content;
 
+    this.isMobileOpen = false;
+    const existingDrawer = document.getElementById('mobile-drawer-root');
+    if (existingDrawer) {
+      existingDrawer.remove();
+      document.body.style.overflow = '';
+    }
+
     this.renderSidebar();
     this.renderHeader();
 
     clearElement(this.contentViewportEl);
+    this.contentViewportEl.className =
+      'flex-1 p-3.5 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full transition-all duration-200 animate-fade-in-up min-w-0';
     this.contentViewportEl.appendChild(this.content);
   }
 

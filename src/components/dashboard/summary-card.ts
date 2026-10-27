@@ -21,20 +21,25 @@ export function createSummaryCard(options: SummaryCardOptions): HTMLElement {
 
   const card = createElement('div', {
     className:
-      'bg-white rounded-xl border border-gray-200/80 p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group h-full',
+      'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs hover:shadow-md hover:border-[#012622]/30 transition-all duration-200 flex flex-col justify-between group h-full relative overflow-hidden',
+  });
+
+  // Subtle top accent border line on hover
+  const topAccent = createElement('div', {
+    className: 'absolute top-0 inset-x-0 h-1 bg-transparent group-hover:bg-[#E98A15] transition-all duration-300',
   });
 
   // Top Row: Title & Icon
-  const topRow = createElement('div', { className: 'flex items-center justify-between gap-2 mb-3' });
+  const topRow = createElement('div', { className: 'flex items-center justify-between gap-2 mb-2' });
 
   const titleEl = createElement('span', {
-    className: 'text-xs font-semibold text-gray-500 group-hover:text-gray-700 transition-colors',
+    className: 'text-xs font-bold text-gray-500 group-hover:text-gray-800 transition-colors truncate',
     textContent: title,
   });
 
   const iconBox = createElement('div', {
     className:
-      'p-2.5 rounded-lg bg-[#ECE5F0]/60 text-[#012622] group-hover:bg-[#012622] group-hover:text-white transition-all duration-200 shrink-0',
+      'p-2.5 rounded-xl bg-[#ECE5F0]/70 text-[#012622] group-hover:bg-[#012622] group-hover:text-white transition-all duration-200 shrink-0 shadow-2xs',
     innerHTML: getDashboardIcon(iconName, 'w-5 h-5'),
   });
 
@@ -43,12 +48,12 @@ export function createSummaryCard(options: SummaryCardOptions): HTMLElement {
 
   // Middle Row: Big Metric Value
   const valueEl = createElement('div', {
-    className: 'text-2xl sm:text-3xl font-extrabold text-[#012622] tracking-tight mb-2 dir-rtl text-right',
+    className: 'text-2xl sm:text-3xl font-black text-[#012622] tracking-tight my-1.5 dir-rtl text-right',
     textContent: String(value),
   });
 
   // Bottom Row: Trend Badge & Period
-  const bottomRow = createElement('div', { className: 'flex items-center justify-between text-xs pt-2 border-t border-gray-100' });
+  const bottomRow = createElement('div', { className: 'flex items-center justify-between text-xs pt-2.5 border-t border-gray-100 gap-2' });
 
   if (changePercent !== undefined) {
     const isUp = changeType === 'increase';
@@ -58,15 +63,15 @@ export function createSummaryCard(options: SummaryCardOptions): HTMLElement {
     let arrow = '•';
 
     if (isUp) {
-      badgeBg = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+      badgeBg = 'bg-emerald-50 text-emerald-800 border border-emerald-200/80';
       arrow = '↑';
     } else if (isDown) {
-      badgeBg = 'bg-amber-50 text-amber-800 border border-amber-200';
+      badgeBg = 'bg-amber-50 text-amber-900 border border-amber-200/80';
       arrow = '↓';
     }
 
     const badge = createElement('span', {
-      className: `inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${badgeBg}`,
+      className: `inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold ${badgeBg}`,
       textContent: `${arrow} ${changePercent}٪`,
     });
     bottomRow.appendChild(badge);
@@ -74,12 +79,13 @@ export function createSummaryCard(options: SummaryCardOptions): HTMLElement {
 
   if (periodLabel) {
     const period = createElement('span', {
-      className: 'text-gray-400 text-[11px] truncate',
+      className: 'text-gray-400 text-[11px] truncate font-medium',
       textContent: periodLabel,
     });
     bottomRow.appendChild(period);
   }
 
+  card.appendChild(topAccent);
   card.appendChild(topRow);
   card.appendChild(valueEl);
   card.appendChild(bottomRow);
