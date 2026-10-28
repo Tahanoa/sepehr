@@ -55,9 +55,11 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
     const addBtn = createElement('button', {
       className:
         'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-      innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> تعریف امتحان جدید`,
+      innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ساخت آزمون جدید`,
     });
-    addBtn.addEventListener('click', () => openAddExamModal());
+    addBtn.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: `/app/${orgId}/exam-builder` }));
+    });
 
     headerRow.appendChild(headerText);
     headerRow.appendChild(addBtn);
@@ -157,19 +159,27 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
         `;
 
         const actionsRow = createElement('div', {
-          className: 'pt-3 border-t border-gray-100 flex items-center justify-between text-xs',
+          className: 'pt-3 border-t border-gray-100 flex items-center justify-between text-xs gap-2 flex-wrap',
+        });
+
+        const editBtn = createElement('button', {
+          className: 'px-3 py-2 bg-[#ECE5F0] hover:bg-[#ECE5F0]/80 text-[#012622] font-bold rounded-xl transition-all cursor-pointer',
+          textContent: '✏️ ویرایش',
+        });
+        editBtn.addEventListener('click', () => {
+          window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: `/app/${orgId}/exam-builder?examId=${ex.id}` }));
         });
 
         const scoreEntryBtn = createElement('button', {
           className:
             'px-3.5 py-2 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer',
-          innerHTML: `${getDashboardIcon('award', 'w-4 h-4')} ورود و ثبت نمرات`,
+          innerHTML: `${getDashboardIcon('award', 'w-4 h-4')} ورود نمرات`,
         });
         scoreEntryBtn.addEventListener('click', () => openScoreEntryModal(ex, students));
 
         const togglePublishBtn = createElement('button', {
           className: 'px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl transition-all cursor-pointer',
-          textContent: ex.status === 'published' ? 'خروج از انتشار' : 'انتشار برای اولیا',
+          textContent: ex.status === 'published' ? 'خروج از انتشار' : 'انتشار',
         });
         togglePublishBtn.addEventListener('click', () => {
           const newStatus: ExamStatus = ex.status === 'published' ? 'completed' : 'published';
@@ -178,6 +188,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
           render();
         });
 
+        actionsRow.appendChild(editBtn);
         actionsRow.appendChild(scoreEntryBtn);
         actionsRow.appendChild(togglePublishBtn);
 
@@ -191,134 +202,6 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
     rootWrapper.appendChild(grid);
   };
 
-  const openAddExamModal = () => {
-    const classes = schoolStore.getClasses(orgId);
-    const subjects = schoolStore.getSubjects(orgId);
-
-    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
-
-    form.innerHTML = `
-      <div>
-        <label class="block font-bold mb-1">عنوان امتحان / ارزشیابی *</label>
-        <input type="text" id="ex-title" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" placeholder="مثال: امتحانات پایان ترم حسابان ۲" />
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="block font-bold mb-1">درس انتخابی *</label>
-          <select id="ex-subject" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
-            ${subjects.map((sb) => `<option value="${sb.id}">${sb.name} (${sb.gradeLevel})</option>`).join('')}
-          </select>
-        </div>
-        <div>
-          <label class="block font-bold mb-1">نوبت امتحانی *</label>
-          <select id="ex-term" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
-            <option value="term_1">ترم اول (دی)</option>
-            <option value="midterm_1">میان‌ترم اول</option>
-            <option value="term_2">ترم دوم (خرداد)</option>
-            <option value="midterm_2">میان‌ترم دوم</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div>
-          <label class="block font-bold mb-1">تاریخ آزمون *</label>
-          <input type="text" id="ex-date" value="۱۴۰۲/۱۲/۲۰" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
-        </div>
-        <div>
-          <label class="block font-bold mb-1">ساعت شروع *</label>
-          <input type="text" id="ex-time" value="۰۹:۰۰" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
-        </div>
-        <div>
-          <label class="block font-bold mb-1">مدت (دقیقه)</label>
-          <input type="number" id="ex-duration" value="90" min="15" max="240" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="block font-bold mb-1">نوع ارزشیابی</label>
-          <select id="ex-evalType" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
-            <option value="numeric">عددی (۰ تا ۲۰)</option>
-            <option value="descriptive">توصیفی (ابتدایی)</option>
-          </select>
-        </div>
-        <div>
-          <label class="block font-bold mb-1">سقف نمره *</label>
-          <input type="number" id="ex-maxScore" value="20" min="1" max="100" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
-        </div>
-      </div>
-
-      <div>
-        <label class="block font-bold mb-1">کلاس‌های شرکت‌کننده</label>
-        <select id="ex-classId" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
-          ${classes.map((c) => `<option value="${c.id}">${c.name} (${c.gradeLevel})</option>`).join('')}
-        </select>
-      </div>
-    `;
-
-    const modal = new Modal({
-      title: 'تعریف امتحان جدید',
-      content: form,
-      confirmText: 'بررسی و ثبت امتحان',
-      cancelText: 'انصراف',
-      onConfirm: () => {
-        const title = (form.querySelector('#ex-title') as HTMLInputElement).value.trim();
-        const subjectId = (form.querySelector('#ex-subject') as HTMLSelectElement).value;
-        const term = (form.querySelector('#ex-term') as HTMLSelectElement).value as Exam['term'];
-        const examDate = (form.querySelector('#ex-date') as HTMLInputElement).value.trim();
-        const startTime = (form.querySelector('#ex-time') as HTMLInputElement).value.trim();
-        const durationMinutes = parseInt((form.querySelector('#ex-duration') as HTMLInputElement).value, 10) || 90;
-        const evalType = (form.querySelector('#ex-evalType') as HTMLSelectElement).value as Exam['evalType'];
-        const maxScore = parseFloat((form.querySelector('#ex-maxScore') as HTMLInputElement).value) || 20;
-        const classId = (form.querySelector('#ex-classId') as HTMLSelectElement).value;
-
-        const sbjObj = subjects.find((sb) => sb.id === subjectId);
-
-        if (!title || !examDate) {
-          showToast({ title: 'فیلد خالی', message: 'عنوان امتحان و تاریخ ضروری است.', type: 'warning' });
-          return;
-        }
-
-        // Exam Overlap Conflict Check
-        const existingExams = schoolStore.getExams(orgId);
-        const hasConflict = existingExams.some(
-          (e) => e.examDate === examDate && e.startTime === startTime && e.classIds.includes(classId)
-        );
-
-        if (hasConflict) {
-          showToast({
-            title: 'تداخل زمان امتحانات!',
-            message: 'کلاس انتخابی در این تاریخ و ساعت دارای امتحان دیگری است.',
-            type: 'error',
-          });
-          return;
-        }
-
-        schoolStore.addExam({
-          organizationId: orgId,
-          title,
-          subjectId,
-          subjectName: sbjObj ? sbjObj.name : 'درس عمومی',
-          gradeLevel: sbjObj ? sbjObj.gradeLevel : 'پایه تحصیلی',
-          classIds: [classId],
-          examDate,
-          startTime,
-          durationMinutes,
-          maxScore,
-          term,
-          status: 'scheduled',
-          evalType,
-        });
-
-        showToast({ title: 'ثبت شد', message: `امتحان «${title}» با موفقیت تعریف گردید.`, type: 'success' });
-        render();
-      },
-    });
-
-    modal.open();
-  };
 
   const openScoreEntryModal = (ex: Exam, allStudents: any[]) => {
     const examStudents = allStudents.filter((s) => ex.classIds.includes(s.classId));

@@ -12,6 +12,7 @@ import { createTeachersPage } from './teachers-page';
 import { createAttendancePage } from './attendance-page';
 import { createTimetablePage } from './timetable-page';
 import { createExamsPage } from './exams-page';
+import { createExamBuilderPage } from '../teacher/exam-builder-page';
 import { createGradesPage } from './grades-page';
 import { createCounselingPage } from './counseling-page';
 import { createAnnouncementsPage } from './announcements-page';
@@ -40,6 +41,8 @@ export function renderSchoolAdminSection(sectionKey: string, membership: Organiz
       return createTimetablePage(membership);
     case 'exams':
       return createExamsPage(membership);
+    case 'exam-builder':
+      return createExamBuilderPage(membership);
     case 'grades':
       return createGradesPage(membership);
     case 'counseling':

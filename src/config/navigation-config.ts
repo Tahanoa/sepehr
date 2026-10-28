@@ -254,6 +254,13 @@ const MASTER_NAVIGATION: NavigationConfigEntry[] = [
     roles: ['parent'],
   },
   {
+    id: 'parent-schedule',
+    title: 'برنامه هفتگی فرزند',
+    sectionKey: 'schedule',
+    icon: 'calendar',
+    roles: ['parent'],
+  },
+  {
     id: 'parent-messages',
     title: 'ارتباط با کادر مدرسه',
     sectionKey: 'messages',
@@ -498,6 +505,7 @@ export function getDashboardSectionTitles(): Record<string, string> {
     attendance: 'حضور و غیاب',
     assignments: 'تکالیف و تمرین‌ها',
     exams: 'آزمون‌ها و ارزشیابی',
+    'exam-builder': 'طراح هوشمند و سازنده آزمون',
     grades: 'کارنامه‌ها و نمرات',
     materials: 'محتوا و منابع آموزشی',
     announcements: 'اطلاعیه‌ها و پیام‌ها',
