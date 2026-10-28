@@ -1,19 +1,20 @@
 /**
- * POLARIS TEACHER EXAM BUILDER & AI DESCRIPTIVE GRADING PAGE
- * Exam scheduling, question setup (MCQ & Descriptive with rubrics),
- * student attempt review, and interactive AI descriptive grading simulation trigger.
+ * POLARIS TEACHER EXAM BUILDER, MANAGEMENT & INTEGRITY LOG PAGE
+ * Complete multi-step builder, tabbed exam dashboard, descriptive grading queue,
+ * and integrity activity log review panel.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
-import { Exam } from '../../../types/school';
+import { Exam, ExamQuestion, ExamStatus } from '../../../types/school';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
+import { authService } from '../../../services/auth-service';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
 import { Modal } from '../../../components/modal';
 import { showToast } from '../../../components/toast';
-import { createAIGradingModal } from '../../../components/dashboard/ai-grading-modal';
-
-import { authService } from '../../../services/auth-service';
+import { renderExamBuilderStep1, renderExamBuilderStep2, ExamBuilderDraftData } from '../../../components/dashboard/exam-builder-steps-1-2';
+import { renderExamBuilderStep3, renderExamBuilderStep4 } from '../../../components/dashboard/exam-builder-steps-3-4';
+import { renderExamBuilderStep5, renderExamBuilderStep6 } from '../../../components/dashboard/exam-builder-steps-5-6';
 
 export function createTeacherExamsPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
@@ -26,12 +27,22 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
     classes = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
   }
 
-  const exams = schoolStore.getExams(orgId);
   const subjects = schoolStore.getSubjects(orgId);
   const students = schoolStore.getStudents(orgId);
 
+  let activeTab: ExamStatus | 'all' | 'activity_logs' = 'all';
+
   const render = () => {
     rootWrapper.innerHTML = '';
+
+    const allExams = schoolStore.getExams(orgId);
+    const activityLogs = schoolStore.getExamActivityLogs(orgId);
+
+    // Filter exams by tab
+    let displayExams = allExams;
+    if (activeTab !== 'all' && activeTab !== 'activity_logs') {
+      displayExams = allExams.filter((e) => e.status === activeTab);
+    }
 
     // Header Row
     const headerRow = createElement('div', {
@@ -41,187 +52,357 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
     const headerText = createElement('div', { className: 'space-y-1' });
     headerText.innerHTML = `
       <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('exam', 'w-6 h-6 text-[#012622]')} طراح آزمون‌ها و دستیار تصحیح هوشمند (AI)
+        ${getDashboardIcon('exam', 'w-6 h-6 text-[#012622]')} طراح هوشمند و مدیریت آزمون‌ها
       </h2>
-      <p class="text-xs sm:text-sm text-gray-600">تعریف آزمون‌های تست آنلاین، تنظیم کلید و بارم‌بندی، و استفاده از دستیار هوشمند در تصحیح سوالات تشریحی.</p>
+      <p class="text-xs sm:text-sm text-gray-600">تعریف آزمون‌های چندمرحله‌ای، بانک سوالات، تصحیح پاسخ‌های تشریحی و بررسی گزارش سلامت جلسه.</p>
     `;
 
     const addBtn = createElement('button', {
       className: 'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
-      innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> تعریف آزمون جدید`,
+      innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> طراحی آزمون جدید (۶ گام)`,
     });
-    addBtn.addEventListener('click', () => openAddExamModal());
+    addBtn.addEventListener('click', () => openMultiStepExamBuilderModal());
 
     headerRow.appendChild(headerText);
     headerRow.appendChild(addBtn);
 
-    // Exams List
+    // Tabs
+    const tabsNav = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 pb-1 overflow-x-auto text-xs font-extrabold' });
+
+    const tabList: { key: typeof activeTab; label: string; count?: number }[] = [
+      { key: 'all', label: 'همه آزمون‌ها', count: allExams.length },
+      { key: 'draft', label: 'پیش‌نویس‌ها', count: allExams.filter((e) => e.status === 'draft').length },
+      { key: 'scheduled', label: 'برنامه‌ریزی شده', count: allExams.filter((e) => e.status === 'scheduled').length },
+      { key: 'available', label: 'در حال برگزاری / فعال', count: allExams.filter((e) => e.status === 'available' || e.status === 'in_progress').length },
+      { key: 'grading', label: 'نیازمند تصحیح تشریحی', count: allExams.filter((e) => e.status === 'grading' || e.status === 'submitted').length },
+      { key: 'published', label: 'منتشر شده', count: allExams.filter((e) => e.status === 'published' || e.status === 'completed').length },
+      { key: 'archived', label: 'آرشیو شده', count: allExams.filter((e) => e.status === 'archived').length },
+      { key: 'activity_logs', label: 'گزارش فعالیت و سلامت جلسه', count: activityLogs.length },
+    ];
+
+    tabList.forEach((t) => {
+      const btn = createElement('button', {
+        className: `px-3.5 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+          activeTab === t.key ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        }`,
+        textContent: `${t.label} (${(t.count || 0).toLocaleString('fa-IR')})`,
+      });
+      btn.addEventListener('click', () => {
+        activeTab = t.key;
+        render();
+      });
+      tabsNav.appendChild(btn);
+    });
+
+    rootWrapper.appendChild(headerRow);
+    rootWrapper.appendChild(tabsNav);
+
+    // Content Panel based on Tab
+    if (activeTab === 'activity_logs') {
+      rootWrapper.appendChild(renderActivityLogsPanel(activityLogs));
+      return;
+    }
+
+    // Grid Cards for Exams
     const grid = createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-5' });
 
-    if (exams.length === 0) {
-      grid.innerHTML = `<div class="col-span-full bg-white p-8 text-center border border-gray-200 rounded-2xl text-xs text-gray-500">هنوز آزمونی تعریف نشده است.</div>`;
+    if (displayExams.length === 0) {
+      grid.innerHTML = `<div class="col-span-full bg-white p-8 text-center border border-gray-200 rounded-2xl text-xs text-gray-500">امتحانی در این وضعیت یافت نشد.</div>`;
     } else {
-      exams.forEach((ex) => {
+      displayExams.forEach((ex) => {
         const questions = schoolStore.getExamQuestions(ex.id);
+        const attempts = schoolStore.getExamAttemptsForExam(ex.id);
 
         const card = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs space-y-4 flex flex-col justify-between' });
+
+        let statusText = 'برنامه‌ریزی شده';
+        let statusBg = 'bg-blue-100 text-blue-900';
+
+        if (ex.status === 'draft') { statusText = 'پیش‌نویس'; statusBg = 'bg-gray-100 text-gray-800'; }
+        else if (ex.status === 'available' || ex.status === 'in_progress') { statusText = 'در حال برگزاری'; statusBg = 'bg-emerald-100 text-emerald-900'; }
+        else if (ex.status === 'grading' || ex.status === 'submitted') { statusText = 'در انتظار تصحیح'; statusBg = 'bg-amber-100 text-amber-900'; }
+        else if (ex.status === 'published' || ex.status === 'completed') { statusText = 'منتشر شده'; statusBg = 'bg-[#012622] text-white'; }
+        else if (ex.status === 'archived') { statusText = 'آرشیو شده'; statusBg = 'bg-rose-100 text-rose-900'; }
+
         card.innerHTML = `
           <div class="space-y-2.5">
             <div class="flex items-center justify-between pb-2 border-b border-gray-100">
               <span class="font-bold text-xs text-[#012622] bg-[#ECE5F0] px-2.5 py-1 rounded-lg">${ex.subjectName}</span>
-              <span class="text-[11px] font-mono text-gray-500">تاریخ: ${ex.examDate} — ${ex.startTime}</span>
+              <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold ${statusBg}">${statusText}</span>
             </div>
             <h3 class="font-extrabold text-sm text-gray-900">${ex.title}</h3>
             <div class="text-xs text-gray-600 space-y-1">
-              <div><strong>نوع ارزیابی:</strong> ${ex.evalType === 'descriptive' ? 'ارزشیابی توصیفی (کیفی)' : 'آزمون نمره‌ای عددی (۰-۲۰)'}</div>
-              <div><strong>تعداد سوالات ثبت‌شده:</strong> <span class="font-mono font-bold">${questions.length} سوال</span></div>
+              <div><strong>تاریخ برگزاری:</strong> <span class="font-mono">${ex.examDate} (${ex.durationMinutes} دقیقه)</span></div>
+              <div><strong>تعداد سوالات / سقف نمره:</strong> <span class="font-mono font-bold">${questions.length} سوال (${ex.maxScore} نمره)</span></div>
+              <div><strong>تعداد تلاش‌های ثبت شده:</strong> <span class="font-mono font-bold">${attempts.length.toLocaleString('fa-IR')} شرکت‌کننده</span></div>
             </div>
           </div>
 
-          <div class="pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
-            <button class="add-q-btn px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl transition-colors cursor-pointer">
-              افزودن سوال
+          <div class="pt-3 border-t border-gray-100 flex items-center justify-between gap-2 text-xs">
+            <button class="grade-btn px-3 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl transition-colors cursor-pointer">
+              تصحیح و نمره‌دهی
             </button>
-            <button class="grade-ai-btn px-3.5 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer">
-              <svg class="w-3.5 h-3.5 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-              دستیار تصحیح AI
+            <button class="dup-btn px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl transition-colors cursor-pointer">
+              رونوشت (کپی)
+            </button>
+            <button class="pub-btn px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-bold rounded-xl transition-colors cursor-pointer">
+              ${ex.status === 'published' ? 'خروج از انتشار' : 'انتشار آزمون'}
             </button>
           </div>
         `;
 
-        const addQBtn = card.querySelector('.add-q-btn') as HTMLButtonElement;
-        const gradeAiBtn = card.querySelector('.grade-ai-btn') as HTMLButtonElement;
-
-        addQBtn.addEventListener('click', () => openAddQuestionModal(ex));
-        gradeAiBtn.addEventListener('click', () => openAiGradingWorkflow(ex));
+        card.querySelector('.grade-btn')!.addEventListener('click', () => openDescriptiveGradingQueueModal(ex, attempts));
+        card.querySelector('.dup-btn')!.addEventListener('click', () => {
+          schoolStore.duplicateExam(ex.id);
+          showToast({ title: 'رونوشت ایجاد شد', message: `رونوشت جدیدی از آزمون «${ex.title}» ساخته شد.`, type: 'success' });
+          render();
+        });
+        card.querySelector('.pub-btn')!.addEventListener('click', () => {
+          const newStatus: ExamStatus = ex.status === 'published' ? 'scheduled' : 'published';
+          schoolStore.updateExam(ex.id, { status: newStatus });
+          showToast({ title: 'وضعیت بروز شد', message: 'وضعیت انتشار آزمون با موفقیت تغییر کرد.', type: 'info' });
+          render();
+        });
 
         grid.appendChild(card);
       });
     }
 
-    rootWrapper.appendChild(headerRow);
     rootWrapper.appendChild(grid);
   };
 
-  const openAddExamModal = () => {
-    const form = createElement('form', { className: 'space-y-3.5 text-xs text-gray-800 dir-rtl' });
-    form.innerHTML = `
-      <div>
-        <label class="block font-bold mb-1">عنوان آزمون *</label>
-        <input type="text" id="ex-title" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs" placeholder="مثال: امتحان مستمر حسابان ۲ - فصل مشتق" />
-      </div>
+  const openMultiStepExamBuilderModal = () => {
+    let currentStep = 1;
 
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="block font-bold mb-1">درس انتخابی</label>
-          <select id="ex-subjectId" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs">
-            ${subjects.map((s) => `<option value="${s.id}">${s.name} (${s.gradeLevel})</option>`).join('')}
-          </select>
-        </div>
-        <div>
-          <label class="block font-bold mb-1">نوع سنجش</label>
-          <select id="ex-evalType" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs">
-            <option value="numeric">عددی (۰ تا ۲۰)</option>
-            <option value="descriptive">توصیفی (خیلی خوب، خوب ...)</option>
-          </select>
-        </div>
-      </div>
+    const draftData: ExamBuilderDraftData = {
+      title: '',
+      instructions: '',
+      subjectId: subjects.length > 0 ? subjects[0]!.id : '',
+      subjectName: subjects.length > 0 ? subjects[0]!.name : '',
+      gradeLevel: subjects.length > 0 ? subjects[0]!.gradeLevel : '',
+      examType: 'mixed',
+      difficulty: 'medium',
+      durationMinutes: 60,
+      maxScore: 20,
+      passingScore: 10,
+      examDate: '۱۴۰۲/۱۲/۲۵',
+      attemptLimit: 1,
+      resultReleasePolicy: 'manual',
+      canReviewAnswers: true,
+      selectedClassIds: classes.length > 0 ? [classes[0]!.id] : [],
+      excludedStudentIds: [],
+      interruptionPolicy: 'warn_flag',
+      allowResume: true,
+      allowBackNavigation: true,
+      allowUnansweredSubmission: true,
+      autoSubmitOnTimeout: true,
+      randomizeQuestions: false,
+      randomizeOptions: false,
+    };
 
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="block font-bold mb-1">تاریخ برگزاری *</label>
-          <input type="text" id="ex-date" value="۱۴۰۲/۱۲/۲۵" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
+    let builderQuestions: ExamQuestion[] = [];
+
+    const modalContainer = createElement('div', { className: 'space-y-4 dir-rtl text-xs text-gray-800' });
+
+    const stepIndicator = createElement('div', { className: 'flex items-center justify-between border-b border-gray-200 pb-3 font-bold text-xs' });
+    const bodyArea = createElement('div', { className: 'min-h-[320px]' });
+
+    const renderStep = () => {
+      stepIndicator.innerHTML = `
+        <span class="text-[#012622] font-black">گام ${currentStep.toLocaleString('fa-IR')} از ۶</span>
+        <div class="flex items-center gap-1">
+          ${[1, 2, 3, 4, 5, 6].map((st) => `
+            <span class="w-2.5 h-2.5 rounded-full ${st === currentStep ? 'bg-[#012622]' : st < currentStep ? 'bg-emerald-600' : 'bg-gray-300'}"></span>
+          `).join('')}
         </div>
-        <div>
-          <label class="block font-bold mb-1">ساعت شروع *</label>
-          <input type="text" id="ex-time" value="۰۹:۰۰" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
-        </div>
-      </div>
-    `;
+      `;
+
+      bodyArea.innerHTML = '';
+
+      if (currentStep === 1) {
+        bodyArea.appendChild(renderExamBuilderStep1(draftData, subjects, (up) => Object.assign(draftData, up)));
+      } else if (currentStep === 2) {
+        bodyArea.appendChild(renderExamBuilderStep2(draftData, classes, students, (up) => Object.assign(draftData, up)));
+      } else if (currentStep === 3) {
+        bodyArea.appendChild(renderExamBuilderStep3(builderQuestions, (newQs) => { builderQuestions = newQs; }));
+      } else if (currentStep === 4) {
+        bodyArea.appendChild(renderExamBuilderStep4(orgId, draftData.subjectId || '', (imported) => {
+          builderQuestions = [...builderQuestions, ...imported];
+          showToast({ title: 'افزوده شد', message: `${imported.length} سوال از بانک اضافه شد.`, type: 'success' });
+        }));
+      } else if (currentStep === 5) {
+        bodyArea.appendChild(renderExamBuilderStep5(draftData, (up) => Object.assign(draftData, up)));
+      } else if (currentStep === 6) {
+        const assignedCls = classes.filter((c) => (draftData.selectedClassIds || []).includes(c.id));
+        const { element } = renderExamBuilderStep6(draftData, builderQuestions, assignedCls);
+        bodyArea.appendChild(element);
+      }
+    };
+
+    modalContainer.appendChild(stepIndicator);
+    modalContainer.appendChild(bodyArea);
 
     const modal = new Modal({
-      title: 'تعریف آزمون جدید',
-      content: form,
-      confirmText: 'ثبت آزمون',
+      title: 'طراحی آزمون هوشمند (طراح ۶ مرحله‌ای)',
+      content: modalContainer,
+      confirmText: 'گام بعدی ➔',
       cancelText: 'انصراف',
       onConfirm: () => {
-        const title = (form.querySelector('#ex-title') as HTMLInputElement).value.trim();
-        const subjectId = (form.querySelector('#ex-subjectId') as HTMLSelectElement).value;
-        const evalType = (form.querySelector('#ex-evalType') as HTMLSelectElement).value as any;
-        const examDate = (form.querySelector('#ex-date') as HTMLInputElement).value.trim();
-        const startTime = (form.querySelector('#ex-time') as HTMLInputElement).value.trim();
+        if (currentStep < 6) {
+          if (currentStep === 1 && !draftData.title) {
+            showToast({ title: 'خطا', message: 'لطفاً عنوان آزمون را وارد نمایید.', type: 'warning' });
+            return;
+          }
+          currentStep++;
+          renderStep();
+        } else {
+          // Final Publish Step
+          const newExam = schoolStore.addExam({
+            organizationId: orgId,
+            title: draftData.title || 'آزمون جدید',
+            ...(draftData.instructions ? { description: draftData.instructions, instructions: draftData.instructions } : {}),
+            subjectId: draftData.subjectId || 'sbj-1',
+            subjectName: draftData.subjectName || 'درس عمومی',
+            gradeLevel: draftData.gradeLevel || 'پایه تحصیلی',
+            classIds: draftData.selectedClassIds || [],
+            ...(draftData.excludedStudentIds && draftData.excludedStudentIds.length > 0 ? { excludedStudentIds: draftData.excludedStudentIds } : {}),
+            examDate: draftData.examDate || '۱۴۰۲/۱۲/۲۵',
+            startTime: '۰۹:۰۰',
+            durationMinutes: draftData.durationMinutes || 60,
+            maxScore: draftData.maxScore || 20,
+            ...(draftData.passingScore !== undefined ? { passingScore: draftData.passingScore } : {}),
+            term: 'term_1',
+            status: 'published',
+            evalType: draftData.examType === 'descriptive' ? 'descriptive' : 'numeric',
+            ...(draftData.examType ? { examType: draftData.examType } : {}),
+            ...(draftData.difficulty ? { difficulty: draftData.difficulty } : {}),
+            ...(draftData.attemptLimit !== undefined ? { attemptLimit: draftData.attemptLimit } : {}),
+            ...(draftData.canReviewAnswers !== undefined ? { canReviewAnswers: draftData.canReviewAnswers } : {}),
+            ...(draftData.resultReleasePolicy ? { resultReleasePolicy: draftData.resultReleasePolicy } : {}),
+            ...(draftData.allowBackNavigation !== undefined ? { allowBackNavigation: draftData.allowBackNavigation } : {}),
+            ...(draftData.allowUnansweredSubmission !== undefined ? { allowUnansweredSubmission: draftData.allowUnansweredSubmission } : {}),
+            ...(draftData.autoSubmitOnTimeout !== undefined ? { autoSubmitOnTimeout: draftData.autoSubmitOnTimeout } : {}),
+            ...(draftData.interruptionPolicy ? { interruptionPolicy: draftData.interruptionPolicy } : {}),
+            ...(draftData.randomizeQuestions !== undefined ? { randomizeQuestions: draftData.randomizeQuestions } : {}),
+            ...(draftData.randomizeOptions !== undefined ? { randomizeOptions: draftData.randomizeOptions } : {}),
+            ...(currentUser?.id ? { createdByTeacherId: currentUser.id } : {}),
+            ...(currentUser?.name ? { createdByTeacherName: currentUser.name } : {}),
+          });
 
-        const sbj = subjects.find((s) => s.id === subjectId) || subjects[0];
+          // Save Questions
+          builderQuestions.forEach((q) => {
+            schoolStore.addExamQuestion({
+              ...q,
+              examId: newExam.id,
+            });
+          });
 
-        schoolStore.addExam({
-          organizationId: orgId,
-          title,
-          subjectId: sbj ? sbj.id : 'sbj-1',
-          subjectName: sbj ? sbj.name : 'درس اصلی',
-          gradeLevel: sbj ? sbj.gradeLevel : 'پایه تحصیلی',
-          classIds: classes.map((c) => c.id),
-          examDate,
-          startTime,
-          durationMinutes: 60,
-          maxScore: 20,
-          term: 'term_1',
-          status: 'scheduled',
-          evalType,
-        });
-
-        showToast({ title: 'آزمون ایجاد شد', message: 'آزمون جدید در برنامه قرار گرفت.', type: 'success' });
-        render();
+          showToast({ title: 'آزمون منتشر شد', message: 'آزمون با موفقیت ساخته شد و در دسترس دانش‌آموزان قرار گرفت.', type: 'success' });
+          render();
+        }
       },
     });
 
     modal.open();
+    renderStep();
   };
 
-  const openAddQuestionModal = (ex: Exam) => {
-    const form = createElement('form', { className: 'space-y-3.5 text-xs text-gray-800 dir-rtl' });
+  const renderActivityLogsPanel = (logs: any[]) => {
+    const container = createElement('div', { className: 'bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-4 text-xs dir-rtl' });
+
+    container.innerHTML = `
+      <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+        <div>
+          <h3 class="font-black text-sm text-[#012622]">گزارشات فعالیت و سیگنال‌های سلامت جلسه آزمون</h3>
+          <p class="text-gray-500 text-[11px]">رویدادهای ثبت‌شده توسط سیستم صرفاً جهت بررسی مدرس است و تخلف قطعی تلقی نمی‌گردد.</p>
+        </div>
+        <span class="px-3 py-1 bg-amber-100 text-amber-950 font-bold font-mono rounded-xl">
+          ${logs.filter((l) => l.reviewStatus === 'pending').length.toLocaleString('fa-IR')} رویداد نیازمند بررسی
+        </span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="polaris-table w-full">
+          <thead>
+            <tr>
+              <th>دانش‌آموز</th>
+              <th>آزمون</th>
+              <th>نوع رویداد</th>
+              <th>زمان</th>
+              <th>توضیحات رویداد</th>
+              <th>وضعیت بررسی</th>
+              <th class="text-center">اقدام</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${logs.length === 0 ? `
+              <tr><td colspan="7" class="text-center py-6 text-gray-500">هیچ رویداد مشکوک یا قطعی در جلسات آزمون ثبت نشده است.</td></tr>
+            ` : logs.map((log) => `
+              <tr>
+                <td class="font-bold text-gray-900">${log.studentName}</td>
+                <td>${log.examTitle}</td>
+                <td><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-200">${log.eventType}</span></td>
+                <td class="font-mono text-[11px]">${log.timestamp}</td>
+                <td class="text-gray-600">${log.description}</td>
+                <td>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
+                    log.reviewStatus === 'confirmed_violation' ? 'bg-rose-100 text-rose-900' :
+                    log.reviewStatus === 'reviewed_ok' ? 'bg-emerald-100 text-emerald-900' : 'bg-amber-100 text-amber-900'
+                  }">
+                    ${log.reviewStatus === 'confirmed_violation' ? 'تایید تخلف (انضباطی)' : log.reviewStatus === 'reviewed_ok' ? 'تایید — بدون مشکل' : 'نیازمند بررسی مدرس'}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button type="button" data-log-id="${log.id}" class="btn-review-log px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg font-bold cursor-pointer">
+                    ثبت تصمیم
+                  </button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    container.querySelectorAll('.btn-review-log').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const logId = btn.getAttribute('data-log-id')!;
+        openReviewLogDecisionModal(logId);
+      });
+    });
+
+    return container;
+  };
+
+  const openReviewLogDecisionModal = (logId: string) => {
+    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
     form.innerHTML = `
       <div>
-        <label class="block font-bold mb-1">نوع سوال *</label>
-        <select id="q-type" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
-          <option value="mcq">چهارگزینه‌ای (تصحیح خودکار)</option>
-          <option value="descriptive" selected>تشریحی (با دستیار تصحیح AI)</option>
+        <label class="block font-bold mb-1">نتیجه بررسی مدرس *</label>
+        <select id="log-status" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-semibold">
+          <option value="reviewed_ok">تایید بررسی — موجه و بدون مشکل آموزشی</option>
+          <option value="needs_review">نیازمند بررسی بیشتر / جلسه حضوری با ولی</option>
+          <option value="confirmed_violation">تخلف قطعی بعد از بررسی انسانی (ثبت نمره صفر)</option>
         </select>
       </div>
 
       <div>
-        <label class="block font-bold mb-1">متن سوال *</label>
-        <textarea id="q-prompt" rows="3" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" placeholder="متن کامل سوال را بنویسید..."></textarea>
-      </div>
-
-      <div>
-        <label class="block font-bold mb-1">پاسخ کلید / راهنمای تصحیح استاد *</label>
-        <textarea id="q-ref" rows="3" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" placeholder="پاسخ کامل مرجع جهت مقایسه با پاسخ دانش‌آموز..."></textarea>
+        <label class="block font-bold mb-1">توضیحات و دلیل تصمیم مدرس</label>
+        <textarea id="log-note" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs" placeholder="دلیل تصمیم انسانی جهت درج در سوابق آزمون..."></textarea>
       </div>
     `;
 
     const modal = new Modal({
-      title: `افزودن سوال به آزمون — ${ex.title}`,
+      title: 'ثبت نتیجه بررسی رویداد جلسه آزمون',
       content: form,
-      confirmText: 'ذخیره سوال',
+      confirmText: 'ثبت تصمیم نهایی',
       cancelText: 'انصراف',
       onConfirm: () => {
-        const type = (form.querySelector('#q-type') as HTMLSelectElement).value as any;
-        const prompt = (form.querySelector('#q-prompt') as HTMLTextAreaElement).value.trim();
-        const referenceAnswer = (form.querySelector('#q-ref') as HTMLTextAreaElement).value.trim();
+        const status = (form.querySelector('#log-status') as HTMLSelectElement).value as any;
+        const note = (form.querySelector('#log-note') as HTMLTextAreaElement).value.trim();
 
-        schoolStore.addExamQuestion({
-          examId: ex.id,
-          type,
-          prompt,
-          points: 10,
-          referenceAnswer,
-          rubricCriteria: [
-            { id: 'c1', title: 'بیان استدلال و فرمول‌بندی اولیه', maxPoints: 5, description: 'پوشش مفاهیم اولیه' },
-            { id: 'c2', title: 'محاسبه دقیق و جواب نهایی', maxPoints: 5, description: 'دقت در محاسبات' },
-          ],
-        });
-
-        showToast({ title: 'سوال افزوده شد', message: 'سوال جدید به بانک سوالات آزمون اضافه گردید.', type: 'success' });
+        schoolStore.updateExamActivityLogStatus(logId, status, currentUser?.name || 'مدرس', note);
+        showToast({ title: 'ثبت شد', message: 'نتیجه بررسی رویداد با موفقیت ذخیره گردید.', type: 'success' });
         render();
       },
     });
@@ -229,37 +410,34 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
     modal.open();
   };
 
-  const openAiGradingWorkflow = (ex: Exam) => {
-    const studentSample = students[0];
-    const stdName = studentSample ? studentSample.fullName : 'امیرحسین رضایی';
+  const openDescriptiveGradingQueueModal = (ex: Exam, attempts: any[]) => {
+    const container = createElement('div', { className: 'space-y-4 dir-rtl text-xs text-gray-800 max-h-[60vh] overflow-y-auto p-1' });
 
-    const aiModal = createAIGradingModal({
-      studentName: stdName,
-      examTitle: ex.title,
-      questionPrompt: 'با استفاده از تعریف مشتق (حد کسر تفاضلی)، مشتق تابع f(x) = 2x^2 + 1 را در نقطه x = a محاسبه و اثبات نمایید.',
-      studentAnswer: 'حد f(a+h)-f(a)/h وقتی h->0. جایگذاری کنیم کسر حاصل برابر 4ah + 2h^2 تقسیم بر h می‌شود که پس از ساده‌سازی با h جواب برابر 4a خواهد بود.',
-      referenceAnswer: 'حد کسر تفاضلی [f(a+h) - f(a)] / h محاسبه شده و با ساده‌سازی به 4a می‌رسیم.',
-      maxPoints: 20,
-      rubricCriteria: [
-        { id: 'rc1', title: 'فرمول‌بندی صحیح تعریف مشتق', maxPoints: 6, description: 'نوشتن حد تفاضلی' },
-        { id: 'rc2', title: 'جای‌گذاری و ساده‌سازی', maxPoints: 7, description: 'فاکتورگیری صحیح' },
-        { id: 'rc3', title: 'جواب نهایی و استدلال', maxPoints: 7, description: 'رسیدن به 4a' },
-      ],
-      onAcceptGrading: (finalScore, feedback) => {
-        if (studentSample) {
-          schoolStore.saveStudentGrades(orgId, ex.id, [
-            { studentId: studentSample.id, score: finalScore, feedback },
-          ]);
-        }
-        showToast({ title: 'نمره تایید شد', message: `نمره ${finalScore} با موفقیت ثبت شد.`, type: 'success' });
-        render();
-      },
-      onClose: () => {
-        if (document.body.contains(aiModal)) document.body.removeChild(aiModal);
-      },
+    if (attempts.length === 0) {
+      container.innerHTML = `<div class="p-6 text-center text-gray-500 bg-gray-50 rounded-xl">هنوز پاسخی برای این آزمون ثبت نشده است.</div>`;
+    } else {
+      attempts.forEach((att) => {
+        const item = createElement('div', { className: 'p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-2' });
+        item.innerHTML = `
+          <div class="flex items-center justify-between font-bold text-gray-900 border-b border-gray-200 pb-2">
+            <span>${att.studentName} (${att.className || 'کلاس اصلی'})</span>
+            <span class="font-mono text-gray-500">زمان تحویل: ${att.submittedAt || '—'}</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-gray-700">
+            <div>نمره سوالات عینی (تستی): <strong class="font-mono">${att.mcqScore ?? 0} نمره</strong></div>
+            <div>نمره نهایی ثبت شده: <strong class="font-mono">${att.totalScore ?? 'نامشخص'} از ${ex.maxScore}</strong></div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    const modal = new Modal({
+      title: `صف تصحیح و نمره‌دهی — ${ex.title}`,
+      content: container,
+      confirmText: 'بستن',
     });
-
-    document.body.appendChild(aiModal);
+    modal.open();
   };
 
   render();

@@ -21,7 +21,9 @@ import {
   HomeworkSubmission,
   LearningMaterial,
   ExamQuestion,
+  QuestionBankItem,
   StudentExamAttempt,
+  ExamActivityLog,
   InstituteApplication,
   TuitionInvoice,
   DirectMessage,
@@ -51,7 +53,9 @@ interface SchoolDataState {
   submissions: HomeworkSubmission[];
   materials: LearningMaterial[];
   examQuestions: ExamQuestion[];
+  questionBank: QuestionBankItem[];
   examAttempts: StudentExamAttempt[];
+  examActivityLogs: ExamActivityLog[];
   applications: InstituteApplication[];
   invoices: TuitionInvoice[];
   messages: DirectMessage[];
@@ -327,7 +331,9 @@ class SchoolStoreService {
           submissions: parsed.submissions || DEFAULT_SUBMISSIONS,
           materials: parsed.materials || DEFAULT_MATERIALS,
           examQuestions: parsed.examQuestions || DEFAULT_EXAM_QUESTIONS,
+          questionBank: parsed.questionBank || [],
           examAttempts: parsed.examAttempts || [],
+          examActivityLogs: parsed.examActivityLogs || [],
           applications: parsed.applications || DEFAULT_APPLICATIONS,
           invoices: parsed.invoices || DEFAULT_INVOICES,
           messages: parsed.messages || DEFAULT_MESSAGES,
@@ -358,7 +364,9 @@ class SchoolStoreService {
       submissions: DEFAULT_SUBMISSIONS,
       materials: DEFAULT_MATERIALS,
       examQuestions: DEFAULT_EXAM_QUESTIONS,
+      questionBank: [],
       examAttempts: [],
+      examActivityLogs: [],
       applications: DEFAULT_APPLICATIONS,
       invoices: DEFAULT_INVOICES,
       messages: DEFAULT_MESSAGES,
@@ -395,7 +403,9 @@ class SchoolStoreService {
       submissions: [...DEFAULT_SUBMISSIONS],
       materials: [...DEFAULT_MATERIALS],
       examQuestions: [...DEFAULT_EXAM_QUESTIONS],
+      questionBank: [],
       examAttempts: [],
+      examActivityLogs: [],
       applications: [...DEFAULT_APPLICATIONS],
       invoices: [...DEFAULT_INVOICES],
       messages: [...DEFAULT_MESSAGES],
@@ -588,11 +598,29 @@ class SchoolStoreService {
   public addTimetableSlot(slot: Omit<TimetableSlot, 'id'>): TimetableSlot {
     const newSlot: TimetableSlot = {
       ...slot,
-      id: 'tt-' + Date.now().toString(36),
+      id: 'tt-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
     };
     this.state.timetable.push(newSlot);
     this.saveState();
     return newSlot;
+  }
+
+  public updateTimetableSlot(id: string, updates: Partial<TimetableSlot>): TimetableSlot | null {
+    const idx = this.state.timetable.findIndex((s) => s.id === id);
+    if (idx === -1) return null;
+    this.state.timetable[idx] = { ...this.state.timetable[idx]!, ...updates };
+    this.saveState();
+    return this.state.timetable[idx]!;
+  }
+
+  public deleteTimetableSlot(id: string): boolean {
+    const len = this.state.timetable.length;
+    this.state.timetable = this.state.timetable.filter((s) => s.id !== id);
+    if (this.state.timetable.length !== len) {
+      this.saveState();
+      return true;
+    }
+    return false;
   }
 
   public checkTimetableConflict(
@@ -607,12 +635,12 @@ class SchoolStoreService {
 
     const classConflict = slots.find((s) => s.classId === classId && s.dayOfWeek === dayOfWeek && s.periodNumber === periodNumber);
     if (classConflict) {
-      return { hasConflict: true, reason: `کلاس در زنگ ${periodNumber} روز انتخابی دارای درس «${classConflict.subjectName}» است.` };
+      return { hasConflict: true, reason: `کلاس در زنگ ${periodNumber.toLocaleString('fa-IR')} دارای درس «${classConflict.subjectName}» است.` };
     }
 
     const teacherConflict = slots.find((s) => s.teacherId === teacherId && s.dayOfWeek === dayOfWeek && s.periodNumber === periodNumber);
     if (teacherConflict) {
-      return { hasConflict: true, reason: `استاد انتخابی (${teacherConflict.teacherName}) در این زنگ در کلاس دیگری مشغول به تدریس است.` };
+      return { hasConflict: true, reason: `استاد (${teacherConflict.teacherName}) در این زمان در کلاس «${teacherConflict.subjectName}» مشغول به تدریس است.` };
     }
 
     return { hasConflict: false };
@@ -649,36 +677,179 @@ class SchoolStoreService {
   public addExamQuestion(q: Omit<ExamQuestion, 'id'>): ExamQuestion {
     const newQ: ExamQuestion = {
       ...q,
-      id: 'q-' + Date.now().toString(36),
+      id: 'q-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
     };
     this.state.examQuestions.push(newQ);
     this.saveState();
     return newQ;
   }
 
-  public saveExamAttempt(attempt: Omit<StudentExamAttempt, 'id' | 'submittedAt'>): StudentExamAttempt {
-    const existingIdx = this.state.examAttempts.findIndex(
-      (a) => a.examId === attempt.examId && a.studentId === attempt.studentId
-    );
+  public updateExamQuestion(id: string, updates: Partial<ExamQuestion>): ExamQuestion | null {
+    const idx = this.state.examQuestions.findIndex((q) => q.id === id);
+    if (idx === -1) return null;
+    this.state.examQuestions[idx] = { ...this.state.examQuestions[idx]!, ...updates };
+    this.saveState();
+    return this.state.examQuestions[idx]!;
+  }
 
-    const fullAttempt: StudentExamAttempt = {
-      ...attempt,
-      id: existingIdx !== -1 ? this.state.examAttempts[existingIdx]!.id : 'att-' + Date.now().toString(36),
-      submittedAt: new Date().toLocaleDateString('fa-IR') + ' - ' + new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }),
+  public deleteExamQuestion(id: string): boolean {
+    const len = this.state.examQuestions.length;
+    this.state.examQuestions = this.state.examQuestions.filter((q) => q.id !== id);
+    if (this.state.examQuestions.length !== len) {
+      this.saveState();
+      return true;
+    }
+    return false;
+  }
+
+  public duplicateExamQuestion(id: string): ExamQuestion | null {
+    const orig = this.state.examQuestions.find((q) => q.id === id);
+    if (!orig) return null;
+    const copy: ExamQuestion = {
+      ...JSON.parse(JSON.stringify(orig)),
+      id: 'q-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
+      prompt: orig.prompt + ' (کپی)',
+    };
+    this.state.examQuestions.push(copy);
+    this.saveState();
+    return copy;
+  }
+
+  public duplicateExam(examId: string, newTeacherId?: string, newTeacherName?: string): Exam | null {
+    const origExam = this.state.exams.find((e) => e.id === examId);
+    if (!origExam) return null;
+
+    const newExamId = 'ex-' + Date.now().toString(36);
+    const duplicatedExam: Exam = {
+      ...JSON.parse(JSON.stringify(origExam)),
+      id: newExamId,
+      title: origExam.title + ' (رونوشت)',
+      status: 'draft',
+      createdByTeacherId: newTeacherId || origExam.createdByTeacherId,
+      createdByTeacherName: newTeacherName || origExam.createdByTeacherName,
     };
 
-    if (existingIdx !== -1) {
-      this.state.examAttempts[existingIdx] = fullAttempt;
-    } else {
-      this.state.examAttempts.push(fullAttempt);
-    }
+    const origQuestions = this.getExamQuestions(examId);
+    origQuestions.forEach((q) => {
+      const qCopy: ExamQuestion = {
+        ...JSON.parse(JSON.stringify(q)),
+        id: 'q-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
+        examId: newExamId,
+      };
+      this.state.examQuestions.push(qCopy);
+    });
 
+    this.state.exams.unshift(duplicatedExam);
     this.saveState();
-    return fullAttempt;
+    return duplicatedExam;
+  }
+
+  // --- Question Bank ---
+  public getQuestionBank(orgId: string): QuestionBankItem[] {
+    return this.state.questionBank.filter((q) => q.organizationId === orgId);
+  }
+
+  public addQuestionBankItem(item: Omit<QuestionBankItem, 'id'>): QuestionBankItem {
+    const newItem: QuestionBankItem = {
+      ...item,
+      id: 'qb-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
+    };
+    this.state.questionBank.unshift(newItem);
+    this.saveState();
+    return newItem;
+  }
+
+  public copyQuestionFromBankToExam(bankItemId: string, examId: string): ExamQuestion | null {
+    const bankItem = this.state.questionBank.find((q) => q.id === bankItemId);
+    if (!bankItem) return null;
+
+    const newExamQ: ExamQuestion = {
+      id: 'q-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
+      examId,
+      type: bankItem.type,
+      prompt: bankItem.prompt,
+      points: bankItem.points,
+      ...(bankItem.imageAttachment ? { imageAttachment: bankItem.imageAttachment } : {}),
+      ...(bankItem.options ? { options: JSON.parse(JSON.stringify(bankItem.options)) } : {}),
+      ...(bankItem.correctOptionId ? { correctOptionId: bankItem.correctOptionId } : {}),
+      ...(bankItem.correctOptionIds ? { correctOptionIds: [...bankItem.correctOptionIds] } : {}),
+      ...(bankItem.correctBool !== undefined ? { correctBool: bankItem.correctBool } : {}),
+      ...(bankItem.numericTarget !== undefined ? { numericTarget: bankItem.numericTarget } : {}),
+      ...(bankItem.numericTolerance !== undefined ? { numericTolerance: bankItem.numericTolerance } : {}),
+      ...(bankItem.textKeywords ? { textKeywords: [...bankItem.textKeywords] } : {}),
+      ...(bankItem.referenceAnswer ? { referenceAnswer: bankItem.referenceAnswer } : {}),
+      ...(bankItem.explanation ? { explanation: bankItem.explanation } : {}),
+      ...(bankItem.difficulty ? { difficulty: bankItem.difficulty } : {}),
+      ...(bankItem.topicTags ? { topicTags: [...bankItem.topicTags] } : {}),
+    };
+
+    this.state.examQuestions.push(newExamQ);
+    this.saveState();
+    return newExamQ;
+  }
+
+  // --- Student Exam Attempts ---
+  public getExamAttemptsForExam(examId: string): StudentExamAttempt[] {
+    return this.state.examAttempts.filter((a) => a.examId === examId);
   }
 
   public getExamAttempt(examId: string, studentId: string): StudentExamAttempt | null {
     return this.state.examAttempts.find((a) => a.examId === examId && a.studentId === studentId) || null;
+  }
+
+  public saveExamAttempt(attempt: StudentExamAttempt): StudentExamAttempt {
+    const existingIdx = this.state.examAttempts.findIndex(
+      (a) => a.examId === attempt.examId && a.studentId === attempt.studentId
+    );
+
+    if (existingIdx !== -1) {
+      this.state.examAttempts[existingIdx] = attempt;
+    } else {
+      this.state.examAttempts.push(attempt);
+    }
+
+    this.saveState();
+    return attempt;
+  }
+
+  // --- Integrity & Activity Logs ---
+  public getExamActivityLogs(orgId: string, examId?: string): ExamActivityLog[] {
+    return this.state.examActivityLogs.filter((log) => {
+      if (log.organizationId !== orgId) return false;
+      if (examId && log.examId !== examId) return false;
+      return true;
+    });
+  }
+
+  public logExamActivity(event: Omit<ExamActivityLog, 'id' | 'timestamp' | 'reviewStatus'>): ExamActivityLog {
+    const nowStr = new Date().toLocaleDateString('fa-IR') + ' - ' + new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+    const newLog: ExamActivityLog = {
+      ...event,
+      id: 'log-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
+      timestamp: nowStr,
+      reviewStatus: 'pending',
+    };
+    this.state.examActivityLogs.unshift(newLog);
+    this.saveState();
+    return newLog;
+  }
+
+  public updateExamActivityLogStatus(
+    logId: string,
+    status: ExamActivityLog['reviewStatus'],
+    reviewerName: string,
+    note?: string
+  ): ExamActivityLog | null {
+    const item = this.state.examActivityLogs.find((l) => l.id === logId);
+    if (!item) return null;
+
+    item.reviewStatus = status;
+    item.reviewerName = reviewerName;
+    if (note) item.reviewerNote = note;
+    item.reviewedAt = new Date().toLocaleDateString('fa-IR') + ' - ' + new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+
+    this.saveState();
+    return item;
   }
 
   public getGradesForExam(orgId: string, examId: string): StudentGrade[] {
