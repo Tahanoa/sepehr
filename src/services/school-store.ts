@@ -27,6 +27,10 @@ import {
   DirectMessage,
   SMSNotificationLog,
   SupportTicket,
+  WeeklyGradebookNote,
+  ScheduleConfig,
+  ParentConversation,
+  ParentConversationMessage,
 } from '../types/school';
 
 const STORAGE_KEY_PREFIX = 'polaris_school_store_v2_';
@@ -53,6 +57,9 @@ interface SchoolDataState {
   messages: DirectMessage[];
   smsLogs: SMSNotificationLog[];
   supportTickets: SupportTicket[];
+  weeklyNotes: WeeklyGradebookNote[];
+  scheduleConfigs: Record<string, ScheduleConfig>;
+  parentConversations: ParentConversation[];
 }
 
 // Default Seed Data
@@ -227,6 +234,71 @@ const DEFAULT_SETTINGS: Record<string, SchoolSettings> = {
   'org-104': { organizationId: 'org-104', schoolName: 'مجتمع آموزشی جامع حکمت', principalName: 'دکتر علیرضا رضایی', phone: '۰۲۱-۴۴۵۵۶۶۷۷', address: 'تهران، شهرک غرب، بلوار دادمان', academicYear: '۱۴۰۳ - ۱۴۰۲', termName: 'نیم‌سال دوم', allowParentMessaging: true, autoAttendanceAlerts: true, passingScore: 10 },
 };
 
+const DEFAULT_WEEKLY_NOTES: WeeklyGradebookNote[] = [
+  {
+    id: 'note-1',
+    organizationId: 'org-101',
+    classId: 'cls-sec-121',
+    className: 'کلاس ۱۲/۱ ریاضی (کنکور)',
+    subjectId: 'sbj-s1',
+    subjectName: 'حسابان ۲',
+    studentId: 'std-s1',
+    studentName: 'امیرحسین رضایی',
+    noteDate: '۱۴۰۲/۱۲/۰۵',
+    weekLabel: 'هفته اول اسفند',
+    authorId: 'stf-sec-01',
+    authorName: 'استاد مریم حسینی',
+    content: 'عملکرد عالی در آزمون‌های تستی مشتق. تمرکز روی حل تمرینات سرعت عمل پیشنهاد می‌شود.',
+    isParentVisible: true,
+    createdAt: '۱۴۰۲/۱۲/۰۵',
+  },
+];
+
+const DEFAULT_SCHEDULE_CONFIGS: Record<string, ScheduleConfig> = {
+  'org-101': { organizationId: 'org-101', periodsCount: 4, startTime: '08:00', periodDurationMinutes: 90, breakDurationMinutes: 30, isPublished: true },
+  'org-102': { organizationId: 'org-102', periodsCount: 4, startTime: '08:30', periodDurationMinutes: 75, breakDurationMinutes: 20, isPublished: true },
+  'org-103': { organizationId: 'org-103', periodsCount: 3, startTime: '16:00', periodDurationMinutes: 120, breakDurationMinutes: 15, isPublished: true },
+  'org-104': { organizationId: 'org-104', periodsCount: 4, startTime: '08:00', periodDurationMinutes: 90, breakDurationMinutes: 30, isPublished: true },
+};
+
+const DEFAULT_PARENT_CONVERSATIONS: ParentConversation[] = [
+  {
+    id: 'pconv-1',
+    organizationId: 'org-101',
+    parentId: 'usr-sec-parent',
+    parentName: 'مهندس رضا رضایی',
+    parentPhone: '۰۹۱۲۴۴۴۵۵۶۶',
+    studentId: 'std-s1',
+    studentName: 'امیرحسین رضایی',
+    className: 'کلاس ۱۲/۱ ریاضی (کنکور)',
+    category: 'educational',
+    subject: 'برنامه کلاس‌های جبرانی کنکور اسفند ماه',
+    status: 'replied',
+    createdAt: '۱۴۰۲/۱۲/۰۲ - ۱۰:۳۰',
+    updatedAt: '۱۴۰۲/۱۲/۰۲ - ۱۱:۱۵',
+    messages: [
+      {
+        id: 'pmsg-1',
+        conversationId: 'pconv-1',
+        senderId: 'usr-sec-parent',
+        senderName: 'مهندس رضا رضایی',
+        senderRole: 'parent',
+        content: 'با سلام و احترام، آیا امکان برگزاری کلاس جبرانی هندسه پیش از امتحانات وجود دارد؟',
+        sentAt: '۱۴۰۲/۱۲/۰۲ - ۱۰:۳۰',
+      },
+      {
+        id: 'pmsg-2',
+        conversationId: 'pconv-1',
+        senderId: 'usr-sec-admin',
+        senderName: 'دکتر علیرضا رضایی (مدیر)',
+        senderRole: 'school_admin',
+        content: 'سلام جناب رضایی محترم. کلاس‌های جبرانی پنج‌شنبه‌ها طبق برنامه درسی برگزار می‌گردد.',
+        sentAt: '۱۴۰۲/۱۲/۰۲ - ۱۱:۱۵',
+      },
+    ],
+  },
+];
+
 class SchoolStoreService {
   private state: SchoolDataState;
 
@@ -261,6 +333,9 @@ class SchoolStoreService {
           messages: parsed.messages || DEFAULT_MESSAGES,
           smsLogs: parsed.smsLogs || DEFAULT_SMS_LOGS,
           supportTickets: parsed.supportTickets || DEFAULT_SUPPORT_TICKETS,
+          weeklyNotes: parsed.weeklyNotes || DEFAULT_WEEKLY_NOTES,
+          scheduleConfigs: parsed.scheduleConfigs || DEFAULT_SCHEDULE_CONFIGS,
+          parentConversations: parsed.parentConversations || DEFAULT_PARENT_CONVERSATIONS,
         };
       }
     } catch (e) {
@@ -289,6 +364,9 @@ class SchoolStoreService {
       messages: DEFAULT_MESSAGES,
       smsLogs: DEFAULT_SMS_LOGS,
       supportTickets: DEFAULT_SUPPORT_TICKETS,
+      weeklyNotes: DEFAULT_WEEKLY_NOTES,
+      scheduleConfigs: DEFAULT_SCHEDULE_CONFIGS,
+      parentConversations: DEFAULT_PARENT_CONVERSATIONS,
     };
   }
 
@@ -323,6 +401,9 @@ class SchoolStoreService {
       messages: [...DEFAULT_MESSAGES],
       smsLogs: [...DEFAULT_SMS_LOGS],
       supportTickets: [...DEFAULT_SUPPORT_TICKETS],
+      weeklyNotes: [...DEFAULT_WEEKLY_NOTES],
+      scheduleConfigs: JSON.parse(JSON.stringify(DEFAULT_SCHEDULE_CONFIGS)),
+      parentConversations: [...DEFAULT_PARENT_CONVERSATIONS],
     };
     this.saveState();
   }
@@ -882,6 +963,187 @@ class SchoolStoreService {
     this.state.settings[orgId] = { ...current, ...settings };
     this.saveState();
     return this.state.settings[orgId]!;
+  }
+
+  // --- Weekly Gradebook Notes ---
+  public getWeeklyNotes(orgId: string, classId?: string, studentId?: string): WeeklyGradebookNote[] {
+    return this.state.weeklyNotes.filter((n) => {
+      if (n.organizationId !== orgId) return false;
+      if (classId && n.classId !== classId) return false;
+      if (studentId && n.studentId !== studentId) return false;
+      return true;
+    });
+  }
+
+  public addWeeklyNote(note: Omit<WeeklyGradebookNote, 'id' | 'createdAt'>): WeeklyGradebookNote {
+    const newNote: WeeklyGradebookNote = {
+      ...note,
+      id: 'note-' + Date.now().toString(36),
+      createdAt: new Date().toLocaleDateString('fa-IR'),
+    };
+    this.state.weeklyNotes.unshift(newNote);
+    this.saveState();
+    return newNote;
+  }
+
+  public updateWeeklyNote(id: string, content: string, isParentVisible: boolean): WeeklyGradebookNote | null {
+    const item = this.state.weeklyNotes.find((n) => n.id === id);
+    if (item) {
+      item.content = content;
+      item.isParentVisible = isParentVisible;
+      this.saveState();
+      return item;
+    }
+    return null;
+  }
+
+  public deleteWeeklyNote(id: string): boolean {
+    const origLen = this.state.weeklyNotes.length;
+    this.state.weeklyNotes = this.state.weeklyNotes.filter((n) => n.id !== id);
+    if (this.state.weeklyNotes.length !== origLen) {
+      this.saveState();
+      return true;
+    }
+    return false;
+  }
+
+  // --- Schedule Config ---
+  public getScheduleConfig(orgId: string): ScheduleConfig {
+    if (this.state.scheduleConfigs[orgId]) {
+      return this.state.scheduleConfigs[orgId]!;
+    }
+    const defaultConfig: ScheduleConfig = {
+      organizationId: orgId,
+      periodsCount: 4,
+      startTime: '08:00',
+      periodDurationMinutes: 90,
+      breakDurationMinutes: 30,
+      isPublished: true,
+    };
+    this.state.scheduleConfigs[orgId] = defaultConfig;
+    return defaultConfig;
+  }
+
+  public updateScheduleConfig(orgId: string, config: Partial<ScheduleConfig>): ScheduleConfig {
+    const current = this.getScheduleConfig(orgId);
+    this.state.scheduleConfigs[orgId] = { ...current, ...config };
+    this.saveState();
+    return this.state.scheduleConfigs[orgId]!;
+  }
+
+  // --- Parent Conversations ---
+  public getParentConversations(orgId: string, parentId?: string): ParentConversation[] {
+    return this.state.parentConversations.filter((c) => {
+      if (c.organizationId !== orgId) return false;
+      if (parentId && c.parentId !== parentId) return false;
+      return true;
+    });
+  }
+
+  public addParentConversation(
+    conv: Omit<ParentConversation, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'messages'>,
+    initialMessageText: string
+  ): ParentConversation {
+    const convId = 'pconv-' + Date.now().toString(36);
+    const nowStr = new Date().toLocaleDateString('fa-IR') + ' - ' + new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+
+    const newConv: ParentConversation = {
+      ...conv,
+      id: convId,
+      status: 'awaiting_reply',
+      createdAt: nowStr,
+      updatedAt: nowStr,
+      messages: [
+        {
+          id: 'pmsg-' + Date.now().toString(36),
+          conversationId: convId,
+          senderId: conv.parentId,
+          senderName: conv.parentName,
+          senderRole: 'parent',
+          content: initialMessageText,
+          sentAt: nowStr,
+        },
+      ],
+    };
+
+    this.state.parentConversations.unshift(newConv);
+    this.saveState();
+    return newConv;
+  }
+
+  public addReplyToParentConversation(
+    convId: string,
+    senderId: string,
+    senderName: string,
+    senderRole: string,
+    content: string
+  ): ParentConversationMessage | null {
+    const conv = this.state.parentConversations.find((c) => c.id === convId);
+    if (!conv) return null;
+
+    const nowStr = new Date().toLocaleDateString('fa-IR') + ' - ' + new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+    const msg: ParentConversationMessage = {
+      id: 'pmsg-' + Date.now().toString(36),
+      conversationId: convId,
+      senderId,
+      senderName,
+      senderRole,
+      content,
+      sentAt: nowStr,
+    };
+
+    conv.messages.push(msg);
+    conv.updatedAt = nowStr;
+    if (senderRole === 'parent') {
+      conv.status = 'awaiting_reply';
+    } else {
+      conv.status = 'replied';
+    }
+
+    this.saveState();
+    return msg;
+  }
+
+  public updateParentConversationStatus(convId: string, status: ParentConversation['status']): boolean {
+    const conv = this.state.parentConversations.find((c) => c.id === convId);
+    if (conv) {
+      conv.status = status;
+      this.saveState();
+      return true;
+    }
+    return false;
+  }
+
+  // --- Staff & Multi-Class Helpers ---
+  public getStaffByEmailOrPhone(orgId: string, identifier: string): StaffMember | null {
+    const lower = identifier.toLowerCase();
+    return (
+      this.getStaff(orgId).find(
+        (st) => st.email.toLowerCase() === lower || st.phone === identifier || st.fullName === identifier || st.id === identifier
+      ) || null
+    );
+  }
+
+  public getTeacherClasses(orgId: string, teacherIdentifier: string): SchoolClass[] {
+    const staffMember = this.getStaffByEmailOrPhone(orgId, teacherIdentifier);
+    const allOrgClasses = this.getClasses(orgId);
+
+    if (!staffMember) {
+      return allOrgClasses;
+    }
+
+    const assignedNamesOrIds = staffMember.assignedClasses || [];
+    if (assignedNamesOrIds.length === 0) {
+      return allOrgClasses;
+    }
+
+    return allOrgClasses.filter(
+      (c) =>
+        assignedNamesOrIds.includes(c.id) ||
+        assignedNamesOrIds.includes(c.name) ||
+        assignedNamesOrIds.some((assigned) => c.name.includes(assigned) || assigned.includes(c.name)) ||
+        c.homeroomTeacherId === staffMember.id
+    );
   }
 }
 

@@ -15,9 +15,15 @@ import { showToast } from '../../../components/toast';
 export function createTeacherAssignmentsPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
+  const currentUser = authService.getCurrentUser();
+
+  const isTeacher = membership.role === 'teacher' || membership.role === 'instructor';
+  let classes = schoolStore.getClasses(orgId);
+  if (isTeacher && currentUser) {
+    classes = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
+  }
 
   const assignments = schoolStore.getAssignments(orgId);
-  const classes = schoolStore.getClasses(orgId);
 
   const render = () => {
     rootWrapper.innerHTML = '';

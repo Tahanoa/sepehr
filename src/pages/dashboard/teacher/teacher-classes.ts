@@ -8,12 +8,23 @@ import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
 
+import { authService } from '../../../services/auth-service';
+
 export function createTeacherClassesPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
+  const currentUser = authService.getCurrentUser();
 
-  const classes = schoolStore.getClasses(orgId);
+  const isTeacher = membership.role === 'teacher' || membership.role === 'instructor';
+  let classes = schoolStore.getClasses(orgId);
+  if (isTeacher && currentUser) {
+    classes = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
+  }
+
   const students = schoolStore.getStudents(orgId);
+  const allAssignments = schoolStore.getAssignments(orgId);
+  const allExams = schoolStore.getExams(orgId);
+  const allAttendance = schoolStore.getAttendance(orgId);
 
   let selectedClassId = classes.length > 0 ? classes[0]!.id : '';
 
@@ -32,31 +43,96 @@ export function createTeacherClassesPage(membership: OrganizationMembership): HT
       <p class="text-xs text-gray-600">مشاهده مشخصات دانش‌آموزان/فراگیران، شماره تماس سرپرست و وضعیت تحصیلی</p>
     `;
 
-    // Class selector tabs
-    const tabsRow = createElement('div', { className: 'flex items-center gap-2 overflow-x-auto pb-1' });
-    classes.forEach((c) => {
-      const isSelected = c.id === selectedClassId;
-      const btn = createElement('button', {
-        className: `px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
-          isSelected ? 'bg-[#012622] text-white shadow' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
-        }`,
-        textContent: `${c.name} (${c.studentCount} نفر)`,
+    // Class Overview Cards Grid
+    const cardsGrid = createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5' });
+
+    classes.forEach((cls) => {
+      const clsStudents = students.filter((s) => s.classId === cls.id);
+      const clsAssignments = allAssignments.filter((a) => a.classId === cls.id);
+      const clsExams = allExams.filter((e) => e.classIds && e.classIds.includes(cls.id));
+      const clsAttendance = allAttendance.filter((a) => a.classId === cls.id && a.submitted);
+
+      const presentCount = clsAttendance.filter((a) => a.status === 'present').length;
+      const attPercent = clsAttendance.length > 0 ? Math.round((presentCount / clsAttendance.length) * 100) : 98;
+
+      const isSelected = cls.id === selectedClassId;
+
+      const card = createElement('div', {
+        className: `bg-white rounded-2xl border ${
+          isSelected ? 'border-[#012622] ring-2 ring-[#012622]/20' : 'border-gray-200/80'
+        } p-5 shadow-2xs space-y-4 flex flex-col justify-between transition-all`,
       });
-      btn.addEventListener('click', () => {
-        selectedClassId = c.id;
+
+      card.innerHTML = `
+        <div class="space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+            <span class="font-extrabold text-sm text-[#012622]">${cls.name}</span>
+            <span class="px-2.5 py-0.5 bg-[#ECE5F0] text-[#012622] rounded-lg text-[11px] font-bold">${cls.gradeLevel}</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+              <div class="text-[10px] text-gray-500 font-bold">تعداد کل دانش‌آموزان</div>
+              <div class="text-base font-black text-gray-900 font-mono mt-0.5">${clsStudents.length} نفر</div>
+            </div>
+
+            <div class="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100">
+              <div class="text-[10px] text-emerald-800 font-bold">نرخ حضور و غیاب</div>
+              <div class="text-base font-black text-emerald-950 font-mono mt-0.5">٪${attPercent}</div>
+            </div>
+
+            <div class="bg-blue-50/60 p-2.5 rounded-xl border border-blue-100">
+              <div class="text-[10px] text-blue-800 font-bold">تکالیف فعال</div>
+              <div class="text-base font-black text-blue-950 font-mono mt-0.5">${clsAssignments.length} مورد</div>
+            </div>
+
+            <div class="bg-amber-50/60 p-2.5 rounded-xl border border-amber-100">
+              <div class="text-[10px] text-amber-800 font-bold">آزمون‌های برنامه‌ریزی‌شده</div>
+              <div class="text-base font-black text-amber-950 font-mono mt-0.5">${clsExams.length} مورد</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shortcuts -->
+        <div class="pt-3 border-t border-gray-100 grid grid-cols-2 gap-2 text-xs">
+          <button class="nav-att-btn px-2.5 py-1.5 bg-[#012622] text-white font-bold rounded-xl text-[11px] hover:bg-[#003B36] transition-colors cursor-pointer text-center">
+            ثبت حضور/غیاب
+          </button>
+          <button class="nav-grd-btn px-2.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl text-[11px] transition-colors cursor-pointer text-center">
+            دفتر نمرات
+          </button>
+        </div>
+      `;
+
+      const navAttBtn = card.querySelector('.nav-att-btn') as HTMLButtonElement;
+      const navGrdBtn = card.querySelector('.nav-grd-btn') as HTMLButtonElement;
+
+      navAttBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: `/app/${orgId}/attendance` }));
+      });
+
+      navGrdBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: `/app/${orgId}/grades` }));
+      });
+
+      card.addEventListener('click', () => {
+        selectedClassId = cls.id;
         render();
       });
-      tabsRow.appendChild(btn);
+
+      cardsGrid.appendChild(card);
     });
 
     // Roster Card Table
-    const rosterCard = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 shadow-2xs overflow-hidden p-4 space-y-3' });
+    const rosterCard = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 shadow-2xs overflow-hidden p-5 space-y-4' });
 
     if (selectedClass) {
-      const classMeta = createElement('div', { className: 'flex items-center justify-between pb-3 border-b border-gray-100 text-xs' });
+      const classMeta = createElement('div', { className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b border-gray-100 gap-2 text-xs' });
       classMeta.innerHTML = `
-        <span class="font-extrabold text-[#012622] text-sm">${selectedClass.name} — ${selectedClass.gradeLevel}</span>
-        <span class="text-gray-500 font-medium">معلم راهنما / مدرس: ${selectedClass.homeroomTeacherName} | شماره اتاق/کلاس: ${selectedClass.roomNumber}</span>
+        <span class="font-black text-[#012622] text-base">لیست دانش‌آموزان ${selectedClass.name} (${selectedClass.gradeLevel})</span>
+        <span class="text-gray-600 font-medium">مدرس/معلم راهنما: ${selectedClass.homeroomTeacherName} | شماره اتاق: ${selectedClass.roomNumber}</span>
       `;
       rosterCard.appendChild(classMeta);
     }
@@ -104,7 +180,7 @@ export function createTeacherClassesPage(membership: OrganizationMembership): HT
     rosterCard.appendChild(table);
 
     rootWrapper.appendChild(headerRow);
-    rootWrapper.appendChild(tabsRow);
+    rootWrapper.appendChild(cardsGrid);
     rootWrapper.appendChild(rosterCard);
   };
 

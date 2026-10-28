@@ -151,6 +151,30 @@ export class AccessPolicy {
   }
 
   /**
+   * Returns true if the user is a school or institute administrator with full management rights.
+   */
+  public static canManageOrgRecords(membership: OrganizationMembership | null): boolean {
+    if (!membership || membership.status !== 'active') return false;
+    return membership.role === 'school_admin' || membership.role === 'institute_admin';
+  }
+
+  /**
+   * Returns true if the user is allowed to edit records for a given class.
+   */
+  public static canModifyClassData(
+    membership: OrganizationMembership | null,
+    classId: string,
+    assignedClassIds: string[] = []
+  ): boolean {
+    if (!membership || membership.status !== 'active') return false;
+    if (this.canManageOrgRecords(membership)) return true;
+    if (membership.role === 'teacher' || membership.role === 'instructor') {
+      return assignedClassIds.includes(classId);
+    }
+    return false;
+  }
+
+  /**
    * Checks whether a given role can access a named section key.
    */
   public static canAccessSectionKey(

@@ -9,6 +9,8 @@ import { OrganizationMembership } from '../../../types/auth';
 import { Student, StudentStatus } from '../../../types/school';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
+import { authService } from '../../../services/auth-service';
+import { AccessPolicy } from '../../../services/access-policy';
 import { createDataTable } from '../../../components/data-table';
 import { TableColumn } from '../../../types/common';
 import { Modal } from '../../../components/modal';
@@ -19,6 +21,10 @@ import { createExcelImportModal } from '../../../components/dashboard/excel-impo
 export function createStudentsPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
+  const currentUser = authService.getCurrentUser();
+
+  const isManagement = AccessPolicy.canManageOrgRecords(membership);
+  const isTeacher = membership.role === 'teacher' || membership.role === 'instructor';
 
   // Local UI State
   let searchQuery = '';
@@ -30,8 +36,15 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
   const render = () => {
     rootWrapper.innerHTML = '';
 
-    const allStudents = schoolStore.getStudents(orgId);
-    const classes = schoolStore.getClasses(orgId);
+    let allStudents = schoolStore.getStudents(orgId);
+    let classes = schoolStore.getClasses(orgId);
+
+    if (isTeacher && currentUser) {
+      const teacherClasses = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
+      const teacherClassIds = teacherClasses.map((c) => c.id);
+      allStudents = allStudents.filter((s) => teacherClassIds.includes(s.classId));
+      classes = teacherClasses;
+    }
 
     // Extract unique grades for filter dropdown
     const availableGrades = Array.from(new Set(classes.map((c) => c.gradeLevel)));
@@ -78,35 +91,37 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
     const actionBtns = createElement('div', { className: 'flex items-center gap-2' });
 
-    const importBtn = createElement('button', {
-      className:
-        'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-      innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود گروهی Excel`,
-    });
-    importBtn.addEventListener('click', () => {
-      const modal = createExcelImportModal({
-        entityType: 'students',
-        organizationId: orgId,
-        onImportComplete: (count) => {
-          showToast({ title: 'ورود گروهی موفق', message: `${count} دانش‌آموز جدید افزوده گردید.`, type: 'success' });
-          render();
-        },
-        onClose: () => {
-          if (document.body.contains(modal)) document.body.removeChild(modal);
-        },
+    if (isManagement) {
+      const importBtn = createElement('button', {
+        className:
+          'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود گروهی Excel`,
       });
-      document.body.appendChild(modal);
-    });
+      importBtn.addEventListener('click', () => {
+        const modal = createExcelImportModal({
+          entityType: 'students',
+          organizationId: orgId,
+          onImportComplete: (count) => {
+            showToast({ title: 'ورود گروهی موفق', message: `${count} دانش‌آموز جدید افزوده گردید.`, type: 'success' });
+            render();
+          },
+          onClose: () => {
+            if (document.body.contains(modal)) document.body.removeChild(modal);
+          },
+        });
+        document.body.appendChild(modal);
+      });
 
-    const addBtn = createElement('button', {
-      className:
-        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-      innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ثبت دانش‌آموز جدید`,
-    });
-    addBtn.addEventListener('click', () => openAddStudentModal());
+      const addBtn = createElement('button', {
+        className:
+          'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ثبت دانش‌آموز جدید`,
+      });
+      addBtn.addEventListener('click', () => openAddStudentModal());
 
-    actionBtns.appendChild(importBtn);
-    actionBtns.appendChild(addBtn);
+      actionBtns.appendChild(importBtn);
+      actionBtns.appendChild(addBtn);
+    }
 
     headerRow.appendChild(headerText);
     headerRow.appendChild(actionBtns);
@@ -223,27 +238,42 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
             openStudentDetailModal(row);
           });
 
-          const editBtn = createElement('button', {
-            className: 'p-1.5 text-amber-700 hover:bg-amber-50 rounded-lg transition-colors title="ویرایش مشخصات"',
-            innerHTML: getDashboardIcon('exam', 'w-4 h-4'),
-          });
-          editBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            openEditStudentModal(row);
-          });
-
-          const deleteBtn = createElement('button', {
-            className: 'p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors title="حذف دانش‌آموز"',
-            innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`,
-          });
-          deleteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            confirmDeleteStudent(row);
-          });
-
           actionBox.appendChild(viewBtn);
-          actionBox.appendChild(editBtn);
-          actionBox.appendChild(deleteBtn);
+
+          if (isTeacher) {
+            const referBtn = createElement('button', {
+              className: 'px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-[11px] font-bold rounded-lg transition-colors cursor-pointer',
+              textContent: '+ ارجاع مشاور',
+            });
+            referBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              openCounselorReferralModal(row);
+            });
+            actionBox.appendChild(referBtn);
+          }
+
+          if (isManagement) {
+            const editBtn = createElement('button', {
+              className: 'p-1.5 text-amber-700 hover:bg-amber-50 rounded-lg transition-colors title="ویرایش مشخصات"',
+              innerHTML: getDashboardIcon('exam', 'w-4 h-4'),
+            });
+            editBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              openEditStudentModal(row);
+            });
+
+            const deleteBtn = createElement('button', {
+              className: 'p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors title="حذف دانش‌آموز"',
+              innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`,
+            });
+            deleteBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              confirmDeleteStudent(row);
+            });
+
+            actionBox.appendChild(editBtn);
+            actionBox.appendChild(deleteBtn);
+          }
 
           return actionBox;
         },
@@ -321,6 +351,71 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
   };
 
   // Modals
+  const openCounselorReferralModal = (std: Student) => {
+    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
+    form.innerHTML = `
+      <div class="bg-purple-50 p-3 rounded-xl border border-purple-200 space-y-1">
+        <div class="font-bold text-purple-950">دانش‌آموز ارجاعی: ${std.fullName} (${std.className})</div>
+        <div class="text-[11px] text-purple-800">این ارجاع مستقیماً در کارتابل مشاور تحصیلی مدرسه قرار خواهد گرفت.</div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block font-bold mb-1">سطح اولویت *</label>
+          <select id="ref-priority" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
+            <option value="high">بالا / فوری</option>
+            <option value="medium" selected>متوسط</option>
+            <option value="low">عادی</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold mb-1">تاریخ ارجاع *</label>
+          <input type="text" id="ref-date" value="۱۴۰۲/۱۲/۰۵" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-bold mb-1">علت ارجاع به مشاور *</label>
+        <textarea id="ref-reason" rows="3" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs leading-relaxed" placeholder="شرح علت ارجاع (افت تحصیلی، استرس، غیبت مکرر یا...)..."></textarea>
+      </div>
+    `;
+
+    const modal = new Modal({
+      title: 'ارسال ارجاع به مشاور تحصیلی',
+      content: form,
+      confirmText: 'ثبت ارجاع',
+      cancelText: 'انصراف',
+      onConfirm: () => {
+        const priority = (form.querySelector('#ref-priority') as HTMLSelectElement).value as any;
+        const referralDate = (form.querySelector('#ref-date') as HTMLInputElement).value.trim();
+        const reason = (form.querySelector('#ref-reason') as HTMLTextAreaElement).value.trim();
+
+        if (!reason) {
+          showToast({ title: 'علت ارجاع خالی است', message: 'لطفاً علت ارجاع را شرح دهید.', type: 'warning' });
+          return;
+        }
+
+        schoolStore.addCounselingReferral({
+          organizationId: orgId,
+          studentId: std.id,
+          studentName: std.fullName,
+          className: std.className,
+          referredBy: `${currentUser?.name || 'استاد آموزگار'} (دبیر)`,
+          referralDate: referralDate || '۱۴۰۲/۱۲/۰۵',
+          reason,
+          priority,
+          status: 'pending',
+          counselorName: 'دکتر سارا کریمی',
+        });
+
+        showToast({ title: 'ارجاع ثبت شد', message: `دانش‌آموز «${std.fullName}» به مشاور ارجاع داده شد.`, type: 'success' });
+        render();
+      },
+    });
+
+    modal.open();
+  };
+
   const openStudentDetailModal = (std: Student) => {
     const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800' });
     content.innerHTML = `

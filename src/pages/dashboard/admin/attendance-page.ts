@@ -9,6 +9,8 @@ import { OrganizationMembership } from '../../../types/auth';
 import { AttendanceStatus } from '../../../types/school';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
+import { authService } from '../../../services/auth-service';
+import { AccessPolicy } from '../../../services/access-policy';
 import { showToast } from '../../../components/toast';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
 import { createSMSModal } from '../../../components/dashboard/sms-modal';
@@ -17,8 +19,18 @@ import { createExcelImportModal } from '../../../components/dashboard/excel-impo
 export function createAttendancePage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
+  const currentUser = authService.getCurrentUser();
 
-  const classes = schoolStore.getClasses(orgId);
+  const isManagement = AccessPolicy.canManageOrgRecords(membership);
+  const isTeacher = membership.role === 'teacher' || membership.role === 'instructor';
+  const isStudentOrParent = membership.role === 'student' || membership.role === 'parent';
+
+  // Get accessible classes based on role
+  let classes = schoolStore.getClasses(orgId);
+  if (isTeacher && currentUser) {
+    classes = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
+  }
+
   const students = schoolStore.getStudents(orgId);
 
   let selectedClassId = classes.length > 0 ? classes[0]!.id : '';
@@ -90,68 +102,79 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
 
     const actionBtns = createElement('div', { className: 'flex items-center gap-2' });
 
-    const smsBtn = createElement('button', {
-      className:
-        'px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-      innerHTML: `${getDashboardIcon('chat', 'w-4 h-4 text-[#E98A15]')} ارسال SMS اولیا`,
-    });
-    smsBtn.addEventListener('click', () => {
-      const modal = createSMSModal({
-        organizationId: orgId,
-        onClose: () => {
-          if (document.body.contains(modal)) document.body.removeChild(modal);
-        },
+    if (isManagement) {
+      const smsBtn = createElement('button', {
+        className:
+          'px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        innerHTML: `${getDashboardIcon('chat', 'w-4 h-4 text-[#E98A15]')} ارسال SMS اولیا`,
       });
-      document.body.appendChild(modal);
-    });
-
-    const importBtn = createElement('button', {
-      className:
-        'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-      innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود CSV`,
-    });
-    importBtn.addEventListener('click', () => {
-      const modal = createExcelImportModal({
-        entityType: 'attendance',
-        organizationId: orgId,
-        onImportComplete: () => {
-          showToast({ title: 'ورود موفق', message: 'سوابق حضور و غیاب بروزرسانی شد.', type: 'success' });
-          render();
-        },
-        onClose: () => {
-          if (document.body.contains(modal)) document.body.removeChild(modal);
-        },
-      });
-      document.body.appendChild(modal);
-    });
-
-    const submitBtn = createElement('button', {
-      className:
-        'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-      innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> ثبت نهایی حضور و غیاب`,
-    });
-    submitBtn.addEventListener('click', () => {
-      if (!selectedClassObj) return;
-
-      const entries = classStudents.map((std) => {
-        const draft = localDrafts[std.id];
-        const entry: { studentId: string; studentName: string; status: AttendanceStatus; notes?: string } = {
-          studentId: std.id,
-          studentName: std.fullName,
-          status: draft?.status || 'present',
-        };
-        if (draft?.notes) entry.notes = draft.notes;
-        return entry;
+      smsBtn.addEventListener('click', () => {
+        const modal = createSMSModal({
+          organizationId: orgId,
+          onClose: () => {
+            if (document.body.contains(modal)) document.body.removeChild(modal);
+          },
+        });
+        document.body.appendChild(modal);
       });
 
-      schoolStore.recordAttendance(orgId, selectedClassId, selectedDate, entries, membership.organization.name);
-      showToast({ title: 'ثبت شد', message: `حضور و غیاب ${selectedClassObj.name} با موفقیت نهایی گردید.`, type: 'success' });
-      render();
-    });
+      const importBtn = createElement('button', {
+        className:
+          'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود CSV`,
+      });
+      importBtn.addEventListener('click', () => {
+        const modal = createExcelImportModal({
+          entityType: 'attendance',
+          organizationId: orgId,
+          onImportComplete: () => {
+            showToast({ title: 'ورود موفق', message: 'سوابق حضور و غیاب بروزرسانی شد.', type: 'success' });
+            render();
+          },
+          onClose: () => {
+            if (document.body.contains(modal)) document.body.removeChild(modal);
+          },
+        });
+        document.body.appendChild(modal);
+      });
 
-    actionBtns.appendChild(smsBtn);
-    actionBtns.appendChild(importBtn);
-    actionBtns.appendChild(submitBtn);
+      actionBtns.appendChild(smsBtn);
+      actionBtns.appendChild(importBtn);
+    }
+
+    if (!isStudentOrParent) {
+      const submitBtn = createElement('button', {
+        className:
+          'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> ثبت نهایی حضور و غیاب`,
+      });
+      submitBtn.addEventListener('click', () => {
+        if (!selectedClassObj) return;
+
+        // Verify teacher authorization for selected class
+        if (isTeacher && !classes.some((c) => c.id === selectedClassId)) {
+          showToast({ title: 'دسترسی غیرمجاز', message: 'شما مجاز به ثبت حضور و غیاب برای این کلاس نمی‌باشید.', type: 'error' });
+          return;
+        }
+
+        const entries = classStudents.map((std) => {
+          const draft = localDrafts[std.id];
+          const entry: { studentId: string; studentName: string; status: AttendanceStatus; notes?: string } = {
+            studentId: std.id,
+            studentName: std.fullName,
+            status: draft?.status || 'present',
+          };
+          if (draft?.notes) entry.notes = draft.notes;
+          return entry;
+        });
+
+        schoolStore.recordAttendance(orgId, selectedClassId, selectedDate, entries, membership.organization.name);
+        showToast({ title: 'ثبت شد', message: `حضور و غیاب ${selectedClassObj.name} با موفقیت نهایی گردید.`, type: 'success' });
+        render();
+      });
+
+      actionBtns.appendChild(submitBtn);
+    }
 
     headerRow.appendChild(headerText);
     headerRow.appendChild(actionBtns);
@@ -278,47 +301,68 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
         // Status choices cell
         const statusTd = createElement('td', { className: 'text-center' });
 
-        const btnGroup = createElement('div', { className: 'inline-flex items-center rounded-xl p-1 bg-gray-100 border border-gray-200 gap-1' });
+        if (isStudentOrParent) {
+          let badgeClass = 'bg-emerald-100 text-emerald-800';
+          let labelText = 'حاضر';
+          if (currentStatus === 'absent') {
+            badgeClass = 'bg-rose-100 text-rose-800';
+            labelText = 'غایب';
+          } else if (currentStatus === 'late') {
+            badgeClass = 'bg-amber-100 text-amber-800';
+            labelText = 'تأخیر';
+          } else if (currentStatus === 'excused') {
+            badgeClass = 'bg-blue-100 text-blue-800';
+            labelText = 'غایب موجه';
+          }
 
-        const statuses: { key: AttendanceStatus; label: string; activeClass: string }[] = [
-          { key: 'present', label: 'حاضر', activeClass: 'bg-emerald-700 text-white font-black shadow-2xs' },
-          { key: 'absent', label: 'غایب', activeClass: 'bg-rose-700 text-white font-black shadow-2xs' },
-          { key: 'late', label: 'تأخیر', activeClass: 'bg-amber-600 text-white font-black shadow-2xs' },
-          { key: 'excused', label: 'موجه', activeClass: 'bg-blue-600 text-white font-black shadow-2xs' },
-        ];
+          statusTd.innerHTML = `<span class="px-3 py-1 rounded-lg text-xs font-bold ${badgeClass}">${labelText}</span>`;
+        } else {
+          const btnGroup = createElement('div', { className: 'inline-flex items-center rounded-xl p-1 bg-gray-100 border border-gray-200 gap-1' });
 
-        statuses.forEach((st) => {
-          const isSelected = currentStatus === st.key;
-          const btn = createElement('button', {
-            className: `px-2.5 py-1 text-[11px] rounded-lg transition-all cursor-pointer ${
-              isSelected ? st.activeClass : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
-            }`,
-            textContent: st.label,
+          const statuses: { key: AttendanceStatus; label: string; activeClass: string }[] = [
+            { key: 'present', label: 'حاضر', activeClass: 'bg-emerald-700 text-white font-black shadow-2xs' },
+            { key: 'absent', label: 'غایب', activeClass: 'bg-rose-700 text-white font-black shadow-2xs' },
+            { key: 'late', label: 'تأخیر', activeClass: 'bg-amber-600 text-white font-black shadow-2xs' },
+            { key: 'excused', label: 'موجه', activeClass: 'bg-blue-600 text-white font-black shadow-2xs' },
+          ];
+
+          statuses.forEach((st) => {
+            const isSelected = currentStatus === st.key;
+            const btn = createElement('button', {
+              className: `px-2.5 py-1 text-[11px] rounded-lg transition-all cursor-pointer ${
+                isSelected ? st.activeClass : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
+              }`,
+              textContent: st.label,
+            });
+
+            btn.addEventListener('click', () => {
+              localDrafts[std.id] = { ...localDrafts[std.id], status: st.key };
+              render();
+            });
+
+            btnGroup.appendChild(btn);
           });
 
-          btn.addEventListener('click', () => {
-            localDrafts[std.id] = { ...localDrafts[std.id], status: st.key };
-            render();
-          });
-
-          btnGroup.appendChild(btn);
-        });
-
-        statusTd.appendChild(btnGroup);
+          statusTd.appendChild(btnGroup);
+        }
 
         // Notes cell
         const notesTd = createElement('td');
-        const notesInput = createElement('input', {
-          className: 'w-full bg-gray-50 border border-gray-200 rounded-lg p-1.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#E98A15]',
-          attributes: { type: 'text', placeholder: 'ثبت علت غیبت/تأخیر...', value: localDrafts[std.id]?.notes || '' },
-        });
+        if (isStudentOrParent) {
+          notesTd.innerHTML = `<span class="text-xs text-gray-700">${localDrafts[std.id]?.notes || '—'}</span>`;
+        } else {
+          const notesInput = createElement('input', {
+            className: 'w-full bg-gray-50 border border-gray-200 rounded-lg p-1.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#E98A15]',
+            attributes: { type: 'text', placeholder: 'ثبت علت غیبت/تأخیر...', value: localDrafts[std.id]?.notes || '' },
+          });
 
-        notesInput.addEventListener('input', (e) => {
-          const val = (e.target as HTMLInputElement).value;
-          localDrafts[std.id] = { ...localDrafts[std.id], status: localDrafts[std.id]?.status || 'present', notes: val };
-        });
+          notesInput.addEventListener('input', (e) => {
+            const val = (e.target as HTMLInputElement).value;
+            localDrafts[std.id] = { ...localDrafts[std.id], status: localDrafts[std.id]?.status || 'present', notes: val };
+          });
 
-        notesTd.appendChild(notesInput);
+          notesTd.appendChild(notesInput);
+        }
 
         tr.appendChild(nameTd);
         tr.appendChild(codeTd);
