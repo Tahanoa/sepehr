@@ -96,23 +96,48 @@ export interface TimetableSlot {
   roomNumber: string;
 }
 
-export type ExamStatus = 'scheduled' | 'in_progress' | 'grading' | 'completed' | 'published';
+export type ExamStatus = 'draft' | 'scheduled' | 'available' | 'in_progress' | 'submitted' | 'grading' | 'completed' | 'published' | 'archived';
+export type ExamType = 'practice' | 'quiz' | 'midterm' | 'final' | 'descriptive' | 'objective' | 'mixed';
+export type ExamDifficulty = 'easy' | 'medium' | 'hard';
+export type ResultReleasePolicy = 'immediate' | 'manual';
+export type InterruptionPolicy = 'warn_continue' | 'warn_flag' | 'terminate';
 
 export interface Exam {
   id: string;
   organizationId: string;
   title: string;
+  description?: string;
+  instructions?: string;
+  educationalLevel?: string;
   subjectId: string;
   subjectName: string;
   gradeLevel: string;
   classIds: string[];
+  excludedStudentIds?: string[];
   examDate: string; // YYYY-MM-DD
   startTime: string; // e.g. "09:00"
+  endDate?: string;
   durationMinutes: number;
   maxScore: number;
+  passingScore?: number;
   term: 'term_1' | 'term_2' | 'midterm_1' | 'midterm_2';
   status: ExamStatus;
   evalType: 'numeric' | 'descriptive'; // numeric for secondary/general, descriptive for elementary
+  examType?: ExamType;
+  difficulty?: ExamDifficulty;
+  attemptLimit?: number;
+  canReviewAnswers?: boolean;
+  resultReleasePolicy?: ResultReleasePolicy;
+  allowBackNavigation?: boolean;
+  allowUnansweredSubmission?: boolean;
+  autoSubmitOnTimeout?: boolean;
+  requiresTeacherReview?: boolean;
+  allowResume?: boolean;
+  interruptionPolicy?: InterruptionPolicy;
+  randomizeQuestions?: boolean;
+  randomizeOptions?: boolean;
+  createdByTeacherId?: string;
+  createdByTeacherName?: string;
 }
 
 export interface StudentGrade {
@@ -233,16 +258,53 @@ export interface RubricCriterion {
   description: string;
 }
 
+export type QuestionType = 'single_choice' | 'multiple_select' | 'true_false' | 'short_answer' | 'descriptive' | 'numeric' | 'mcq';
+
 export interface ExamQuestion {
   id: string;
   examId: string;
-  type: 'mcq' | 'descriptive';
+  type: QuestionType;
   prompt: string;
   points: number;
+  imageAttachment?: string;
   options?: QuestionOption[];
   correctOptionId?: string;
+  correctOptionIds?: string[];
+  correctBool?: boolean;
+  numericTarget?: number;
+  numericTolerance?: number;
+  textKeywords?: string[];
   referenceAnswer?: string;
+  explanation?: string;
+  difficulty?: ExamDifficulty;
+  topicTags?: string[];
+  isRequired?: boolean;
   rubricCriteria?: RubricCriterion[];
+}
+
+export interface QuestionBankItem {
+  id: string;
+  organizationId: string;
+  subjectId: string;
+  subjectName: string;
+  topic: string;
+  difficulty: ExamDifficulty;
+  createdByTeacherId: string;
+  createdByTeacherName: string;
+  type: QuestionType;
+  prompt: string;
+  points: number;
+  imageAttachment?: string;
+  options?: QuestionOption[];
+  correctOptionId?: string;
+  correctOptionIds?: string[];
+  correctBool?: boolean;
+  numericTarget?: number;
+  numericTolerance?: number;
+  textKeywords?: string[];
+  referenceAnswer?: string;
+  explanation?: string;
+  topicTags?: string[];
 }
 
 export interface AIGradingSuggestion {
@@ -257,15 +319,44 @@ export interface StudentExamAttempt {
   examId: string;
   studentId: string;
   studentName: string;
-  submittedAt: string;
-  mcqAnswers: Record<string, string>;
-  descriptiveAnswers: Record<string, string>;
+  className?: string;
+  startTime: string;
+  startTimestamp: number;
+  deadlineTimestamp: number;
+  submittedAt?: string;
+  answers: Record<string, any>;
+  questionScores?: Record<string, number>;
+  mcqAnswers?: Record<string, string>;
+  descriptiveAnswers?: Record<string, string>;
   mcqScore?: number;
   descriptiveScore?: number;
   totalScore?: number;
   status: 'in_progress' | 'submitted' | 'graded';
+  submissionReason?: 'manual' | 'timeout' | 'terminated';
+  interruptionCount?: number;
   aiGradingSuggestions?: Record<string, AIGradingSuggestion>;
   teacherFeedback?: string;
+}
+
+export type IntegrityEventType = 'visibility_hidden' | 'page_leave' | 'refresh' | 'network_similarity' | 'repeated_interruption';
+export type IntegrityReviewStatus = 'pending' | 'reviewed_ok' | 'needs_review' | 'confirmed_violation';
+
+export interface ExamActivityLog {
+  id: string;
+  organizationId: string;
+  examId: string;
+  examTitle: string;
+  studentId: string;
+  studentName: string;
+  attemptId: string;
+  eventType: IntegrityEventType;
+  timestamp: string;
+  severity: 'low' | 'medium' | 'high';
+  description: string;
+  reviewStatus: IntegrityReviewStatus;
+  reviewerNote?: string;
+  reviewerName?: string;
+  reviewedAt?: string;
 }
 
 // --- Institute Applications & Tuition Invoices ---
