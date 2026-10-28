@@ -13,12 +13,20 @@ import { Modal } from '../../../components/modal';
 import { showToast } from '../../../components/toast';
 import { createAIGradingModal } from '../../../components/dashboard/ai-grading-modal';
 
+import { authService } from '../../../services/auth-service';
+
 export function createTeacherExamsPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
+  const currentUser = authService.getCurrentUser();
+
+  const isTeacher = membership.role === 'teacher' || membership.role === 'instructor';
+  let classes = schoolStore.getClasses(orgId);
+  if (isTeacher && currentUser) {
+    classes = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
+  }
 
   const exams = schoolStore.getExams(orgId);
-  const classes = schoolStore.getClasses(orgId);
   const subjects = schoolStore.getSubjects(orgId);
   const students = schoolStore.getStudents(orgId);
 

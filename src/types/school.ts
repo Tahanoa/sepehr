@@ -316,6 +316,60 @@ export interface TuitionInvoice {
 }
 
 // --- Messaging, SMS Logs & Developer Support ---
+export interface WeeklyGradebookNote {
+  id: string;
+  organizationId: string;
+  classId: string;
+  className: string;
+  subjectId: string;
+  subjectName: string;
+  studentId: string;
+  studentName: string;
+  noteDate: string; // YYYY-MM-DD or Solar Hijri
+  weekLabel: string; // e.g. "هفته ۱ اسفند"
+  authorId: string;
+  authorName: string;
+  content: string;
+  isParentVisible: boolean;
+  createdAt: string;
+}
+
+export interface ScheduleConfig {
+  organizationId: string;
+  periodsCount: number; // e.g. 4 or 5
+  startTime: string; // e.g. "08:00"
+  periodDurationMinutes: number; // e.g. 90
+  breakDurationMinutes: number; // e.g. 30
+  isPublished: boolean;
+}
+
+export interface ParentConversationMessage {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  senderName: string;
+  senderRole: string;
+  content: string;
+  sentAt: string;
+}
+
+export interface ParentConversation {
+  id: string;
+  organizationId: string;
+  parentId: string;
+  parentName: string;
+  parentPhone: string;
+  studentId: string;
+  studentName: string;
+  className: string;
+  category: 'educational' | 'attendance' | 'administrative' | 'other';
+  subject: string;
+  status: 'sent' | 'awaiting_reply' | 'replied' | 'resolved';
+  createdAt: string;
+  updatedAt: string;
+  messages: ParentConversationMessage[];
+}
+
 export interface DirectMessage {
   id: string;
   organizationId: string;
