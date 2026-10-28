@@ -12,7 +12,8 @@ export type Role =
   | 'parent'
   | 'counselor'
   | 'institute_admin'
-  | 'instructor';
+  | 'instructor'
+  | 'applicant';
 
 export type Permission =
   | 'view_students'

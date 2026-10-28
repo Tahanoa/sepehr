@@ -11,6 +11,7 @@ import { schoolStore } from '../../../services/school-store';
 import { Modal } from '../../../components/modal';
 import { showToast } from '../../../components/toast';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
+import { createExcelImportModal } from '../../../components/dashboard/excel-import-modal';
 
 export function createTeachersPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
@@ -55,6 +56,28 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
     headerText.appendChild(title);
     headerText.appendChild(desc);
 
+    const actionBtns = createElement('div', { className: 'flex items-center gap-2' });
+
+    const importBtn = createElement('button', {
+      className:
+        'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود گروهی Excel`,
+    });
+    importBtn.addEventListener('click', () => {
+      const modal = createExcelImportModal({
+        entityType: 'staff',
+        organizationId: orgId,
+        onImportComplete: (count) => {
+          showToast({ title: 'ورود گروهی موفق', message: `${count} همکار جدید افزوده شد.`, type: 'success' });
+          render();
+        },
+        onClose: () => {
+          if (document.body.contains(modal)) document.body.removeChild(modal);
+        },
+      });
+      document.body.appendChild(modal);
+    });
+
     const addBtn = createElement('button', {
       className:
         'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
@@ -62,8 +85,11 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
     });
     addBtn.addEventListener('click', () => openAddStaffModal());
 
+    actionBtns.appendChild(importBtn);
+    actionBtns.appendChild(addBtn);
+
     headerRow.appendChild(headerText);
-    headerRow.appendChild(addBtn);
+    headerRow.appendChild(actionBtns);
 
     // Filter Toolbar
     const toolbar = createElement('div', {

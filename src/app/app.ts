@@ -10,6 +10,11 @@ import { getNavigationForRoleAndOrg, getDashboardSectionTitles } from '../config
 import { DashboardLayout } from '../components/dashboard/layout';
 import { getRoleLabel } from '../components/dashboard/icons';
 import { renderSchoolAdminSection } from '../pages/dashboard/admin/admin-router';
+import { renderTeacherSection } from '../pages/dashboard/teacher/teacher-router';
+import { renderStudentSection } from '../pages/dashboard/student/student-router';
+import { renderParentSection } from '../pages/dashboard/parent/parent-router';
+import { renderCounselorSection } from '../pages/dashboard/counselor/counselor-router';
+import { renderApplicantSection } from '../pages/dashboard/applicant/applicant-router';
 import {
   createFeaturePlaceholderPage,
   createAccessDeniedPage,
@@ -116,8 +121,18 @@ export function initializeApp(): { getRootElement: () => HTMLElement } {
 
     let viewContent: HTMLElement;
 
-    if (membership.role === 'school_admin') {
+    if (membership.role === 'school_admin' || membership.role === 'institute_admin') {
       viewContent = renderSchoolAdminSection(sectionKey, membership);
+    } else if (membership.role === 'teacher' || membership.role === 'instructor') {
+      viewContent = renderTeacherSection(sectionKey, membership);
+    } else if (membership.role === 'student') {
+      viewContent = renderStudentSection(sectionKey, membership);
+    } else if (membership.role === 'parent') {
+      viewContent = renderParentSection(sectionKey, membership);
+    } else if (membership.role === 'counselor') {
+      viewContent = renderCounselorSection(sectionKey, membership);
+    } else if (membership.role === 'applicant') {
+      viewContent = renderApplicantSection(sectionKey, membership);
     } else {
       // Intentional feature placeholder for unfinished role feature routes
       viewContent = createFeaturePlaceholderPage({

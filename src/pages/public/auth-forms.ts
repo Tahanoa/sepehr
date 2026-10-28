@@ -3,6 +3,7 @@
  */
 
 import { createElement } from '../../utils/dom';
+import { createDemoSwitcherModal } from '../../components/dashboard/demo-switcher-modal';
 
 export function createContactPage(): HTMLElement {
   const container = createElement('div', { className: 'max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8' });
@@ -77,7 +78,33 @@ export function createContactPage(): HTMLElement {
 }
 
 export function createLoginPage(): HTMLElement {
-  const container = createElement('div', { className: 'max-w-md mx-auto px-4 py-16 space-y-8' });
+  const container = createElement('div', { className: 'max-w-md mx-auto px-4 py-12 space-y-6' });
+
+  // Demo Switcher Banner Card
+  const demoCard = createElement('div', {
+    className: 'bg-gradient-to-br from-[#012622] to-[#003B36] text-white p-6 rounded-3xl shadow-lg border border-[#E98A15]/30 space-y-3 dir-rtl text-right',
+  });
+  demoCard.innerHTML = `
+    <div class="flex items-center justify-between">
+      <span class="px-2.5 py-1 bg-[#E98A15] text-[#012622] text-[10px] font-bold rounded-lg">ورود سریع آزمایشی</span>
+      <span class="text-xs text-amber-200">۱۴ نقش آزمایشی فعال</span>
+    </div>
+    <h2 class="text-base font-extrabold text-white">ورود مستقیم به دمو سامانه</h2>
+    <p class="text-xs text-gray-300 leading-relaxed">
+      بدون نیاز به رمز عبور، نقش آزمایشی مورد نظر خود (مدیر، دبیر، دانش‌آموز، والدین، مشاور یا متقاضی) را در هر ۳ طرح انتخاب و بررسی کنید.
+    </p>
+  `;
+  const enterDemoBtn = createElement('button', {
+    className: 'w-full py-3 bg-[#E98A15] hover:bg-amber-600 text-[#012622] font-extrabold text-xs rounded-xl shadow transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-amber-300',
+    textContent: 'مشاهده و انتخاب نقش‌های دمو',
+  });
+  enterDemoBtn.addEventListener('click', () => {
+    const modal = createDemoSwitcherModal(() => {
+      if (document.body.contains(modal)) document.body.removeChild(modal);
+    });
+    document.body.appendChild(modal);
+  });
+  demoCard.appendChild(enterDemoBtn);
 
   const card = createElement('div', { className: 'bg-white p-8 rounded-3xl border border-gray-200 shadow-lg space-y-6' });
   card.innerHTML = `
@@ -85,7 +112,7 @@ export function createLoginPage(): HTMLElement {
       <div class="w-12 h-12 rounded-2xl bg-brand-evergreen text-white flex items-center justify-center mx-auto text-xl font-bold shadow-md">
         <svg class="w-7 h-7 stroke-current fill-none stroke-2" viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
       </div>
-      <h1 class="text-2xl font-extrabold text-brand-evergreen">ورود به سامانه پولاریس</h1>
+      <h1 class="text-2xl font-extrabold text-brand-evergreen">ورود با حساب کاربری</h1>
       <p class="text-xs text-gray-500">حساب کاربری مدرسه یا آموزشگاه خود را وارد نمایید</p>
     </div>
   `;
@@ -143,6 +170,7 @@ export function createLoginPage(): HTMLElement {
   });
 
   card.appendChild(form);
+  container.appendChild(demoCard);
   container.appendChild(card);
   return container;
 }
