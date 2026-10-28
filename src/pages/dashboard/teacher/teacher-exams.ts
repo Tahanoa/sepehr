@@ -5,30 +5,18 @@
  */
 
 import { OrganizationMembership } from '../../../types/auth';
-import { Exam, ExamQuestion, ExamStatus } from '../../../types/school';
+import { Exam, ExamStatus } from '../../../types/school';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
 import { authService } from '../../../services/auth-service';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
 import { Modal } from '../../../components/modal';
 import { showToast } from '../../../components/toast';
-import { renderExamBuilderStep1, renderExamBuilderStep2, ExamBuilderDraftData } from '../../../components/dashboard/exam-builder-steps-1-2';
-import { renderExamBuilderStep3, renderExamBuilderStep4 } from '../../../components/dashboard/exam-builder-steps-3-4';
-import { renderExamBuilderStep5, renderExamBuilderStep6 } from '../../../components/dashboard/exam-builder-steps-5-6';
 
 export function createTeacherExamsPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
   const currentUser = authService.getCurrentUser();
-
-  const isTeacher = membership.role === 'teacher' || membership.role === 'instructor';
-  let classes = schoolStore.getClasses(orgId);
-  if (isTeacher && currentUser) {
-    classes = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
-  }
-
-  const subjects = schoolStore.getSubjects(orgId);
-  const students = schoolStore.getStudents(orgId);
 
   let activeTab: ExamStatus | 'all' | 'activity_logs' = 'all';
 
@@ -59,9 +47,11 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
 
     const addBtn = createElement('button', {
       className: 'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
-      innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> طراحی آزمون جدید (۶ گام)`,
+      innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ساخت آزمون جدید`,
     });
-    addBtn.addEventListener('click', () => openMultiStepExamBuilderModal());
+    addBtn.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: `/app/${orgId}/exam-builder` }));
+    });
 
     headerRow.appendChild(headerText);
     headerRow.appendChild(addBtn);
@@ -138,7 +128,10 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
             </div>
           </div>
 
-          <div class="pt-3 border-t border-gray-100 flex items-center justify-between gap-2 text-xs">
+          <div class="pt-3 border-t border-gray-100 flex items-center justify-between gap-2 text-xs flex-wrap">
+            <button class="edit-btn px-3 py-1.5 bg-[#ECE5F0] hover:bg-[#ECE5F0]/80 text-[#012622] font-bold rounded-xl transition-colors cursor-pointer">
+              ✏️ ویرایش
+            </button>
             <button class="grade-btn px-3 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl transition-colors cursor-pointer">
               تصحیح و نمره‌دهی
             </button>
@@ -151,6 +144,9 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
           </div>
         `;
 
+        card.querySelector('.edit-btn')!.addEventListener('click', () => {
+          window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: `/app/${orgId}/exam-builder?examId=${ex.id}` }));
+        });
         card.querySelector('.grade-btn')!.addEventListener('click', () => openDescriptiveGradingQueueModal(ex, attempts));
         card.querySelector('.dup-btn')!.addEventListener('click', () => {
           schoolStore.duplicateExam(ex.id);
@@ -171,141 +167,6 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
     rootWrapper.appendChild(grid);
   };
 
-  const openMultiStepExamBuilderModal = () => {
-    let currentStep = 1;
-
-    const draftData: ExamBuilderDraftData = {
-      title: '',
-      instructions: '',
-      subjectId: subjects.length > 0 ? subjects[0]!.id : '',
-      subjectName: subjects.length > 0 ? subjects[0]!.name : '',
-      gradeLevel: subjects.length > 0 ? subjects[0]!.gradeLevel : '',
-      examType: 'mixed',
-      difficulty: 'medium',
-      durationMinutes: 60,
-      maxScore: 20,
-      passingScore: 10,
-      examDate: '۱۴۰۲/۱۲/۲۵',
-      attemptLimit: 1,
-      resultReleasePolicy: 'manual',
-      canReviewAnswers: true,
-      selectedClassIds: classes.length > 0 ? [classes[0]!.id] : [],
-      excludedStudentIds: [],
-      interruptionPolicy: 'warn_flag',
-      allowResume: true,
-      allowBackNavigation: true,
-      allowUnansweredSubmission: true,
-      autoSubmitOnTimeout: true,
-      randomizeQuestions: false,
-      randomizeOptions: false,
-    };
-
-    let builderQuestions: ExamQuestion[] = [];
-
-    const modalContainer = createElement('div', { className: 'space-y-4 dir-rtl text-xs text-gray-800' });
-
-    const stepIndicator = createElement('div', { className: 'flex items-center justify-between border-b border-gray-200 pb-3 font-bold text-xs' });
-    const bodyArea = createElement('div', { className: 'min-h-[320px]' });
-
-    const renderStep = () => {
-      stepIndicator.innerHTML = `
-        <span class="text-[#012622] font-black">گام ${currentStep.toLocaleString('fa-IR')} از ۶</span>
-        <div class="flex items-center gap-1">
-          ${[1, 2, 3, 4, 5, 6].map((st) => `
-            <span class="w-2.5 h-2.5 rounded-full ${st === currentStep ? 'bg-[#012622]' : st < currentStep ? 'bg-emerald-600' : 'bg-gray-300'}"></span>
-          `).join('')}
-        </div>
-      `;
-
-      bodyArea.innerHTML = '';
-
-      if (currentStep === 1) {
-        bodyArea.appendChild(renderExamBuilderStep1(draftData, subjects, (up) => Object.assign(draftData, up)));
-      } else if (currentStep === 2) {
-        bodyArea.appendChild(renderExamBuilderStep2(draftData, classes, students, (up) => Object.assign(draftData, up)));
-      } else if (currentStep === 3) {
-        bodyArea.appendChild(renderExamBuilderStep3(builderQuestions, (newQs) => { builderQuestions = newQs; }));
-      } else if (currentStep === 4) {
-        bodyArea.appendChild(renderExamBuilderStep4(orgId, draftData.subjectId || '', (imported) => {
-          builderQuestions = [...builderQuestions, ...imported];
-          showToast({ title: 'افزوده شد', message: `${imported.length} سوال از بانک اضافه شد.`, type: 'success' });
-        }));
-      } else if (currentStep === 5) {
-        bodyArea.appendChild(renderExamBuilderStep5(draftData, (up) => Object.assign(draftData, up)));
-      } else if (currentStep === 6) {
-        const assignedCls = classes.filter((c) => (draftData.selectedClassIds || []).includes(c.id));
-        const { element } = renderExamBuilderStep6(draftData, builderQuestions, assignedCls);
-        bodyArea.appendChild(element);
-      }
-    };
-
-    modalContainer.appendChild(stepIndicator);
-    modalContainer.appendChild(bodyArea);
-
-    const modal = new Modal({
-      title: 'طراحی آزمون هوشمند (طراح ۶ مرحله‌ای)',
-      content: modalContainer,
-      confirmText: 'گام بعدی ➔',
-      cancelText: 'انصراف',
-      onConfirm: () => {
-        if (currentStep < 6) {
-          if (currentStep === 1 && !draftData.title) {
-            showToast({ title: 'خطا', message: 'لطفاً عنوان آزمون را وارد نمایید.', type: 'warning' });
-            return;
-          }
-          currentStep++;
-          renderStep();
-        } else {
-          // Final Publish Step
-          const newExam = schoolStore.addExam({
-            organizationId: orgId,
-            title: draftData.title || 'آزمون جدید',
-            ...(draftData.instructions ? { description: draftData.instructions, instructions: draftData.instructions } : {}),
-            subjectId: draftData.subjectId || 'sbj-1',
-            subjectName: draftData.subjectName || 'درس عمومی',
-            gradeLevel: draftData.gradeLevel || 'پایه تحصیلی',
-            classIds: draftData.selectedClassIds || [],
-            ...(draftData.excludedStudentIds && draftData.excludedStudentIds.length > 0 ? { excludedStudentIds: draftData.excludedStudentIds } : {}),
-            examDate: draftData.examDate || '۱۴۰۲/۱۲/۲۵',
-            startTime: '۰۹:۰۰',
-            durationMinutes: draftData.durationMinutes || 60,
-            maxScore: draftData.maxScore || 20,
-            ...(draftData.passingScore !== undefined ? { passingScore: draftData.passingScore } : {}),
-            term: 'term_1',
-            status: 'published',
-            evalType: draftData.examType === 'descriptive' ? 'descriptive' : 'numeric',
-            ...(draftData.examType ? { examType: draftData.examType } : {}),
-            ...(draftData.difficulty ? { difficulty: draftData.difficulty } : {}),
-            ...(draftData.attemptLimit !== undefined ? { attemptLimit: draftData.attemptLimit } : {}),
-            ...(draftData.canReviewAnswers !== undefined ? { canReviewAnswers: draftData.canReviewAnswers } : {}),
-            ...(draftData.resultReleasePolicy ? { resultReleasePolicy: draftData.resultReleasePolicy } : {}),
-            ...(draftData.allowBackNavigation !== undefined ? { allowBackNavigation: draftData.allowBackNavigation } : {}),
-            ...(draftData.allowUnansweredSubmission !== undefined ? { allowUnansweredSubmission: draftData.allowUnansweredSubmission } : {}),
-            ...(draftData.autoSubmitOnTimeout !== undefined ? { autoSubmitOnTimeout: draftData.autoSubmitOnTimeout } : {}),
-            ...(draftData.interruptionPolicy ? { interruptionPolicy: draftData.interruptionPolicy } : {}),
-            ...(draftData.randomizeQuestions !== undefined ? { randomizeQuestions: draftData.randomizeQuestions } : {}),
-            ...(draftData.randomizeOptions !== undefined ? { randomizeOptions: draftData.randomizeOptions } : {}),
-            ...(currentUser?.id ? { createdByTeacherId: currentUser.id } : {}),
-            ...(currentUser?.name ? { createdByTeacherName: currentUser.name } : {}),
-          });
-
-          // Save Questions
-          builderQuestions.forEach((q) => {
-            schoolStore.addExamQuestion({
-              ...q,
-              examId: newExam.id,
-            });
-          });
-
-          showToast({ title: 'آزمون منتشر شد', message: 'آزمون با موفقیت ساخته شد و در دسترس دانش‌آموزان قرار گرفت.', type: 'success' });
-          render();
-        }
-      },
-    });
-
-    modal.open();
-    renderStep();
-  };
 
   const renderActivityLogsPanel = (logs: any[]) => {
     const container = createElement('div', { className: 'bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-4 text-xs dir-rtl' });

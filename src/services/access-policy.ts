@@ -194,8 +194,14 @@ export class AccessPolicy {
           'teachers',
           'classes',
           'attendance',
+          'schedule',
+          'exams',
+          'exam-builder',
           'grades',
+          'counseling',
           'announcements',
+          'reports',
+          'payments',
           'settings',
         ].includes(sectionKey);
 
@@ -207,8 +213,10 @@ export class AccessPolicy {
           'attendance',
           'assignments',
           'exams',
+          'exam-builder',
           'grades',
           'materials',
+          'schedule',
         ].includes(sectionKey);
 
       case 'student':
@@ -230,6 +238,8 @@ export class AccessPolicy {
           'grades',
           'announcements',
           'messages',
+          'schedule',
+          'payments',
         ].includes(sectionKey);
 
       case 'counselor':
@@ -248,6 +258,9 @@ export class AccessPolicy {
           'instructors',
           'courses',
           'attendance',
+          'schedule',
+          'exams',
+          'exam-builder',
           'grades',
           'payments',
           'settings',
@@ -262,6 +275,7 @@ export class AccessPolicy {
           'attendance',
           'assignments',
           'exams',
+          'exam-builder',
           'grades',
           'materials',
         ].includes(sectionKey);

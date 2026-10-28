@@ -1,11 +1,15 @@
 /**
  * POLARIS TIMETABLE & SCHEDULING PAGE
- * Full Administrator Weekly Schedule Manager with Class, Teacher, and Configuration views,
- * slot editing, real-time synchronization, and conflict validation.
+ * Full Administrator Weekly Schedule Manager with 3 connected views:
+ * 1. Class Timetables («برنامه کلاس‌ها»)
+ * 2. Teacher Timetables («برنامه دبیران و معلمان»)
+ * 3. Schedule Settings & Periods Configuration («تنظیمات زنگ‌ها و روزهای آموزشی»)
+ * Real-time synchronization across class, teacher, student, and parent views,
+ * dynamic period structure management, and strict conflict detection.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
-import { TimetableSlot, ScheduleConfig } from '../../../types/school';
+import { PeriodDefinition, ScheduleConfig, TimetableSlot, WeekDay } from '../../../types/school';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
 import { authService } from '../../../services/auth-service';
@@ -14,69 +18,68 @@ import { Modal } from '../../../components/modal';
 import { showToast } from '../../../components/toast';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
 
+const ALL_WEEKDAYS: { key: WeekDay; title: string }[] = [
+  { key: 'saturday', title: 'شنبه' },
+  { key: 'sunday', title: 'یکشنبه' },
+  { key: 'monday', title: 'دوشنبه' },
+  { key: 'tuesday', title: 'سه‌شنبه' },
+  { key: 'wednesday', title: 'چهارشنبه' },
+  { key: 'thursday', title: 'پنج‌شنبه' },
+  { key: 'friday', title: 'جمعه' },
+];
+
 export function createTimetablePage(membership: OrganizationMembership): HTMLElement {
-  const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
+  const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in pb-12' });
   const orgId = membership.organizationId;
   const currentUser = authService.getCurrentUser();
 
   const isManagement = AccessPolicy.canManageOrgRecords(membership);
-  const isTeacher = membership.role === 'teacher' || membership.role === 'instructor';
+  const isTeacherRole = membership.role === 'teacher' || membership.role === 'instructor';
+  const isStudentRole = membership.role === 'student';
+  const isParentRole = membership.role === 'parent';
 
   let classes = schoolStore.getClasses(orgId);
-  if (isTeacher && currentUser) {
-    classes = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
+  const staff = schoolStore.getStaff(orgId);
+  const subjects = schoolStore.getSubjects(orgId);
+  const students = schoolStore.getStudents(orgId);
+
+  // Determine current student / linked child for student & parent views
+  let studentClassId = '';
+  if (isStudentRole && currentUser) {
+    const studentObj = students.find((s) => s.fullName === currentUser.name || s.studentCode === currentUser.phone) || students[0];
+    if (studentObj) studentClassId = studentObj.classId;
+  } else if (isParentRole) {
+    const linkedStudent = students[0];
+    if (linkedStudent) studentClassId = linkedStudent.classId;
   }
 
-  const subjects = schoolStore.getSubjects(orgId);
-  const staff = schoolStore.getStaff(orgId);
+  // Teacher filtered classes
+  if (isTeacherRole && currentUser) {
+    const teacherClasses = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
+    if (teacherClasses.length > 0) classes = teacherClasses;
+  }
 
-  // Active Tab state for Admin
-  let activeTab: 'class' | 'teacher' | 'config' = 'class';
-  let selectedClassId = classes.length > 0 ? classes[0]!.id : '';
-  let selectedTeacherId = staff.length > 0 ? staff[0]!.id : '';
+  // Active Tab & Selection States
+  let activeTab: 'class' | 'teacher' | 'config' = isTeacherRole ? 'teacher' : 'class';
+  let selectedClassId = studentClassId || (classes[0] ? classes[0].id : '');
 
-  const daysMap: { key: TimetableSlot['dayOfWeek']; title: string }[] = [
-    { key: 'saturday', title: 'شنبه' },
-    { key: 'sunday', title: 'یکشنبه' },
-    { key: 'monday', title: 'دوشنبه' },
-    { key: 'tuesday', title: 'سه‌شنبه' },
-    { key: 'wednesday', title: 'چهارشنبه' },
-  ];
-
-  // Calculate dynamic periods based on ScheduleConfig
-  const getDynamicPeriods = (config: ScheduleConfig) => {
-    const periods: { num: number; label: string; timeRange: string }[] = [];
-    const [startH, startM] = config.startTime.split(':').map((n) => parseInt(n, 10));
-    let currentTotalMin = (startH || 8) * 60 + (startM || 0);
-
-    for (let p = 1; p <= config.periodsCount; p++) {
-      const endTotalMin = currentTotalMin + config.periodDurationMinutes;
-
-      const formatTime = (totalMin: number) => {
-        const h = Math.floor(totalMin / 60) % 24;
-        const m = totalMin % 60;
-        const hStr = h < 10 ? '۰' + h.toLocaleString('fa-IR') : h.toLocaleString('fa-IR');
-        const mStr = m < 10 ? '۰' + m.toLocaleString('fa-IR') : m.toLocaleString('fa-IR');
-        return `${hStr}:${mStr}`;
-      };
-
-      const range = `${formatTime(currentTotalMin)} - ${formatTime(endTotalMin)}`;
-      periods.push({
-        num: p,
-        label: `زنگ ${p.toLocaleString('fa-IR')} (${range})`,
-        timeRange: range,
-      });
-
-      currentTotalMin = endTotalMin + config.breakDurationMinutes;
-    }
-    return periods;
-  };
+  // Find staff record for current teacher user if applicable
+  const currentTeacherStaff = currentUser ? schoolStore.getStaffByEmailOrPhone(orgId, currentUser.email || currentUser.phone || currentUser.id) : null;
+  let selectedTeacherId = currentTeacherStaff ? currentTeacherStaff.id : (staff[0] ? staff[0].id : '');
 
   const render = () => {
     rootWrapper.innerHTML = '';
 
     const config = schoolStore.getScheduleConfig(orgId);
-    const periodsMap = getDynamicPeriods(config);
+    const activeDaysKeys: WeekDay[] = config.activeDays && config.activeDays.length > 0
+      ? config.activeDays
+      : ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday'];
+
+    const activeDaysList = ALL_WEEKDAYS.filter((d) => activeDaysKeys.includes(d.key));
+    const periodsList: PeriodDefinition[] = config.periods && config.periods.length > 0
+      ? config.periods
+      : schoolStore.generateDefaultPeriods(config.periodsCount || 4, config.startTime || '08:00', config.periodDurationMinutes || 90, config.breakDurationMinutes || 20);
+
     const timetableSlots = schoolStore.getTimetable(orgId);
 
     // Header Row
@@ -88,54 +91,48 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     const title = createElement('h2', {
       className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('calendar', 'w-6 h-6 text-[#012622]')} مدیریت برنامه هفتگی`;
+    title.innerHTML = `${getDashboardIcon('calendar', 'w-6 h-6 text-[#012622]')} مدیریت برنامه هفتگی و زمان‌بندی آموزشی`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',
-      textContent: 'تنظیم برنامه هفتگی کلاس‌ها، برنامه تدریس معلمان، ساعت زنگ‌ها و همگام‌سازی لحظه‌ای همپوشانی‌ها.',
+      textContent: isManagement
+        ? 'مدیریت زنگ‌ها، روزهای فعال، برنامه درسی کلاس‌ها و برنامه تدریس معلمان با سیستم هوشمند پیشگیری از تداخل.'
+        : 'مشاهده برنامه هفتگی و زمان‌بندی رسمی کلاس‌های آموزشی.',
     });
 
     headerText.appendChild(title);
     headerText.appendChild(desc);
 
-    const actionGroup = createElement('div', { className: 'flex items-center gap-2' });
+    const actionGroup = createElement('div', { className: 'flex items-center gap-2 flex-wrap' });
 
     if (isManagement) {
       const publishBtn = createElement('button', {
-        className: `px-3.5 py-2.5 text-xs font-bold rounded-xl border transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+        className: `px-3.5 py-2 text-xs font-bold rounded-xl border transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
           config.isPublished
             ? 'bg-emerald-50 text-emerald-900 border-emerald-300 hover:bg-emerald-100'
             : 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100'
         }`,
         innerHTML: config.isPublished
-          ? `<svg class="w-4 h-4 text-emerald-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> منتشر شده`
-          : `⏳ پیش‌نویس (کلیک برای انتشار)`,
+          ? `✅ برنامه منتشر شده (کلیک برای پیش‌نویس)`
+          : `⏳ حالت پیش‌نویس (کلیک برای انتشار)`,
       });
       publishBtn.addEventListener('click', () => {
         schoolStore.updateScheduleConfig(orgId, { isPublished: !config.isPublished });
         showToast({
           title: config.isPublished ? 'تغییر به پیش‌نویس' : 'برنامه منتشر شد',
-          message: config.isPublished ? 'برنامه به حالت پیش‌نویس تغییر یافت.' : 'برنامه هفتگی جهت تمامی کاربران و اولیا منتشر گردید.',
+          message: config.isPublished ? 'برنامه به حالت پیش‌نویس تغییر یافت.' : 'برنامه هفتگی برای دانش‌آموزان، معلمان و اولیا منتشر گردید.',
           type: 'success',
         });
         render();
       });
 
-      const addBtn = createElement('button', {
-        className:
-          'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-        innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> افزودن زنگ جدید`,
-      });
-      addBtn.addEventListener('click', () => openSlotModal(config, periodsMap));
-
       actionGroup.appendChild(publishBtn);
-      actionGroup.appendChild(addBtn);
     } else {
       const statusBadge = createElement('span', {
         className: `px-3 py-1.5 rounded-xl text-xs font-bold ${
           config.isPublished ? 'bg-emerald-100 text-emerald-900 border border-emerald-200' : 'bg-amber-100 text-amber-900 border border-amber-200'
         }`,
-        textContent: config.isPublished ? 'برنامه منتشر شده' : 'پیش‌نویس (غیرقابل مشاهده عمومی)',
+        textContent: config.isPublished ? 'برنامه رسمی منتشر شده' : 'پیش‌نویس (غیرقابل مشاهده عمومی)',
       });
       actionGroup.appendChild(statusBadge);
     }
@@ -151,34 +148,25 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
         className: `px-4 py-2 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
           activeTab === 'class' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
-        textContent: 'برنامه هفتگی کلاس‌ها',
+        textContent: 'برنامه کلاس‌ها',
       });
-      classTab.addEventListener('click', () => {
-        activeTab = 'class';
-        render();
-      });
+      classTab.addEventListener('click', () => { activeTab = 'class'; render(); });
 
       const teacherTab = createElement('button', {
         className: `px-4 py-2 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
           activeTab === 'teacher' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
-        textContent: 'برنامه هفتگی معلمان',
+        textContent: 'برنامه دبیران و معلمان',
       });
-      teacherTab.addEventListener('click', () => {
-        activeTab = 'teacher';
-        render();
-      });
+      teacherTab.addEventListener('click', () => { activeTab = 'teacher'; render(); });
 
       const configTab = createElement('button', {
         className: `px-4 py-2 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
           activeTab === 'config' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
-        textContent: 'تنظیمات زنگ‌ها و ساعات',
+        textContent: 'تنظیمات زنگ‌ها و روزهای آموزشی',
       });
-      configTab.addEventListener('click', () => {
-        activeTab = 'config';
-        render();
-      });
+      configTab.addEventListener('click', () => { activeTab = 'config'; render(); });
 
       tabsNav.appendChild(classTab);
       tabsNav.appendChild(teacherTab);
@@ -190,71 +178,21 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       rootWrapper.appendChild(headerRow);
     }
 
-    // Config Tab View
+    // VIEW 3: SCHEDULE CONFIGURATION & PERIODS EDITOR
     if (isManagement && activeTab === 'config') {
-      const configCard = createElement('div', { className: 'bg-white p-6 rounded-2xl border border-gray-200/80 shadow-2xs space-y-5 max-w-2xl' });
-      configCard.innerHTML = `
-        <h3 class="font-extrabold text-sm text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2">
-          ${getDashboardIcon('settings', 'w-4 h-4 text-[#E98A15]')} پیکربندی زنگ‌ها و زمان‌بندی روزانه
-        </h3>
-
-        <form id="schedule-config-form" class="space-y-4 text-xs">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block font-bold mb-1">تعداد زنگ‌ها در روز *</label>
-              <input type="number" id="cfg-count" value="${config.periodsCount}" min="1" max="8" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
-            </div>
-            <div>
-              <label class="block font-bold mb-1">ساعت شروع اولین زنگ *</label>
-              <input type="text" id="cfg-start" value="${config.startTime}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" placeholder="08:00" />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block font-bold mb-1">مدت هر زنگ (دقیقه) *</label>
-              <input type="number" id="cfg-duration" value="${config.periodDurationMinutes}" min="30" max="180" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
-            </div>
-            <div>
-              <label class="block font-bold mb-1">مدت زنگ تفریح (دقیقه) *</label>
-              <input type="number" id="cfg-break" value="${config.breakDurationMinutes}" min="5" max="60" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
-            </div>
-          </div>
-
-          <div class="pt-3 border-t border-gray-100 flex justify-end">
-            <button type="submit" class="px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl transition-all cursor-pointer">
-              ذخیره تنظیمات زنگ‌ها
-            </button>
-          </div>
-        </form>
-      `;
-
-      const cfgForm = configCard.querySelector('#schedule-config-form') as HTMLFormElement;
-      cfgForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const periodsCount = parseInt((cfgForm.querySelector('#cfg-count') as HTMLInputElement).value, 10) || 4;
-        const startTime = (cfgForm.querySelector('#cfg-start') as HTMLInputElement).value.trim() || '08:00';
-        const periodDurationMinutes = parseInt((cfgForm.querySelector('#cfg-duration') as HTMLInputElement).value, 10) || 90;
-        const breakDurationMinutes = parseInt((cfgForm.querySelector('#cfg-break') as HTMLInputElement).value, 10) || 20;
-
-        schoolStore.updateScheduleConfig(orgId, { periodsCount, startTime, periodDurationMinutes, breakDurationMinutes });
-        showToast({ title: 'ذخیره شد', message: 'تنظیمات ساعت و زنگ‌ها با موفقیت بروزرسانی شد.', type: 'success' });
-        render();
-      });
-
-      rootWrapper.appendChild(configCard);
+      rootWrapper.appendChild(renderScheduleConfigView(config, periodsList, activeDaysKeys));
       return;
     }
 
-    // Toolbar Selector
+    // VIEW 1 & 2: CLASS / TEACHER TIMETABLE GRID
     const toolbar = createElement('div', {
-      className: 'bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center justify-between gap-3',
+      className: 'bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3',
     });
 
-    const selectorBox = createElement('div', { className: 'flex items-center gap-3' });
+    const selectorBox = createElement('div', { className: 'flex items-center gap-3 w-full sm:w-auto' });
 
-    if (activeTab === 'teacher') {
-      const teacherLabel = createElement('label', { className: 'text-xs font-bold text-gray-700 shrink-0', textContent: 'انتخاب معلم / مدرس:' });
+    if (activeTab === 'teacher' || (isTeacherRole && !isManagement)) {
+      const teacherLabel = createElement('label', { className: 'text-xs font-bold text-gray-700 shrink-0', textContent: 'دبیر / مدرس:' });
       const teacherSelect = createElement('select', {
         className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15] max-w-xs',
       });
@@ -273,7 +211,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       selectorBox.appendChild(teacherLabel);
       selectorBox.appendChild(teacherSelect);
     } else {
-      const classLabel = createElement('label', { className: 'text-xs font-bold text-gray-700 shrink-0', textContent: isTeacher ? 'کلاس مدرس:' : 'انتخاب کلاس:' });
+      const classLabel = createElement('label', { className: 'text-xs font-bold text-gray-700 shrink-0', textContent: 'انتخاب کلاس:' });
       const classSelect = createElement('select', {
         className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15] max-w-xs',
       });
@@ -294,52 +232,52 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     }
 
     const timingBadge = createElement('div', {
-      className: 'text-xs font-mono font-bold text-gray-600 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-200',
-      textContent: `شروع: ${config.startTime} | مدت زنگ: ${config.periodDurationMinutes} دقیقه‌`,
+      className: 'text-xs font-mono font-bold text-gray-600 bg-gray-50 px-3.5 py-2 rounded-xl border border-gray-200',
+      textContent: `تعداد زنگ‌ها: ${periodsList.length.toLocaleString('fa-IR')} | روزهای فعال: ${activeDaysList.length.toLocaleString('fa-IR')} روز`,
     });
 
     toolbar.appendChild(selectorBox);
     toolbar.appendChild(timingBadge);
 
-    // Filter Slots
+    // Filter Slots based on active view
     let displaySlots = timetableSlots;
-    if (activeTab === 'teacher') {
+    if (activeTab === 'teacher' || (isTeacherRole && !isManagement)) {
       displaySlots = timetableSlots.filter((s) => s.teacherId === selectedTeacherId);
-    } else if (isTeacher && currentUser) {
-      const staffMem = schoolStore.getStaffByEmailOrPhone(orgId, currentUser.email || currentUser.phone || currentUser.id);
-      if (staffMem) {
-        displaySlots = timetableSlots.filter((s) => s.teacherId === staffMem.id);
-      } else {
-        displaySlots = timetableSlots.filter((s) => s.classId === selectedClassId);
-      }
     } else {
       displaySlots = timetableSlots.filter((s) => s.classId === selectedClassId);
     }
 
     // Timetable Grid Table
     const tableContainer = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 shadow-2xs overflow-x-auto' });
-    const table = createElement('table', { className: 'polaris-table min-w-[700px]' });
+    const table = createElement('table', { className: 'polaris-table min-w-[700px] w-full' });
 
     const thead = createElement('thead');
     const headerTr = createElement('tr');
     headerTr.appendChild(createElement('th', { className: 'w-32 text-center', textContent: 'روز / زنگ' }));
 
-    periodsMap.forEach((p) => {
-      headerTr.appendChild(createElement('th', { className: 'text-center', textContent: p.label }));
+    periodsList.forEach((p) => {
+      headerTr.appendChild(createElement('th', { className: 'text-center', textContent: p.name || `زنگ ${p.number}` }));
     });
     thead.appendChild(headerTr);
     table.appendChild(thead);
 
     const tbody = createElement('tbody');
 
-    daysMap.forEach((day) => {
+    activeDaysList.forEach((day) => {
       const tr = createElement('tr');
       const dayTd = createElement('td', { className: 'font-extrabold text-xs text-gray-900 text-center bg-gray-50/80', textContent: day.title });
       tr.appendChild(dayTd);
 
-      periodsMap.forEach((period) => {
-        const slot = displaySlots.find((s) => s.dayOfWeek === day.key && s.periodNumber === period.num);
+      periodsList.forEach((period) => {
         const td = createElement('td', { className: 'text-center p-2' });
+
+        if (period.isBreak) {
+          td.innerHTML = `<span class="text-[11px] text-amber-800 bg-amber-50 px-2 py-1 rounded-lg font-bold">☕ زنگ تفریح</span>`;
+          tr.appendChild(td);
+          return;
+        }
+
+        const slot = displaySlots.find((s) => s.dayOfWeek === day.key && s.periodNumber === period.number);
 
         if (slot) {
           const clsObj = classes.find((c) => c.id === slot.classId);
@@ -349,11 +287,11 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
           slotBox.innerHTML = `
             <div class="font-bold text-xs text-[#012622]">${slot.subjectName}</div>
             <div class="text-[10px] text-gray-600 font-medium">${activeTab === 'teacher' ? `کلاس: ${clsObj ? clsObj.name : 'نامشخص'}` : slot.teacherName}</div>
-            <div class="text-[10px] text-gray-500 font-mono">اتاق ${slot.roomNumber}</div>
+            <div class="text-[10px] text-gray-500 font-mono">${slot.timeLabel || `${period.startTime} - ${period.endTime}`} | ${slot.roomNumber || '۱۰۱'}</div>
           `;
 
           if (isManagement) {
-            slotBox.addEventListener('click', () => openSlotModal(config, periodsMap, day.key, period.num, slot));
+            slotBox.addEventListener('click', () => openSlotModal(periodsList, day.key, period.number, slot));
           }
 
           td.appendChild(slotBox);
@@ -361,9 +299,9 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
           if (isManagement) {
             const emptyBtn = createElement('button', {
               className: 'w-full py-3 rounded-xl border border-dashed border-gray-200 text-gray-400 hover:border-[#012622] hover:text-[#012622] text-[11px] font-bold transition-all cursor-pointer',
-              textContent: '+ جدید',
+              textContent: '+ افزودن درس',
             });
-            emptyBtn.addEventListener('click', () => openSlotModal(config, periodsMap, day.key, period.num));
+            emptyBtn.addEventListener('click', () => openSlotModal(periodsList, day.key, period.number));
             td.appendChild(emptyBtn);
           } else {
             td.innerHTML = `<span class="text-xs text-gray-300 font-bold">—</span>`;
@@ -383,11 +321,145 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     rootWrapper.appendChild(tableContainer);
   };
 
+  // --- VIEW 3: CONFIGURATION FORM ---
+  const renderScheduleConfigView = (_config: ScheduleConfig, periods: PeriodDefinition[], activeDays: WeekDay[]): HTMLElement => {
+    const container = createElement('div', { className: 'space-y-6 dir-rtl text-xs' });
+
+    // Active Weekdays Config Card
+    const daysCard = createElement('div', { className: 'bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-3' });
+    daysCard.innerHTML = `
+      <h3 class="font-extrabold text-sm text-[#012622] flex items-center gap-2">
+        📅 روزهای آموزشی فعال مدرسه / مرکز
+      </h3>
+      <p class="text-gray-500 text-[11px]">روزهایی که کلاس‌های آموزشی در آن‌ها برگزار می‌شوند را مشخص کنید.</p>
+
+      <div class="flex items-center gap-3 flex-wrap pt-2">
+        ${ALL_WEEKDAYS.map((d) => {
+          const isActive = activeDays.includes(d.key);
+          return `
+            <label class="p-2.5 px-4 rounded-xl border ${isActive ? 'bg-[#012622] text-white border-[#012622]' : 'bg-gray-50 text-gray-700 border-gray-200'} flex items-center gap-2 cursor-pointer font-bold transition-all">
+              <input type="checkbox" value="${d.key}" class="day-chk text-[#E98A15]" ${isActive ? 'checked' : ''} />
+              <span>${d.title}</span>
+            </label>
+          `;
+        }).join('')}
+      </div>
+    `;
+
+    daysCard.querySelectorAll('.day-chk').forEach((chk) => {
+      chk.addEventListener('change', () => {
+        const selectedDays = Array.from(daysCard.querySelectorAll('.day-chk:checked')).map((el) => (el as HTMLInputElement).value as WeekDay);
+        schoolStore.updateScheduleConfig(orgId, { activeDays: selectedDays });
+        showToast({ title: 'بروز شد', message: 'روزهای کاری فعال تغییر یافت.', type: 'info' });
+        render();
+      });
+    });
+
+    // Periods Structure Card
+    const periodsCard = createElement('div', { className: 'bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-4' });
+    const pHeader = createElement('div', { className: 'flex items-center justify-between border-b border-gray-100 pb-3' });
+    pHeader.innerHTML = `
+      <div>
+        <h3 class="font-extrabold text-sm text-[#012622]">⏰ زنگ‌های درسی و تفریح</h3>
+        <p class="text-gray-500 text-[11px]">تعریف نام، زمان شروع و پایان و نوع زنگ (آموزشی یا تفریح).</p>
+      </div>
+      <button type="button" id="btn-add-period" class="px-3.5 py-2 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl text-xs transition-all cursor-pointer">
+        + افزودن زنگ جدید
+      </button>
+    `;
+
+    const pList = createElement('div', { className: 'space-y-3' });
+
+    periods.forEach((p, idx) => {
+      const row = createElement('div', { className: 'p-3 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3' });
+
+      row.innerHTML = `
+        <div class="flex items-center gap-2 flex-1">
+          <span class="w-6 h-6 rounded-full bg-[#012622] text-white flex items-center justify-center font-bold text-xs font-mono">${(idx + 1).toLocaleString('fa-IR')}</span>
+          <input type="text" value="${p.name}" class="p-name-input bg-white border border-gray-300 rounded-lg p-1.5 text-xs font-bold w-48" placeholder="نام زنگ..." />
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div>
+            <span class="text-[10px] text-gray-500 font-bold block">زمان شروع:</span>
+            <input type="text" value="${p.startTime}" class="p-start-input bg-white border border-gray-300 rounded-lg p-1.5 text-xs font-mono font-bold w-20 text-center" />
+          </div>
+          <div>
+            <span class="text-[10px] text-gray-500 font-bold block">زمان پایان:</span>
+            <input type="text" value="${p.endTime}" class="p-end-input bg-white border border-gray-300 rounded-lg p-1.5 text-xs font-mono font-bold w-20 text-center" />
+          </div>
+
+          <label class="flex items-center gap-1.5 cursor-pointer font-bold text-amber-900 bg-amber-50 p-1.5 rounded-lg border border-amber-200">
+            <input type="checkbox" class="p-break-input" ${p.isBreak ? 'checked' : ''} />
+            <span>زنگ تفریح</span>
+          </label>
+
+          <button type="button" class="btn-del-period p-1.5 bg-rose-50 text-rose-700 hover:bg-rose-100 rounded-lg font-bold cursor-pointer" title="حذف زنگ">🗑️</button>
+        </div>
+      `;
+
+      // Handlers
+      const nameInput = row.querySelector('.p-name-input') as HTMLInputElement;
+      const startInput = row.querySelector('.p-start-input') as HTMLInputElement;
+      const endInput = row.querySelector('.p-end-input') as HTMLInputElement;
+      const breakInput = row.querySelector('.p-break-input') as HTMLInputElement;
+
+      const savePeriodsChange = () => {
+        p.name = nameInput.value;
+        p.startTime = startInput.value;
+        p.endTime = endInput.value;
+        p.isBreak = breakInput.checked;
+        schoolStore.updateScheduleConfig(orgId, { periods });
+      };
+
+      nameInput.addEventListener('input', savePeriodsChange);
+      startInput.addEventListener('input', savePeriodsChange);
+      endInput.addEventListener('input', savePeriodsChange);
+      breakInput.addEventListener('change', savePeriodsChange);
+
+      row.querySelector('.btn-del-period')!.addEventListener('click', () => {
+        if (confirm(`آیا از حذف «${p.name}» اطمینان دارید؟`)) {
+          const updatedPeriods = periods.filter((item) => item.id !== p.id);
+          schoolStore.updateScheduleConfig(orgId, { periods: updatedPeriods });
+          showToast({ title: 'حذف شد', message: 'زنگ انتخابی حذف گردید.', type: 'info' });
+          render();
+        }
+      });
+
+      pList.appendChild(row);
+    });
+
+    periodsCard.appendChild(pHeader);
+    periodsCard.appendChild(pList);
+
+    pHeader.querySelector('#btn-add-period')!.addEventListener('click', () => {
+      const lastPeriod = periods[periods.length - 1];
+      const newNum = periods.length + 1;
+      const newPeriod: PeriodDefinition = {
+        id: `p-${Date.now().toString(36)}`,
+        number: newNum,
+        name: `زنگ ${newNum.toLocaleString('fa-IR')}`,
+        startTime: lastPeriod ? lastPeriod.endTime : '08:00',
+        endTime: '10:00',
+        isBreak: false,
+      };
+      periods.push(newPeriod);
+      schoolStore.updateScheduleConfig(orgId, { periods });
+      showToast({ title: 'افزوده شد', message: 'زنگ جدید به برنامه زمان‌بندی اضافه شد.', type: 'success' });
+      render();
+    });
+
+    container.appendChild(daysCard);
+    container.appendChild(periodsCard);
+
+    return container;
+  };
+
+  // --- SLOT EDIT / ADD MODAL WITH STRICT CONFLICT VALIDATION ---
   const openSlotModal = (
-    _config: ScheduleConfig,
-    periodsMap: { num: number; label: string; timeRange: string }[],
-    presetDay?: TimetableSlot['dayOfWeek'],
-    presetPeriod?: number,
+    periodsList: PeriodDefinition[],
+    presetDay?: WeekDay,
+    presetPeriodNum?: number,
     existingSlot?: TimetableSlot
   ) => {
     const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
@@ -398,14 +470,14 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     form.innerHTML = `
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label class="block font-bold mb-1">کلاس / گروه *</label>
-          <select id="slot-class" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
+          <label class="block font-bold mb-1">کلاس / گروه آموزشی *</label>
+          <select id="slot-class" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-extrabold">
             ${classes.map((c) => `<option value="${c.id}" ${currentClassVal === c.id ? 'selected' : ''}>${c.name} (${c.gradeLevel})</option>`).join('')}
           </select>
         </div>
         <div>
-          <label class="block font-bold mb-1">استاد / معلم *</label>
-          <select id="slot-teacher" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
+          <label class="block font-bold mb-1">استاد / مدرس *</label>
+          <select id="slot-teacher" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
             ${staff.map((st) => `<option value="${st.id}" ${currentTeacherVal === st.id ? 'selected' : ''}>${st.fullName} (${st.roleTitle})</option>`).join('')}
           </select>
         </div>
@@ -414,18 +486,14 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">روز هفته *</label>
-          <select id="slot-day" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
-            ${daysMap
-              .map((d) => `<option value="${d.key}" ${(existingSlot ? existingSlot.dayOfWeek : presetDay) === d.key ? 'selected' : ''}>${d.title}</option>`)
-              .join('')}
+          <select id="slot-day" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
+            ${ALL_WEEKDAYS.map((d) => `<option value="${d.key}" ${(existingSlot ? existingSlot.dayOfWeek : presetDay) === d.key ? 'selected' : ''}>${d.title}</option>`).join('')}
           </select>
         </div>
         <div>
           <label class="block font-bold mb-1">زنگ آموزشی *</label>
-          <select id="slot-period" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
-            ${periodsMap
-              .map((p) => `<option value="${p.num}" ${(existingSlot ? existingSlot.periodNumber : presetPeriod) === p.num ? 'selected' : ''}>${p.label}</option>`)
-              .join('')}
+          <select id="slot-period" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
+            ${periodsList.map((p) => `<option value="${p.number}" ${(existingSlot ? existingSlot.periodNumber : presetPeriodNum) === p.number ? 'selected' : ''}>${p.name} (${p.startTime} - ${p.endTime})</option>`).join('')}
           </select>
         </div>
       </div>
@@ -433,13 +501,13 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">درس آموزشی *</label>
-          <select id="slot-subject" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
+          <select id="slot-subject" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
             ${subjects.map((sb) => `<option value="${sb.id}" ${existingSlot && existingSlot.subjectId === sb.id ? 'selected' : ''}>${sb.name} (${sb.gradeLevel})</option>`).join('')}
           </select>
         </div>
         <div>
-          <label class="block font-bold mb-1">شماره اتاق / مکان</label>
-          <input type="text" id="slot-room" value="${existingSlot ? existingSlot.roomNumber : '۱۰۱'}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
+          <label class="block font-bold mb-1">شماره اتاق / کلاس درس</label>
+          <input type="text" id="slot-room" value="${existingSlot ? existingSlot.roomNumber : '۱۰۱'}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono font-bold" />
         </div>
       </div>
 
@@ -448,7 +516,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
           <button type="button" id="btn-delete-slot" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl transition-all cursor-pointer">
             حذف این زنگ
           </button>
-          <span class="text-[10px] text-gray-500">جهت ویرایش مقادیر فوق را تغییر دهید.</span>
+          <span class="text-[10px] text-gray-500">ویرایش و ذخیره مقادیر.</span>
         </div>
       ` : ''}
     `;
@@ -470,12 +538,12 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     const modal = new Modal({
       title: existingSlot ? 'ویرایش زنگ درسی' : 'افزودن زنگ درسی به برنامه هفتگی',
       content: form,
-      confirmText: existingSlot ? 'ذخیره تغییرات' : 'بررسی و ثبت',
+      confirmText: existingSlot ? 'ذخیره تغییرات' : 'بررسی و ثبت زنگ',
       cancelText: 'انصراف',
       onConfirm: () => {
         const classId = (form.querySelector('#slot-class') as HTMLSelectElement).value;
         const teacherId = (form.querySelector('#slot-teacher') as HTMLSelectElement).value;
-        const dayOfWeek = (form.querySelector('#slot-day') as HTMLSelectElement).value as TimetableSlot['dayOfWeek'];
+        const dayOfWeek = (form.querySelector('#slot-day') as HTMLSelectElement).value as WeekDay;
         const periodNumber = parseInt((form.querySelector('#slot-period') as HTMLSelectElement).value, 10);
         const subjectId = (form.querySelector('#slot-subject') as HTMLSelectElement).value;
         const roomNumber = (form.querySelector('#slot-room') as HTMLInputElement).value.trim();
@@ -490,7 +558,8 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
           periodNumber,
           classId,
           teacherId,
-          existingSlot ? existingSlot.id : undefined
+          existingSlot ? existingSlot.id : undefined,
+          roomNumber
         );
 
         if (conflict.hasConflict) {
@@ -498,14 +567,15 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
           return;
         }
 
-        const periodLabel = periodsMap.find((p) => p.num === periodNumber)?.label.split('(')[1]?.replace(')', '') || '۰۸:۰۰ - ۰۹:۳۰';
+        const periodDef = periodsList.find((p) => p.number === periodNumber);
+        const timeLabel = periodDef ? `${periodDef.startTime} - ${periodDef.endTime}` : '۰۸:۰۰ - ۰۹:۳۰';
 
         if (existingSlot) {
           schoolStore.updateTimetableSlot(existingSlot.id, {
             classId,
             dayOfWeek,
             periodNumber,
-            timeLabel: periodLabel,
+            timeLabel,
             subjectId,
             subjectName: sbjObj ? sbjObj.name : 'درس نامشخص',
             teacherId,
@@ -519,7 +589,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
             classId,
             dayOfWeek,
             periodNumber,
-            timeLabel: periodLabel,
+            timeLabel,
             subjectId,
             subjectName: sbjObj ? sbjObj.name : 'درس نامشخص',
             teacherId,

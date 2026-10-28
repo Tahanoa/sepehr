@@ -31,6 +31,8 @@ import {
   SupportTicket,
   WeeklyGradebookNote,
   ScheduleConfig,
+  PeriodDefinition,
+  WeekDay,
   ParentConversation,
   ParentConversationMessage,
 } from '../types/school';
@@ -625,22 +627,43 @@ class SchoolStoreService {
 
   public checkTimetableConflict(
     orgId: string,
-    dayOfWeek: TimetableSlot['dayOfWeek'],
+    dayOfWeek: WeekDay,
     periodNumber: number,
     classId: string,
     teacherId: string,
-    excludeId?: string
+    excludeId?: string,
+    roomNumber?: string
   ): { hasConflict: boolean; reason?: string } {
     const slots = this.getTimetable(orgId).filter((s) => s.id !== excludeId);
 
+    const dayLabels: Record<WeekDay, string> = {
+      saturday: 'شنبه',
+      sunday: 'یکشنبه',
+      monday: 'دوشنبه',
+      tuesday: 'سه‌شنبه',
+      wednesday: 'چهارشنبه',
+      thursday: 'پنج‌شنبه',
+      friday: 'جمعه',
+    };
+    const dayStr = dayLabels[dayOfWeek] || dayOfWeek;
+
     const classConflict = slots.find((s) => s.classId === classId && s.dayOfWeek === dayOfWeek && s.periodNumber === periodNumber);
     if (classConflict) {
-      return { hasConflict: true, reason: `کلاس در زنگ ${periodNumber.toLocaleString('fa-IR')} دارای درس «${classConflict.subjectName}» است.` };
+      return { hasConflict: true, reason: `کلاس در روز ${dayStr} و زنگ ${periodNumber.toLocaleString('fa-IR')} دارای درس «${classConflict.subjectName}» است.` };
     }
 
     const teacherConflict = slots.find((s) => s.teacherId === teacherId && s.dayOfWeek === dayOfWeek && s.periodNumber === periodNumber);
     if (teacherConflict) {
-      return { hasConflict: true, reason: `استاد (${teacherConflict.teacherName}) در این زمان در کلاس «${teacherConflict.subjectName}» مشغول به تدریس است.` };
+      return { hasConflict: true, reason: `استاد (${teacherConflict.teacherName}) در روز ${dayStr} و زنگ ${periodNumber.toLocaleString('fa-IR')} در کلاس «${teacherConflict.subjectName}» مشغول به تدریس است.` };
+    }
+
+    if (roomNumber && roomNumber.trim()) {
+      const roomConflict = slots.find(
+        (s) => s.roomNumber && s.roomNumber.trim().toLowerCase() === roomNumber.trim().toLowerCase() && s.dayOfWeek === dayOfWeek && s.periodNumber === periodNumber
+      );
+      if (roomConflict) {
+        return { hasConflict: true, reason: `اتاق/کلاس «${roomNumber}» در روز ${dayStr} و زنگ ${periodNumber.toLocaleString('fa-IR')} توسط کلاس «${roomConflict.subjectName}» رزرو شده است.` };
+      }
     }
 
     return { hasConflict: false };
@@ -1180,19 +1203,66 @@ class SchoolStoreService {
 
   // --- Schedule Config ---
   public getScheduleConfig(orgId: string): ScheduleConfig {
-    if (this.state.scheduleConfigs[orgId]) {
-      return this.state.scheduleConfigs[orgId]!;
+    let cfg = this.state.scheduleConfigs[orgId];
+    if (!cfg) {
+      cfg = {
+        organizationId: orgId,
+        periodsCount: 4,
+        startTime: '08:00',
+        periodDurationMinutes: 90,
+        breakDurationMinutes: 30,
+        isPublished: true,
+        activeDays: ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday'],
+      };
+      this.state.scheduleConfigs[orgId] = cfg;
     }
-    const defaultConfig: ScheduleConfig = {
-      organizationId: orgId,
-      periodsCount: 4,
-      startTime: '08:00',
-      periodDurationMinutes: 90,
-      breakDurationMinutes: 30,
-      isPublished: true,
-    };
-    this.state.scheduleConfigs[orgId] = defaultConfig;
-    return defaultConfig;
+
+    if (!cfg.activeDays || cfg.activeDays.length === 0) {
+      cfg.activeDays = ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday'];
+    }
+
+    if (!cfg.periods || cfg.periods.length === 0) {
+      cfg.periods = this.generateDefaultPeriods(
+        cfg.periodsCount || 4,
+        cfg.startTime || '08:00',
+        cfg.periodDurationMinutes || 90,
+        cfg.breakDurationMinutes || 20
+      );
+    }
+
+    return cfg;
+  }
+
+  public generateDefaultPeriods(periodsCount: number, startTimeStr: string, durationMin: number, breakMin: number): PeriodDefinition[] {
+    const periods: PeriodDefinition[] = [];
+    const [startH, startM] = (startTimeStr || '08:00').split(':').map((n) => parseInt(n, 10));
+    let currentTotalMin = (startH || 8) * 60 + (startM || 0);
+
+    for (let p = 1; p <= periodsCount; p++) {
+      const endTotalMin = currentTotalMin + durationMin;
+
+      const formatTime = (totalMin: number) => {
+        const h = Math.floor(totalMin / 60) % 24;
+        const m = totalMin % 60;
+        const hStr = h < 10 ? '۰' + h.toLocaleString('fa-IR') : h.toLocaleString('fa-IR');
+        const mStr = m < 10 ? '۰' + m.toLocaleString('fa-IR') : m.toLocaleString('fa-IR');
+        return `${hStr}:${mStr}`;
+      };
+
+      const range = `${formatTime(currentTotalMin)} - ${formatTime(endTotalMin)}`;
+
+      periods.push({
+        id: `p-${p}`,
+        number: p,
+        name: `زنگ ${p.toLocaleString('fa-IR')} (${range})`,
+        startTime: formatTime(currentTotalMin),
+        endTime: formatTime(endTotalMin),
+        isBreak: false,
+      });
+
+      currentTotalMin = endTotalMin + breakMin;
+    }
+    return periods;
   }
 
   public updateScheduleConfig(orgId: string, config: Partial<ScheduleConfig>): ScheduleConfig {

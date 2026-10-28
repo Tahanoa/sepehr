@@ -10,6 +10,7 @@ import { createParentMessagesPage } from './parent-messages';
 import { createStudentPaymentsPage } from '../student/student-payments';
 import { createAnnouncementsPage } from '../admin/announcements-page';
 import { createStudentsPage } from '../admin/students-page';
+import { createTimetablePage } from '../admin/timetable-page';
 import { createDashboardNotFoundPage } from '../../../components/dashboard/route-pages';
 
 export function renderParentSection(sectionKey: string, membership: OrganizationMembership): HTMLElement {
@@ -28,6 +29,8 @@ export function renderParentSection(sectionKey: string, membership: Organization
       return createAnnouncementsPage(membership);
     case 'messages':
       return createParentMessagesPage(membership);
+    case 'schedule':
+      return createTimetablePage(membership);
     case 'payments':
       return createStudentPaymentsPage(membership);
     default:

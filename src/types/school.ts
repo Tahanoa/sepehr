@@ -82,11 +82,22 @@ export interface AttendanceRecord {
   notes?: string;
 }
 
+export type WeekDay = 'saturday' | 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday';
+
+export interface PeriodDefinition {
+  id: string;
+  number: number;
+  name: string; // e.g. "زنگ اول", "زنگ تفریح"
+  startTime: string; // e.g. "08:00"
+  endTime: string; // e.g. "09:30"
+  isBreak?: boolean;
+}
+
 export interface TimetableSlot {
   id: string;
   organizationId: string;
   classId: string;
-  dayOfWeek: 'saturday' | 'sunday' | 'monday' | 'tuesday' | 'wednesday';
+  dayOfWeek: WeekDay;
   periodNumber: number; // 1, 2, 3, 4, 5
   timeLabel: string; // e.g. "08:00 - 09:30"
   subjectId: string;
@@ -432,6 +443,8 @@ export interface ScheduleConfig {
   periodDurationMinutes: number; // e.g. 90
   breakDurationMinutes: number; // e.g. 30
   isPublished: boolean;
+  activeDays?: WeekDay[];
+  periods?: PeriodDefinition[];
 }
 
 export interface ParentConversationMessage {
