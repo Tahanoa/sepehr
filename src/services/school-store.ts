@@ -229,15 +229,15 @@ const DEFAULT_COUNSELING: CounselingReferral[] = [
 ];
 
 const DEFAULT_ANNOUNCEMENTS: Announcement[] = [
-  { id: 'anc-1', organizationId: 'org-102', title: 'برگزاری جشن شکرگزاری حروف الفبا', content: 'اولیا محترم پایه اول، مراسم جشن الفبا روز سه‌شنبه برگزار خواهد شد.', audience: 'parents', targetGrade: 'پایه اول', authorName: 'مدیر دبستان آفتاب', createdAt: '۱۴۰۲/۱۲/۰۲', isPublished: true, priority: 'important' },
+  { id: 'anc-1', organizationId: 'org-102', title: 'برگزاری جشن شکرگزاری حروف الفبا', content: 'اولیا محترم پایه اول، مراسم جشن الفبا روز سه‌شنبه برگزار خواهد شد.', audience: 'parents', targetGrade: 'پایه اول', authorName: 'مدیر دبستان سپهر', createdAt: '۱۴۰۲/۱۲/۰۲', isPublished: true, priority: 'important' },
   { id: 'anc-2', organizationId: 'org-101', title: 'جدول زمانی امتحانات شبه‌نهایی کنکور', content: 'برنامه‌ زمانی آزمون‌های آزمایشی پایه دوازدهم روی سامانه قرار گرفت.', audience: 'all', authorName: 'دکتر علیرضا رضایی', createdAt: '۱۴۰۲/۱۲/۰۱', isPublished: true, priority: 'urgent' },
 ];
 
 const DEFAULT_SETTINGS: Record<string, SchoolSettings> = {
-  'org-101': { organizationId: 'org-101', schoolName: 'دبیرستان هوشمند البرز', principalName: 'دکتر علیرضا رضایی', phone: '۰۲۱-۸۸۹۹۰۰۱۱', address: 'تهران، خیابان انقلاب، خیابان البرز', academicYear: '۱۴۰۳ - ۱۴۰۲', termName: 'نیم‌سال دوم', allowParentMessaging: true, autoAttendanceAlerts: true, passingScore: 10 },
-  'org-102': { organizationId: 'org-102', schoolName: 'دبستان و پیش‌دبستانی آفتاب', principalName: 'خانم علیرضا رضایی (سرپرست)', phone: '۰۲۱-۲۲۳۳۴۴۵۵', address: 'تهران، پاسداران، بوستان چهارم', academicYear: '۱۴۰۳ - ۱۴۰۲', termName: 'ترم دوم', allowParentMessaging: true, autoAttendanceAlerts: true, passingScore: 7 },
-  'org-103': { organizationId: 'org-103', schoolName: 'آموزشگاه زبان و علوم دانش‌نیک', principalName: 'مهندس مهدی احمدی', phone: '۰۲۱-۶۶۷۷۸۸۹۹', address: 'تهران، خیابان ولیعصر، نرسیده به ونک', academicYear: 'ترم بهار ۱۴۰۳', termName: 'ترم بهار', allowParentMessaging: true, autoAttendanceAlerts: true, passingScore: 70 },
-  'org-104': { organizationId: 'org-104', schoolName: 'مجتمع آموزشی جامع حکمت', principalName: 'دکتر علیرضا رضایی', phone: '۰۲۱-۴۴۵۵۶۶۷۷', address: 'تهران، شهرک غرب، بلوار دادمان', academicYear: '۱۴۰۳ - ۱۴۰۲', termName: 'نیم‌سال دوم', allowParentMessaging: true, autoAttendanceAlerts: true, passingScore: 10 },
+  'org-101': { organizationId: 'org-101', schoolName: 'دبیرستان سپهر', principalName: 'دکتر علیرضا رضایی', phone: '۰۲۱-۸۸۹۹۰۰۱۱', address: 'تهران، خیابان انقلاب، خیابان البرز', academicYear: '۱۴۰۳ - ۱۴۰۲', termName: 'نیم‌سال دوم', allowParentMessaging: true, autoAttendanceAlerts: true, passingScore: 10 },
+  'org-102': { organizationId: 'org-102', schoolName: 'دبستان سپهر', principalName: 'خانم علیرضا رضایی (سرپرست)', phone: '۰۲۱-۲۲۳۳۴۴۵۵', address: 'تهران، پاسداران، بوستان چهارم', academicYear: '۱۴۰۳ - ۱۴۰۲', termName: 'ترم دوم', allowParentMessaging: true, autoAttendanceAlerts: true, passingScore: 7 },
+  'org-103': { organizationId: 'org-103', schoolName: 'آموزشگاه سپهر', principalName: 'مهندس مهدی احمدی', phone: '۰۲۱-۶۶۷۷۸۸۹۹', address: 'تهران، خیابان ولیعصر، نرسیده به ونک', academicYear: 'ترم بهار ۱۴۰۳', termName: 'ترم بهار', allowParentMessaging: true, autoAttendanceAlerts: true, passingScore: 70 },
+  'org-104': { organizationId: 'org-104', schoolName: 'مجتمع آموزشی سپهر', principalName: 'دکتر علیرضا رضایی', phone: '۰۲۱-۴۴۵۵۶۶۷۷', address: 'تهران، شهرک غرب، بلوار دادمان', academicYear: '۱۴۰۳ - ۱۴۰۲', termName: 'نیم‌سال دوم', allowParentMessaging: true, autoAttendanceAlerts: true, passingScore: 10 },
 };
 
 const DEFAULT_WEEKLY_NOTES: WeeklyGradebookNote[] = [
@@ -1389,3 +1389,4 @@ class SchoolStoreService {
 }
 
 export const schoolStore = new SchoolStoreService();
+

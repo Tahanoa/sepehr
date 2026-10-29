@@ -9,10 +9,10 @@ export function createAboutPage(): HTMLElement {
 
   const hero = createElement('div', { className: 'text-center space-y-4 max-w-3xl mx-auto' });
   hero.innerHTML = `
-    <span class="px-3 py-1 rounded-full bg-brand-amber/10 text-brand-amber text-xs font-bold">درباره سامانه سپهر</span>
-    <h1 class="text-3xl sm:text-4xl font-semibold text-brand-evergreen">تسهیل و هوشمندسازی مدیریت آموزش</h1>
+    <span class="px-3 py-1 rounded-full bg-brand-amber/10 text-brand-amber text-xs font-bold">درباره تیم پولاریس</span>
+    <h1 class="text-3xl sm:text-4xl font-semibold text-brand-evergreen">پولاریس، سازندهٔ بستر مدیریتی سپهر</h1>
     <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
-      سپهر یک پلتفرم ابری مدرن است که با هدف رفع چالش‌های متعدد مدیران، معلمان و اولیا در فرایندهای آموزشی کشور توسعه یافته است.
+      تیم پولاریس بستر مدیریتی سپهر را برای دبستان، دبیرستان و آموزشگاه سپهر طراحی و توسعه داده است؛ با تمرکز بر نیازهای مدیران، معلمان، دانش‌آموزان و خانواده‌ها.
     </p>
   `;
   container.appendChild(hero);
@@ -100,3 +100,4 @@ export function createNotFoundPage(): HTMLElement {
 
   return container;
 }
+

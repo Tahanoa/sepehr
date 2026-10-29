@@ -13,7 +13,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { label: 'صفحه اصلی', path: '/' },
   { label: 'طرح‌ها و بسته‌ها', path: '/plans' },
-  { label: 'درباره سپهر', path: '/about' },
+  { label: 'درباره پولاریس', path: '/about' },
   { label: 'تماس با ما', path: '/contact' },
 ];
 
@@ -44,11 +44,11 @@ export function createPublicHeader(currentPath: string): HTMLElement {
   const logoText = createElement('div', { className: 'flex flex-col' });
   const brandName = createElement('span', {
     className: 'text-xl font-bold text-brand-evergreen tracking-tight',
-    textContent: 'سپهر',
+    textContent: 'پولاریس',
   });
   const brandSub = createElement('span', {
     className: 'text-[11px] font-medium text-gray-500 -mt-1',
-    textContent: 'سامانه هوشمند مدیریت آموزش',
+    textContent: 'طراح بستر مدیریتی سپهر',
   });
   logoText.appendChild(brandName);
   logoText.appendChild(brandSub);
@@ -184,3 +184,4 @@ export function createPublicHeader(currentPath: string): HTMLElement {
 
   return header;
 }
+

@@ -31,7 +31,7 @@ export function createOrganizationSwitcher(
 
   const iconBadge = createElement('div', {
     className: 'p-1.5 rounded-lg bg-[rgb(var(--theme-subtle))]/20 text-[rgb(var(--theme-subtle))] shrink-0',
-    innerHTML: getDashboardIcon('building', 'w-4 h-4'),
+    innerHTML: '<img src="/sepehr-logo.webp" alt="نشان مرکز سپهر" class="sepehr-logo" />',
   });
 
   const titleGroup = createElement('div', { className: 'min-w-0' });
@@ -146,3 +146,4 @@ export function createOrganizationSwitcher(
 
   return container;
 }
+

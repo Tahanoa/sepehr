@@ -1,6 +1,6 @@
 /** Theme packages are data, never page-specific styles. RGB channels support Tailwind opacity. */
 export const palettes = {
-  sepehr: { label: 'سبز سپهر', primary: '#123E38', hover: '#1C544B', accent: '#E5AE58', secondary: '#63527C', subtle: '#EEF5F2' },
+  sepehr: { label: 'سبز سپهر', primary: '#012622', hover: '#003B36', accent: '#E98A15', secondary: '#59114D', subtle: '#ECE5F0' },
   ocean: { label: 'آبی اقیانوس', primary: '#183F70', hover: '#24558F', accent: '#F0BC65', secondary: '#635992', subtle: '#EDF3FA' },
   plum: { label: 'ارغوان', primary: '#553451', hover: '#70476B', accent: '#EDBD85', secondary: '#38685F', subtle: '#F7F0F5' },
 } as const;
@@ -31,7 +31,7 @@ export function validateTheme(value: unknown): ThemeSettings {
   return { version: 1, palette: v.palette as ThemeSettings['palette'], density: v.density as ThemeSettings['density'], font: v.font as ThemeSettings['font'], radius: v.radius as ThemeSettings['radius'], primary: String(v.primary), accent: String(v.accent) };
 }
 export function readTheme(): ThemeSettings {
-  try { return validateTheme(JSON.parse(localStorage.getItem(key) || 'null')); } catch { return { ...defaultTheme }; }
+  try { const saved=JSON.parse(localStorage.getItem(key) || 'null'); if(saved?.palette==='sepehr' && saved.primary==='#123E38' && saved.accent==='#E5AE58'){saved.primary=palettes.sepehr.primary;saved.accent=palettes.sepehr.accent;} return validateTheme(saved); } catch { return { ...defaultTheme }; }
 }
 export function applyTheme(settings: ThemeSettings): void {
   const t = validateTheme(settings), p = palettes[t.palette], root = document.documentElement;
@@ -46,3 +46,4 @@ export function saveTheme(settings: ThemeSettings): boolean {
   applyTheme(t);
   try { localStorage.setItem(key, JSON.stringify(t)); return true; } catch { return false; }
 }
+

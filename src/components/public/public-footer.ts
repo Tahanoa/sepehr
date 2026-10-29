@@ -24,11 +24,11 @@ export function createPublicFooter(): HTMLElement {
     <div class="w-10 h-10 rounded-xl bg-brand-amber flex items-center justify-center text-gray-900 font-bold text-xl shadow-md">
       <svg class="w-6 h-6 stroke-current fill-none stroke-[2.2]" viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
     </div>
-    <span class="text-2xl font-semibold tracking-tight">سپهر</span>
+    <span class="text-2xl font-semibold tracking-tight">پولاریس</span>
   `;
   const brandDesc = createElement('p', {
     className: 'text-sm text-gray-300 leading-relaxed',
-    textContent: 'پلتفرم جامع، هوشمند و ماژولار مدیریت مدارس ابتدایی، متوسطه و آموزشگاه‌های تخصصی کشور.',
+    textContent: 'تیم پولاریس؛ طراح و توسعه‌دهندهٔ بستر مدیریتی دبستان، دبیرستان و آموزشگاه سپهر.',
   });
   col1.appendChild(brandTitle);
   col1.appendChild(brandDesc);
@@ -50,7 +50,7 @@ export function createPublicFooter(): HTMLElement {
   col3.innerHTML = `
     <h3 class="text-base font-bold text-brand-amber mb-4">دسترسی سریع</h3>
     <ul class="space-y-2.5 text-sm text-gray-300">
-      <li><a href="/about" class="hover:text-white transition-colors polaris-link">درباره سپهر</a></li>
+      <li><a href="/about" class="hover:text-white transition-colors polaris-link">درباره پولاریس</a></li>
       <li><a href="/contact" class="hover:text-white transition-colors polaris-link">ارتباط با ما</a></li>
       <li><a href="/register" class="hover:text-white transition-colors polaris-link">درخواست مشاوره و دمو</a></li>
       <li><a href="/login" class="hover:text-white transition-colors polaris-link">ورود به پنل کاربری</a></li>
@@ -102,3 +102,4 @@ export function createPublicFooter(): HTMLElement {
 
   return footer;
 }
+

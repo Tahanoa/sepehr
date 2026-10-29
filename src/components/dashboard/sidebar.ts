@@ -59,7 +59,7 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
   const logoMark = createElement('div', {
     className:
       'brand-monogram w-10 h-10 rounded-xl bg-gradient-to-br from-[rgb(var(--theme-accent))] to-[rgb(var(--theme-secondary))] text-white flex items-center justify-center font-semibold text-lg shadow-md shrink-0',
-    textContent: 'س',
+    innerHTML: '<img src="/sepehr-logo.webp" alt="نشان سپهر" class="sepehr-logo" />',
   });
 
   const brandTextGroup = createElement('div', { className: `min-w-0 ${isCollapsed ? 'hidden' : 'block'}` });

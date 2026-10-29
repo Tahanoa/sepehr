@@ -8,7 +8,7 @@ import { User } from '../types/auth';
 
 export const org101: Organization = {
   id: 'org-101',
-  name: 'دبیرستان هوشمند البرز',
+  name: 'دبیرستان سپهر',
   type: 'secondary_school',
   code: 'SCH-101',
   description: 'دبیرستان دوره دوم پسرانه - منطقه ۶ تهران',
@@ -17,7 +17,7 @@ export const org101: Organization = {
 
 export const org102: Organization = {
   id: 'org-102',
-  name: 'دبستان و پیش‌دبستانی آفتاب',
+  name: 'دبستان سپهر',
   type: 'elementary_school',
   code: 'SCH-102',
   description: 'دبستان هوشمند دخترانه - منطقه ۳ تهران',
@@ -26,7 +26,7 @@ export const org102: Organization = {
 
 export const org103: Organization = {
   id: 'org-103',
-  name: 'آموزشگاه زبان و علوم دانش‌نیک',
+  name: 'آموزشگاه سپهر',
   type: 'independent_institute',
   code: 'INST-103',
   description: 'مؤسسه تخصصی آموزش‌های آزاد و مهارتی',
@@ -35,7 +35,7 @@ export const org103: Organization = {
 
 export const org104: Organization = {
   id: 'org-104',
-  name: 'مجتمع آموزشی جامع حکمت',
+  name: 'مجتمع آموزشی سپهر',
   type: 'general_school',
   code: 'SCH-104',
   description: 'مجتمع آموزشی همه مقاطع تحصیلی - منطقه ۲ تهران',
@@ -65,7 +65,7 @@ export const DEMO_USERS: User[] = [
         organization: org102,
         role: 'school_admin',
         status: 'active',
-        title: 'مدیر دبستان آفتاب',
+        title: 'مدیر دبستان سپهر',
         department: 'مدیریت دبستان',
         isPrimary: true,
       },
@@ -147,7 +147,7 @@ export const DEMO_USERS: User[] = [
         organization: org101,
         role: 'school_admin',
         status: 'active',
-        title: 'مدیر دبیرستان البرز',
+        title: 'مدیر دبیرستان سپهر',
         department: 'مدیریت دبیرستان',
         isPrimary: true,
       },
@@ -249,7 +249,7 @@ export const DEMO_USERS: User[] = [
         organization: org103,
         role: 'institute_admin',
         status: 'active',
-        title: 'مدیر آموزشگاه دانش‌نیک',
+        title: 'مدیر آموزشگاه سپهر',
         department: 'مدیریت موسسه',
         isPrimary: true,
       },
@@ -387,3 +387,4 @@ export const DEMO_RECENT_ACTIVITIES: DemoActivity[] = [
     badgeType: 'warning',
   },
 ];
+
