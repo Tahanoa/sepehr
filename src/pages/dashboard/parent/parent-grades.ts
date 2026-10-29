@@ -21,8 +21,8 @@ export function createParentGradesPage(membership: OrganizationMembership): HTML
 
     const headerRow = createElement('div', { className: 'pb-2 border-b border-gray-200 space-y-1' });
     headerRow.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('award', 'w-6 h-6 text-[#012622]')} کارنامه و ارزیابی تحصیلی فرزند
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('award', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} کارنامه و ارزیابی تحصیلی فرزند
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">مشاهده نمرات عددی و توصیفی آزمون‌های کلاسی و بازخورد معلم.</p>
     `;
@@ -52,7 +52,7 @@ export function createParentGradesPage(membership: OrganizationMembership): HTML
           <div class="text-[11px] text-gray-500">${ex.subjectName}</div>
         </td>
         <td class="text-center text-xs text-gray-600">${ex.evalType === 'descriptive' ? 'توصیفی' : 'عددی'}</td>
-        <td class="text-center font-bold text-xs font-mono text-[#012622]">
+        <td class="text-center font-bold text-xs font-mono text-[rgb(var(--theme-primary))]">
           ${myGrade ? (myGrade.score !== undefined ? `${myGrade.score} از ۲۰` : myGrade.descriptiveScore || 'خیلی خوب') : '۱۹ از ۲۰'}
         </td>
         <td class="text-xs text-gray-700">${myGrade?.feedback || 'عملکرد عالی در کارهای گروهی و آزمون.'}</td>

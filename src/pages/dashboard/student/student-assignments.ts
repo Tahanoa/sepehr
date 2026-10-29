@@ -28,8 +28,8 @@ export function createStudentAssignmentsPage(membership: OrganizationMembership)
     // Header
     const headerRow = createElement('div', { className: 'pb-2 border-b border-gray-200 space-y-1' });
     headerRow.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('assignment', 'w-6 h-6 text-[#012622]')} تکالیف و پروژه تحصیلی من
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('assignment', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} تکالیف و پروژه تحصیلی من
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">مشاهده تکالیف فعال، ارسال پاسخ متنی/فایلی و بررسی نمره و بازخورد استاد.</p>
     `;
@@ -47,10 +47,10 @@ export function createStudentAssignmentsPage(membership: OrganizationMembership)
         card.innerHTML = `
           <div class="space-y-2">
             <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-              <span class="font-bold text-xs text-[#012622] bg-[#ECE5F0] px-2.5 py-1 rounded-lg">${asg.className}</span>
+              <span class="font-bold text-xs text-[rgb(var(--theme-primary))] bg-[rgb(var(--theme-subtle))] px-2.5 py-1 rounded-lg">${asg.className}</span>
               <span class="text-[11px] font-mono text-gray-500">مهلت تحویل: ${asg.dueDate}</span>
             </div>
-            <h3 class="font-extrabold text-sm text-gray-900">${asg.title}</h3>
+            <h3 class="font-semibold text-sm text-gray-900">${asg.title}</h3>
             <p class="text-xs text-gray-600 leading-relaxed">${asg.description}</p>
             <div class="text-[11px] text-gray-500">استاد آموزگار: <strong>${asg.assignedByTeacherName}</strong></div>
           </div>
@@ -66,7 +66,7 @@ export function createStudentAssignmentsPage(membership: OrganizationMembership)
               ${mySub ? (mySub.status === 'graded' ? `نمره: ${mySub.score} از ۲۰` : 'ارسال شده (در انتظار بررسی)') : 'در انتظار ارسال پاسخ'}
             </span>
 
-            <button class="action-btn px-4 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
+            <button class="action-btn px-4 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
               ${mySub ? 'مشاهده و جزئیات پاسخ' : 'ارسال پاسخ تکلیف'}
             </button>
           </div>

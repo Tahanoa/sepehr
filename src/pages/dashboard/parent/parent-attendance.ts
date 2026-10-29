@@ -21,8 +21,8 @@ export function createParentAttendancePage(membership: OrganizationMembership): 
 
     const headerRow = createElement('div', { className: 'pb-2 border-b border-gray-200 space-y-1' });
     headerRow.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('attendance', 'w-6 h-6 text-[#012622]')} گزارش حضور و غیاب فرزند
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('attendance', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} گزارش حضور و غیاب فرزند
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">مشاهده ریز سوابق حضور، غیبت‌ها و تأخیرهای ورودی ثبت‌شده توسط معلم.</p>
     `;

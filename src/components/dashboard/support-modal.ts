@@ -27,15 +27,15 @@ export function createSupportModal(options: SupportModalOptions): HTMLElement {
 
   // Header
   const header = createElement('div', {
-    className: 'bg-[#012622] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
+    className: 'bg-[rgb(var(--theme-primary))] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
   });
   header.innerHTML = `
     <div class="flex items-center gap-3">
-      <div class="p-2 bg-[#E98A15] text-[#012622] rounded-xl font-bold">
+      <div class="p-2 bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] rounded-xl font-bold">
         ${getDashboardIcon('settings', 'w-5 h-5')}
       </div>
       <div>
-        <h3 class="text-base font-extrabold text-white">ارتباط با تیم توسعه‌دهنده پولاریس</h3>
+        <h3 class="text-base font-semibold text-white">ارتباط با تیم توسعه‌دهنده سپهر</h3>
         <p class="text-xs text-amber-200">ثبت درخواست فنی، بازخورد و سوابق تیکت‌های پشتیبانی دمو</p>
       </div>
     </div>
@@ -55,7 +55,7 @@ export function createSupportModal(options: SupportModalOptions): HTMLElement {
 
   const navTabs = createElement('div', { className: 'flex gap-2 border-b border-gray-200 pb-2' });
   const tabCreateBtn = createElement('button', {
-    className: 'px-4 py-2 rounded-xl text-xs font-bold transition-colors bg-[#012622] text-white',
+    className: 'px-4 py-2 rounded-xl text-xs font-bold transition-colors bg-[rgb(var(--theme-primary))] text-white',
     textContent: 'ثبت درخواست جدید',
   });
   const tabListBtn = createElement('button', {
@@ -74,7 +74,7 @@ export function createSupportModal(options: SupportModalOptions): HTMLElement {
     contentArea.innerHTML = '';
 
     if (activeTab === 'create') {
-      tabCreateBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-[#012622] text-white';
+      tabCreateBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-[rgb(var(--theme-primary))] text-white';
       tabListBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200';
 
       const form = createElement('form', { className: 'space-y-4' });
@@ -82,7 +82,7 @@ export function createSupportModal(options: SupportModalOptions): HTMLElement {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="space-y-1 text-right">
             <label class="block text-xs font-bold text-gray-700">دسته‌بندی درخواست:</label>
-            <select id="sup-category" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs font-bold text-gray-800 focus:border-[#E98A15]">
+            <select id="sup-category" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs font-bold text-gray-800 focus:border-[rgb(var(--theme-accent))]">
               <option value="technical">اشکال و بروز خطا (Technical Bug)</option>
               <option value="academic">سوال درباره فرآیند آموزشی</option>
               <option value="billing">امور مالی و شهریه</option>
@@ -91,7 +91,7 @@ export function createSupportModal(options: SupportModalOptions): HTMLElement {
           </div>
           <div class="space-y-1 text-right">
             <label class="block text-xs font-bold text-gray-700">اولویت پاسخ‌گویی:</label>
-            <select id="sup-priority" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs font-bold text-gray-800 focus:border-[#E98A15]">
+            <select id="sup-priority" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs font-bold text-gray-800 focus:border-[rgb(var(--theme-accent))]">
               <option value="low">کم (عادی)</option>
               <option value="medium" selected>متوسط</option>
               <option value="high">بالا</option>
@@ -102,15 +102,15 @@ export function createSupportModal(options: SupportModalOptions): HTMLElement {
 
         <div class="space-y-1 text-right">
           <label class="block text-xs font-bold text-gray-700">عنوان درخواست:</label>
-          <input type="text" id="sup-title" required class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 focus:border-[#E98A15]" placeholder="مثال: عدم مشاهده فایل در بخش گزارش‌ها">
+          <input type="text" id="sup-title" required class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 focus:border-[rgb(var(--theme-accent))]" placeholder="مثال: عدم مشاهده فایل در بخش گزارش‌ها">
         </div>
 
         <div class="space-y-1 text-right">
           <label class="block text-xs font-bold text-gray-700">شرح کامل درخواست:</label>
-          <textarea id="sup-desc" rows="4" required class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 leading-relaxed focus:border-[#E98A15]" placeholder="جزئیات درخواست یا گام‌های بازتولید مشکل را بنویسید..."></textarea>
+          <textarea id="sup-desc" rows="4" required class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 leading-relaxed focus:border-[rgb(var(--theme-accent))]" placeholder="جزئیات درخواست یا گام‌های بازتولید مشکل را بنویسید..."></textarea>
         </div>
 
-        <button type="submit" class="w-full py-3 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-extrabold rounded-xl shadow transition-colors">
+        <button type="submit" class="w-full py-3 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-semibold rounded-xl shadow transition-colors">
           ارسال درخواست به تیم توسعه
         </button>
       `;
@@ -140,7 +140,7 @@ export function createSupportModal(options: SupportModalOptions): HTMLElement {
 
       contentArea.appendChild(form);
     } else {
-      tabListBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-[#012622] text-white';
+      tabListBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-[rgb(var(--theme-primary))] text-white';
       tabCreateBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200';
 
       const tickets = schoolStore.getSupportTickets(organizationId);
@@ -159,7 +159,7 @@ export function createSupportModal(options: SupportModalOptions): HTMLElement {
           });
           item.innerHTML = `
             <div class="flex justify-between items-center">
-              <span class="font-extrabold text-gray-900">${t.title}</span>
+              <span class="font-semibold text-gray-900">${t.title}</span>
               <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
                 t.status === 'resolved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
               }">${t.status === 'resolved' ? 'پاسخ داده شده (بسته)' : 'در حال بررسی در دمو'}</span>

@@ -14,7 +14,7 @@ export function createSidebar(items: NavItem[], activePath: string, onSelect: (p
   const brand = createElement('a', { className: 'polaris-brand-logo', attributes: { href: '#' } });
 
   const icon = createElement('div', { className: 'polaris-brand-icon', textContent: 'P' });
-  const title = createElement('span', { className: 'polaris-brand-title', textContent: 'سامانه پولاریس' });
+  const title = createElement('span', { className: 'polaris-brand-title', textContent: 'سامانه سپهر' });
 
   brand.appendChild(icon);
   brand.appendChild(title);

@@ -1138,7 +1138,7 @@ class SchoolStoreService {
     }
     const defaultSetting: SchoolSettings = {
       organizationId: orgId,
-      schoolName: 'مرکز آموزشی پولاریس',
+      schoolName: 'مرکز آموزشی سپهر',
       principalName: 'مدیر مرکز',
       phone: '۰۲۱-۱۲۳۴۵۶۷۸',
       address: 'تهران، خیابان اصلی',

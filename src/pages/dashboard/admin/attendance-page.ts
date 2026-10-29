@@ -88,9 +88,9 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('attendance', 'w-6 h-6 text-[#012622]')} ثبت و مدیریت حضور و غیاب روزانه`;
+    title.innerHTML = `${getDashboardIcon('attendance', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} ثبت و مدیریت حضور و غیاب روزانه`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',
@@ -105,8 +105,8 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
     if (isManagement) {
       const smsBtn = createElement('button', {
         className:
-          'px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-        innerHTML: `${getDashboardIcon('chat', 'w-4 h-4 text-[#E98A15]')} ارسال SMS اولیا`,
+          'px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
+        innerHTML: `${getDashboardIcon('chat', 'w-4 h-4 text-[rgb(var(--theme-accent))]')} ارسال SMS اولیا`,
       });
       smsBtn.addEventListener('click', () => {
         const modal = createSMSModal({
@@ -120,8 +120,8 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
 
       const importBtn = createElement('button', {
         className:
-          'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-        innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود CSV`,
+          'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
+        innerHTML: `<svg class="w-4 h-4 text-[rgb(var(--theme-accent))]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود CSV`,
       });
       importBtn.addEventListener('click', () => {
         const modal = createExcelImportModal({
@@ -145,7 +145,7 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
     if (!isStudentOrParent) {
       const submitBtn = createElement('button', {
         className:
-          'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+          'px-5 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
         innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> ثبت نهایی حضور و غیاب`,
       });
       submitBtn.addEventListener('click', () => {
@@ -188,7 +188,7 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
     const classSelectGroup = createElement('div', { className: 'space-y-1' });
     const classLabel = createElement('label', { className: 'block text-[11px] font-bold text-gray-600', textContent: 'انتخاب کلاس:' });
     const classSelect = createElement('select', {
-      className: 'w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      className: 'w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     });
 
     classes.forEach((c) => {
@@ -210,7 +210,7 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
     const dateGroup = createElement('div', { className: 'space-y-1' });
     const dateLabel = createElement('label', { className: 'block text-[11px] font-bold text-gray-600', textContent: 'تاریخ ارزیابی:' });
     const dateInput = createElement('input', {
-      className: 'w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      className: 'w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       attributes: { type: 'text', value: selectedDate },
     });
     dateInput.addEventListener('change', (e) => {
@@ -244,16 +244,16 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
     });
 
     const m1 = createElement('div', { className: 'bg-emerald-50 border border-emerald-200/80 rounded-2xl p-3.5 text-center' });
-    m1.innerHTML = `<div class="text-[11px] font-bold text-emerald-800">حاضرین</div><div class="text-xl font-black font-mono text-emerald-950 mt-1">${presentCount.toLocaleString('fa-IR')}</div>`;
+    m1.innerHTML = `<div class="text-[11px] font-bold text-emerald-800">حاضرین</div><div class="text-xl font-bold font-mono text-emerald-950 mt-1">${presentCount.toLocaleString('fa-IR')}</div>`;
 
     const m2 = createElement('div', { className: 'bg-rose-50 border border-rose-200/80 rounded-2xl p-3.5 text-center' });
-    m2.innerHTML = `<div class="text-[11px] font-bold text-rose-800">غایبین غیرمجاز</div><div class="text-xl font-black font-mono text-rose-950 mt-1">${absentCount.toLocaleString('fa-IR')}</div>`;
+    m2.innerHTML = `<div class="text-[11px] font-bold text-rose-800">غایبین غیرمجاز</div><div class="text-xl font-bold font-mono text-rose-950 mt-1">${absentCount.toLocaleString('fa-IR')}</div>`;
 
     const m3 = createElement('div', { className: 'bg-amber-50 border border-amber-200/80 rounded-2xl p-3.5 text-center' });
-    m3.innerHTML = `<div class="text-[11px] font-bold text-amber-800">تأخیر ورودی</div><div class="text-xl font-black font-mono text-amber-950 mt-1">${lateCount.toLocaleString('fa-IR')}</div>`;
+    m3.innerHTML = `<div class="text-[11px] font-bold text-amber-800">تأخیر ورودی</div><div class="text-xl font-bold font-mono text-amber-950 mt-1">${lateCount.toLocaleString('fa-IR')}</div>`;
 
     const m4 = createElement('div', { className: 'bg-blue-50 border border-blue-200/80 rounded-2xl p-3.5 text-center' });
-    m4.innerHTML = `<div class="text-[11px] font-bold text-blue-800">غایب موجه / مرخصی</div><div class="text-xl font-black font-mono text-blue-950 mt-1">${excusedCount.toLocaleString('fa-IR')}</div>`;
+    m4.innerHTML = `<div class="text-[11px] font-bold text-blue-800">غایب موجه / مرخصی</div><div class="text-xl font-bold font-mono text-blue-950 mt-1">${excusedCount.toLocaleString('fa-IR')}</div>`;
 
     metricsGrid.appendChild(m1);
     metricsGrid.appendChild(m2);
@@ -289,7 +289,7 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
         const nameTd = createElement('td', {
           innerHTML: `
             <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-full bg-[#012622] text-white font-bold flex items-center justify-center text-xs shrink-0">${std.fullName.slice(0, 1)}</div>
+              <div class="w-7 h-7 rounded-full bg-[rgb(var(--theme-primary))] text-white font-bold flex items-center justify-center text-xs shrink-0">${std.fullName.slice(0, 1)}</div>
               <span class="font-bold text-xs text-gray-900">${std.fullName}</span>
             </div>
           `,
@@ -320,10 +320,10 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
           const btnGroup = createElement('div', { className: 'inline-flex items-center rounded-xl p-1 bg-gray-100 border border-gray-200 gap-1' });
 
           const statuses: { key: AttendanceStatus; label: string; activeClass: string }[] = [
-            { key: 'present', label: 'حاضر', activeClass: 'bg-emerald-700 text-white font-black shadow-2xs' },
-            { key: 'absent', label: 'غایب', activeClass: 'bg-rose-700 text-white font-black shadow-2xs' },
-            { key: 'late', label: 'تأخیر', activeClass: 'bg-amber-600 text-white font-black shadow-2xs' },
-            { key: 'excused', label: 'موجه', activeClass: 'bg-blue-600 text-white font-black shadow-2xs' },
+            { key: 'present', label: 'حاضر', activeClass: 'bg-emerald-700 text-white font-bold shadow-2xs' },
+            { key: 'absent', label: 'غایب', activeClass: 'bg-rose-700 text-white font-bold shadow-2xs' },
+            { key: 'late', label: 'تأخیر', activeClass: 'bg-amber-600 text-white font-bold shadow-2xs' },
+            { key: 'excused', label: 'موجه', activeClass: 'bg-blue-600 text-white font-bold shadow-2xs' },
           ];
 
           statuses.forEach((st) => {
@@ -352,7 +352,7 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
           notesTd.innerHTML = `<span class="text-xs text-gray-700">${localDrafts[std.id]?.notes || '—'}</span>`;
         } else {
           const notesInput = createElement('input', {
-            className: 'w-full bg-gray-50 border border-gray-200 rounded-lg p-1.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#E98A15]',
+            className: 'w-full bg-gray-50 border border-gray-200 rounded-lg p-1.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-[rgb(var(--theme-accent))]',
             attributes: { type: 'text', placeholder: 'ثبت علت غیبت/تأخیر...', value: localDrafts[std.id]?.notes || '' },
           });
 

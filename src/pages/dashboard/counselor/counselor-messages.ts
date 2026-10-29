@@ -28,14 +28,14 @@ export function createCounselorMessagesPage(membership: OrganizationMembership):
 
     const headerText = createElement('div', { className: 'space-y-1' });
     headerText.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('chat', 'w-6 h-6 text-[#012622]')} پیام‌رسانی مشاوره‌ای و تفکیک حریم خصوصی
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('chat', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} پیام‌رسانی مشاوره‌ای و تفکیک حریم خصوصی
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">ارسال پیام‌های عمومی برنامه‌ریزی یا پیام‌های خصوصی هدایت تحصیلی به دانش‌آموزان و اولیا.</p>
     `;
 
     const newMsgBtn = createElement('button', {
-      className: 'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
+      className: 'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ارسال پیام مشاوره‌ای جدید`,
     });
     newMsgBtn.addEventListener('click', () => openNewMessageModal());
@@ -53,7 +53,7 @@ export function createCounselorMessagesPage(membership: OrganizationMembership):
         const item = createElement('div', { className: 'p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-2 text-xs' });
         item.innerHTML = `
           <div class="flex items-center justify-between border-b border-gray-200 pb-2">
-            <span class="font-extrabold text-gray-900">گیرنده: ${msg.recipientName} (${msg.recipientRole === 'student' ? 'دانش‌آموز' : 'ولی'})</span>
+            <span class="font-semibold text-gray-900">گیرنده: ${msg.recipientName} (${msg.recipientRole === 'student' ? 'دانش‌آموز' : 'ولی'})</span>
             <span class="text-[11px] font-mono text-gray-500">${msg.sentAt}</span>
           </div>
           <h4 class="font-bold text-gray-800">${msg.subject}</h4>
@@ -99,11 +99,11 @@ export function createCounselorMessagesPage(membership: OrganizationMembership):
         <label class="block font-bold">سطح دسترسی و حریم خصوصی:</label>
         <div class="flex items-center gap-4">
           <label class="flex items-center gap-1.5 cursor-pointer">
-            <input type="checkbox" id="msg-vis-std" checked class="rounded border-gray-300 text-[#012622]" />
+            <input type="checkbox" id="msg-vis-std" checked class="rounded border-gray-300 text-[rgb(var(--theme-primary))]" />
             <span>قابل مشاهده برای دانش‌آموز</span>
           </label>
           <label class="flex items-center gap-1.5 cursor-pointer">
-            <input type="checkbox" id="msg-vis-prt" checked class="rounded border-gray-300 text-[#012622]" />
+            <input type="checkbox" id="msg-vis-prt" checked class="rounded border-gray-300 text-[rgb(var(--theme-primary))]" />
             <span>قابل مشاهده برای ولی</span>
           </label>
         </div>

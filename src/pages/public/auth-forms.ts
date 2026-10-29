@@ -10,7 +10,7 @@ export function createContactPage(): HTMLElement {
 
   const header = createElement('div', { className: 'text-center space-y-3' });
   header.innerHTML = `
-    <h1 class="text-3xl font-extrabold text-brand-evergreen">تماس با کارشناسان پولاریس</h1>
+    <h1 class="text-3xl font-semibold text-brand-evergreen">تماس با کارشناسان سپهر</h1>
     <p class="text-gray-600 text-sm">جهت دریافت راهنمایی، پاسخ به پرسش‌ها یا هماهنگی جلسه دمو با ما در ارتباط باشید.</p>
   `;
   container.appendChild(header);
@@ -82,20 +82,20 @@ export function createLoginPage(): HTMLElement {
 
   // Demo Switcher Banner Card
   const demoCard = createElement('div', {
-    className: 'bg-gradient-to-br from-[#012622] to-[#003B36] text-white p-6 rounded-3xl shadow-lg border border-[#E98A15]/30 space-y-3 dir-rtl text-right',
+    className: 'bg-gradient-to-br from-[rgb(var(--theme-primary))] to-[rgb(var(--theme-hover))] text-white p-6 rounded-3xl shadow-lg border border-[rgb(var(--theme-accent))]/30 space-y-3 dir-rtl text-right',
   });
   demoCard.innerHTML = `
     <div class="flex items-center justify-between">
-      <span class="px-2.5 py-1 bg-[#E98A15] text-[#012622] text-[10px] font-bold rounded-lg">ورود سریع آزمایشی</span>
+      <span class="px-2.5 py-1 bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] text-[10px] font-bold rounded-lg">ورود سریع آزمایشی</span>
       <span class="text-xs text-amber-200">۱۴ نقش آزمایشی فعال</span>
     </div>
-    <h2 class="text-base font-extrabold text-white">ورود مستقیم به دمو سامانه</h2>
+    <h2 class="text-base font-semibold text-white">ورود مستقیم به دمو سامانه</h2>
     <p class="text-xs text-gray-300 leading-relaxed">
       بدون نیاز به رمز عبور، نقش آزمایشی مورد نظر خود (مدیر، دبیر، دانش‌آموز، والدین، مشاور یا متقاضی) را در هر ۳ طرح انتخاب و بررسی کنید.
     </p>
   `;
   const enterDemoBtn = createElement('button', {
-    className: 'w-full py-3 bg-[#E98A15] hover:bg-amber-600 text-[#012622] font-extrabold text-xs rounded-xl shadow transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-amber-300',
+    className: 'w-full py-3 bg-[rgb(var(--theme-accent))] hover:bg-amber-600 text-[rgb(var(--theme-primary))] font-semibold text-xs rounded-xl shadow transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-amber-300',
     textContent: 'مشاهده و انتخاب نقش‌های دمو',
   });
   enterDemoBtn.addEventListener('click', () => {
@@ -112,7 +112,7 @@ export function createLoginPage(): HTMLElement {
       <div class="w-12 h-12 rounded-2xl bg-brand-evergreen text-white flex items-center justify-center mx-auto text-xl font-bold shadow-md">
         <svg class="w-7 h-7 stroke-current fill-none stroke-2" viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
       </div>
-      <h1 class="text-2xl font-extrabold text-brand-evergreen">ورود با حساب کاربری</h1>
+      <h1 class="text-2xl font-semibold text-brand-evergreen">ورود با حساب کاربری</h1>
       <p class="text-xs text-gray-500">حساب کاربری مدرسه یا آموزشگاه خود را وارد نمایید</p>
     </div>
   `;
@@ -181,8 +181,8 @@ export function createRegisterPage(preselectedPlanId?: string): HTMLElement {
   const card = createElement('div', { className: 'bg-white p-8 rounded-3xl border border-gray-200 shadow-md space-y-6' });
   card.innerHTML = `
     <div class="text-center space-y-2">
-      <h1 class="text-2xl font-extrabold text-brand-evergreen">درخواست راه اندازی و مشاوره موسسه</h1>
-      <p class="text-xs text-gray-600">پس از تکمیل فرم، کارشناسان پولاریس جهت ارائه مشاوره تخصصی با شما تماس خواهند گرفت.</p>
+      <h1 class="text-2xl font-semibold text-brand-evergreen">درخواست راه اندازی و مشاوره موسسه</h1>
+      <p class="text-xs text-gray-600">پس از تکمیل فرم، کارشناسان سپهر جهت ارائه مشاوره تخصصی با شما تماس خواهند گرفت.</p>
     </div>
   `;
 
@@ -223,7 +223,7 @@ export function createRegisterPage(preselectedPlanId?: string): HTMLElement {
       <input type="checkbox" required id="terms-check" class="rounded border-gray-300 text-brand-amber focus:ring-brand-amber">
       <label for="terms-check" class="text-xs text-gray-600">با <a href="/terms" class="polaris-terms-link text-brand-amber underline">قوانین و حریم خصوصی</a> موافقم.</label>
     </div>
-    <button type="submit" class="w-full py-3.5 rounded-xl bg-brand-amber hover:bg-amber-600 text-white font-bold text-sm shadow transition-colors">
+    <button type="submit" class="w-full py-3.5 rounded-xl bg-brand-amber hover:brightness-95 text-gray-900 font-bold text-sm shadow transition-colors">
       ثبت درخواست مشاوره
     </button>
   `;
@@ -253,7 +253,7 @@ export function createForgotPasswordPage(): HTMLElement {
   const card = createElement('div', { className: 'bg-white p-8 rounded-3xl border border-gray-200 shadow-md space-y-6' });
   card.innerHTML = `
     <div class="text-center space-y-2">
-      <h1 class="text-2xl font-extrabold text-brand-evergreen">بازیابی کلمه عبور</h1>
+      <h1 class="text-2xl font-semibold text-brand-evergreen">بازیابی کلمه عبور</h1>
       <p class="text-xs text-gray-500">ایمیل ثبت‌شده در سامانه را وارد نمایید</p>
     </div>
   `;

@@ -23,14 +23,14 @@ export function createOrganizationSwitcher(
 
   const trigger = createElement('button', {
     className:
-      'w-full bg-[#003B36] hover:bg-[#002824] border border-[#012622]/50 text-white rounded-xl p-2.5 flex items-center justify-between gap-2 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      'w-full bg-[rgb(var(--theme-hover))] hover:brightness-110 border border-[rgb(var(--theme-primary))]/50 text-white rounded-xl p-2.5 flex items-center justify-between gap-2 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     attributes: { 'aria-expanded': 'false', 'aria-haspopup': 'true', label: 'انتخاب مرکز آموزشی' },
   });
 
   const leftBox = createElement('div', { className: 'flex items-center gap-2.5 min-w-0 text-right' });
 
   const iconBadge = createElement('div', {
-    className: 'p-1.5 rounded-lg bg-[#ECE5F0]/20 text-[#ECE5F0] shrink-0',
+    className: 'p-1.5 rounded-lg bg-[rgb(var(--theme-subtle))]/20 text-[rgb(var(--theme-subtle))] shrink-0',
     innerHTML: getDashboardIcon('building', 'w-4 h-4'),
   });
 
@@ -44,7 +44,7 @@ export function createOrganizationSwitcher(
   const subMeta = createElement('div', {
     className: 'text-[11px] text-gray-300 flex items-center gap-1 truncate',
   });
-  subMeta.innerHTML = `<span class="bg-[#ECE5F0]/20 text-white px-1.5 py-0.2 rounded font-medium">${getOrgTypeLabel(
+  subMeta.innerHTML = `<span class="bg-[rgb(var(--theme-subtle))]/20 text-white px-1.5 py-0.2 rounded font-medium">${getOrgTypeLabel(
     active.organization.type
   )}</span> <span class="opacity-75">• ${getRoleLabel(active.role)}</span>`;
 
@@ -85,8 +85,8 @@ export function createOrganizationSwitcher(
   memberships.forEach((m) => {
     const isCurrent = m.id === activeMembershipId;
     const option = createElement('button', {
-      className: `w-full text-right px-3.5 py-2.5 flex items-center justify-between gap-2 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15] ${
-        isCurrent ? 'bg-[#ECE5F0]/50 font-bold text-[#012622]' : 'hover:bg-gray-50 text-gray-700'
+      className: `w-full text-right px-3.5 py-2.5 flex items-center justify-between gap-2 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))] ${
+        isCurrent ? 'bg-[rgb(var(--theme-subtle))]/50 font-bold text-[rgb(var(--theme-primary))]' : 'hover:bg-gray-50 text-gray-700'
       }`,
     });
 
@@ -104,7 +104,7 @@ export function createOrganizationSwitcher(
 
     if (isCurrent) {
       const check = createElement('span', {
-        className: 'text-[#012622] shrink-0 font-bold',
+        className: 'text-[rgb(var(--theme-primary))] shrink-0 font-bold',
         innerHTML: getDashboardIcon('attendance', 'w-4 h-4'),
       });
       option.appendChild(check);

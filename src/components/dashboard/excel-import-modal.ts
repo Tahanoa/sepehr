@@ -37,15 +37,15 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
 
   // Header
   const header = createElement('div', {
-    className: 'bg-[#012622] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
+    className: 'bg-[rgb(var(--theme-primary))] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
   });
   header.innerHTML = `
     <div class="flex items-center gap-3">
-      <div class="p-2 bg-[#E98A15] text-[#012622] rounded-xl font-bold">
+      <div class="p-2 bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] rounded-xl font-bold">
         ${getDashboardIcon('assignment', 'w-5 h-5')}
       </div>
       <div>
-        <h3 class="text-base font-extrabold text-white">ورود گروهی داده‌ها (Excel / CSV) — ${entityLabels[entityType]}</h3>
+        <h3 class="text-base font-semibold text-white">ورود گروهی داده‌ها (Excel / CSV) — ${entityLabels[entityType]}</h3>
         <p class="text-xs text-amber-200">بارگذاری، اعتبارسنجی سطر به سطر و افزودن مستقیم به سیستم</p>
       </div>
     </div>
@@ -72,8 +72,8 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
     </div>
   `;
   const downloadBtn = createElement('button', {
-    className: 'px-3.5 py-2 bg-white border border-gray-300 hover:border-[#012622] text-gray-800 text-xs font-bold rounded-lg shadow-sm transition-colors flex items-center gap-1.5 shrink-0',
-    innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> دانلود الگوی فایل`,
+    className: 'px-3.5 py-2 bg-white border border-gray-300 hover:border-[rgb(var(--theme-primary))] text-gray-800 text-xs font-bold rounded-lg shadow-sm transition-colors flex items-center gap-1.5 shrink-0',
+    innerHTML: `<svg class="w-4 h-4 text-[rgb(var(--theme-accent))]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> دانلود الگوی فایل`,
   });
 
   downloadBtn.addEventListener('click', () => {
@@ -102,10 +102,10 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
 
   // 2. Upload Area
   const uploadDropZone = createElement('div', {
-    className: 'border-2 border-dashed border-gray-300 hover:border-[#012622] rounded-2xl p-8 text-center bg-gray-50 hover:bg-gray-100/50 transition-colors cursor-pointer space-y-3',
+    className: 'border-2 border-dashed border-gray-300 hover:border-[rgb(var(--theme-primary))] rounded-2xl p-8 text-center bg-gray-50 hover:bg-gray-100/50 transition-colors cursor-pointer space-y-3',
   });
   uploadDropZone.innerHTML = `
-    <div class="w-12 h-12 bg-white rounded-xl border border-gray-200 flex items-center justify-center mx-auto text-[#012622] shadow-sm">
+    <div class="w-12 h-12 bg-white rounded-xl border border-gray-200 flex items-center justify-center mx-auto text-[rgb(var(--theme-primary))] shadow-sm">
       <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
     </div>
     <div>
@@ -258,7 +258,7 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
   cancelBtn.addEventListener('click', onClose);
 
   const confirmBtn = createElement('button', {
-    className: 'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5',
+    className: 'px-5 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5',
     innerHTML: `${getDashboardIcon('attendance', 'w-4 h-4')} <span>تایید و ثبت رکوردها</span>`,
   });
 

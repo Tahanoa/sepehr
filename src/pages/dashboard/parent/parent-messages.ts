@@ -38,15 +38,15 @@ export function createParentMessagesPage(membership: OrganizationMembership): HT
 
     const headerText = createElement('div', { className: 'space-y-1' });
     headerText.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('chat', 'w-6 h-6 text-[#012622]')} پیام‌ها به مدیریت مدرسه
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('chat', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} پیام‌ها به مدیریت مدرسه
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">ارسال درخواست، پیگیری امور آموزشی، حضور و غیاب و دریافت پاسخ‌های رسمی مدیریت.</p>
     `;
 
     const newMsgBtn = createElement('button', {
       className:
-        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
+        'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ثبت پیام جدید به مدیریت`,
     });
     newMsgBtn.addEventListener('click', () => openNewConversationModal());
@@ -62,7 +62,7 @@ export function createParentMessagesPage(membership: OrganizationMembership): HT
     } else {
       conversations.forEach((conv) => {
         const item = createElement('div', {
-          className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-3 cursor-pointer hover:border-[#012622] transition-colors',
+          className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-3 cursor-pointer hover:border-[rgb(var(--theme-primary))] transition-colors',
         });
 
         let statusBadge = 'bg-amber-100 text-amber-900 border-amber-200';
@@ -78,7 +78,7 @@ export function createParentMessagesPage(membership: OrganizationMembership): HT
         item.innerHTML = `
           <div class="flex items-center justify-between pb-2 border-b border-gray-100">
             <div class="flex items-center gap-2">
-              <span class="font-extrabold text-xs text-[#012622] bg-[#ECE5F0] px-2.5 py-1 rounded-lg">${conv.studentName} (${conv.className})</span>
+              <span class="font-semibold text-xs text-[rgb(var(--theme-primary))] bg-[rgb(var(--theme-subtle))] px-2.5 py-1 rounded-lg">${conv.studentName} (${conv.className})</span>
               <span class="text-[10px] text-gray-500">موضوع: ${conv.category === 'educational' ? 'آموزشی' : conv.category === 'attendance' ? 'حضور و غیاب' : 'اداری'}</span>
             </div>
             <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold border ${statusBadge}">${statusText}</span>
@@ -192,7 +192,7 @@ export function createParentMessagesPage(membership: OrganizationMembership): HT
 
       msgBox.innerHTML = `
         <div class="flex items-center justify-between pb-1 border-b border-gray-200/60 text-[11px]">
-          <span class="font-extrabold ${isParent ? 'text-amber-900' : 'text-emerald-950'}">${msg.senderName}</span>
+          <span class="font-semibold ${isParent ? 'text-amber-900' : 'text-emerald-950'}">${msg.senderName}</span>
           <span class="font-mono text-gray-500 text-[10px]">${msg.sentAt}</span>
         </div>
         <p class="text-xs text-gray-800 leading-relaxed">${msg.content}</p>
@@ -208,7 +208,7 @@ export function createParentMessagesPage(membership: OrganizationMembership): HT
     `;
 
     const sendReplyBtn = createElement('button', {
-      className: 'w-full py-2 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl transition-colors cursor-pointer',
+      className: 'w-full py-2 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white font-bold rounded-xl transition-colors cursor-pointer',
       textContent: 'ارسال پاسخ پیرو',
     });
 

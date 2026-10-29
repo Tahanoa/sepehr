@@ -11,10 +11,10 @@ export function createPlansOverviewPage(): HTMLElement {
 
   const header = createElement('div', { className: 'text-center space-y-4 max-w-3xl mx-auto' });
   header.innerHTML = `
-    <span class="px-3 py-1 rounded-full bg-brand-amber/10 text-brand-amber text-xs font-bold">بسته‌های سازمانی پولاریس</span>
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-brand-evergreen">طرح‌های تخصصی پولاریس</h1>
+    <span class="px-3 py-1 rounded-full bg-brand-amber/10 text-brand-amber text-xs font-bold">بسته‌های سازمانی سپهر</span>
+    <h1 class="text-3xl sm:text-4xl font-semibold text-brand-evergreen">طرح‌های تخصصی سپهر</h1>
     <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
-      با توجه به تفاوت‌های بنیادین در فرایندهای آموزشی مدارس ابتدایی، متوسطه و آموزشگاه‌های تخصصی، پولاریس سه طرح کاملا اختصاصی ارائه می‌دهد.
+      با توجه به تفاوت‌های بنیادین در فرایندهای آموزشی مدارس ابتدایی، متوسطه و آموزشگاه‌های تخصصی، سپهر سه طرح کاملا اختصاصی ارائه می‌دهد.
     </p>
   `;
   container.appendChild(header);
@@ -46,13 +46,13 @@ export function createPlanDetailPage(planId: string): HTMLElement {
         ← بازگشت به لیست همه طرح‌ها
       </a>
     </div>
-    <h1 class="text-2xl sm:text-4xl font-extrabold text-brand-evergreen">${plan.title}</h1>
+    <h1 class="text-2xl sm:text-4xl font-semibold text-brand-evergreen">${plan.title}</h1>
     <p class="text-gray-600 text-base sm:text-lg leading-relaxed max-w-4xl">${plan.fullDescription}</p>
   `;
 
   const ctaBtn = createElement('a', {
     attributes: { href: `/register?plan=${plan.id}` },
-    className: 'inline-block px-6 py-3 rounded-xl bg-brand-amber hover:bg-amber-600 text-white font-bold text-sm shadow transition-all',
+    className: 'inline-block px-6 py-3 rounded-xl bg-brand-amber hover:brightness-95 text-gray-900 font-bold text-sm shadow transition-all',
     textContent: `درخواست مشاوره برای ${plan.title}`,
   });
   ctaBtn.addEventListener('click', (e) => {

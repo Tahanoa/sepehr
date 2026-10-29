@@ -22,9 +22,9 @@ export function createHomePage(): HTMLElement {
     innerHTML: `
       <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacing-4);">
         <div>
-          <h2 style="margin-bottom: var(--spacing-2); color: var(--color-primary);">زیرساخت معماری پلتفرم آموزشی پولاریس (Polaris)</h2>
+          <h2 style="margin-bottom: var(--spacing-2); color: var(--color-primary);">زیرساخت معماری پلتفرم آموزشی سپهر (Polaris)</h2>
           <p style="color: var(--color-text-secondary); max-width: 700px;">
-            این صفحه نمایش‌دهنده سیستم طراحی، توکن‌های رنگی رسمی برند، متغیرهای معنایی CSS و کامپوننت‌های پایه قابل استفاده مجدد سامانه پولاریس است.
+            این صفحه نمایش‌دهنده سیستم طراحی، توکن‌های رنگی رسمی برند، متغیرهای معنایی CSS و کامپوننت‌های پایه قابل استفاده مجدد سامانه سپهر است.
           </p>
         </div>
         <div id="banner-actions" style="display: flex; gap: var(--spacing-3); flex-wrap: wrap;"></div>
@@ -40,7 +40,7 @@ export function createHomePage(): HTMLElement {
     onClick: () => {
       showToast({
         title: 'اعلان موفقیت‌آمیز',
-        message: 'سیستم طراحی و معماری اولیه پولاریس با موفقیت بارگذاری شد.',
+        message: 'سیستم طراحی و معماری اولیه سپهر با موفقیت بارگذاری شد.',
         type: 'success',
       });
     },
@@ -53,7 +53,7 @@ export function createHomePage(): HTMLElement {
       const modal = new Modal({
         title: 'تأییدیه عملیات سامانه',
         content: `
-          <p>آیا از ذخیره‌سازی و ثبت تغییرات سیستم در پلتفرم آموزش پولاریس اطمینان دارید؟</p>
+          <p>آیا از ذخیره‌سازی و ثبت تغییرات سیستم در پلتفرم آموزش سپهر اطمینان دارید؟</p>
           <div style="padding: 12px; background: var(--color-lavender-mist); border-radius: 8px; margin-top: 12px;">
             <strong style="color: var(--color-evergreen);">پالت رنگی برند:</strong> EVERGREEN, DARK GREEN, LAVENDER MIST, AMBER EARTH, DEEP PURPLE.
           </div>

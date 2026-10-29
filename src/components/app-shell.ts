@@ -69,7 +69,7 @@ export class AppShell {
     clearElement(this.headerContainerEl);
 
     const breadcrumbs = [
-      { title: 'سامانه پولاریس', path: '/' },
+      { title: 'سامانه سپهر', path: '/' },
       { title: pageTitle },
     ];
 

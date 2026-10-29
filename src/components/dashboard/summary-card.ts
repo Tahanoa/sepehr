@@ -21,12 +21,12 @@ export function createSummaryCard(options: SummaryCardOptions): HTMLElement {
 
   const card = createElement('div', {
     className:
-      'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs hover:shadow-md hover:border-[#012622]/30 transition-all duration-200 flex flex-col justify-between group h-full relative overflow-hidden',
+      'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs hover:shadow-md hover:border-[rgb(var(--theme-primary))]/30 transition-all duration-200 flex flex-col justify-between group h-full relative overflow-hidden',
   });
 
   // Subtle top accent border line on hover
   const topAccent = createElement('div', {
-    className: 'absolute top-0 inset-x-0 h-1 bg-transparent group-hover:bg-[#E98A15] transition-all duration-300',
+    className: 'absolute top-0 inset-x-0 h-1 bg-transparent group-hover:bg-[rgb(var(--theme-accent))] transition-all duration-300',
   });
 
   // Top Row: Title & Icon
@@ -39,7 +39,7 @@ export function createSummaryCard(options: SummaryCardOptions): HTMLElement {
 
   const iconBox = createElement('div', {
     className:
-      'p-2.5 rounded-xl bg-[#ECE5F0]/70 text-[#012622] group-hover:bg-[#012622] group-hover:text-white transition-all duration-200 shrink-0 shadow-2xs',
+      'p-2.5 rounded-xl bg-[rgb(var(--theme-subtle))]/70 text-[rgb(var(--theme-primary))] group-hover:bg-[rgb(var(--theme-primary))] group-hover:text-white transition-all duration-200 shrink-0 shadow-2xs',
     innerHTML: getDashboardIcon(iconName, 'w-5 h-5'),
   });
 
@@ -48,7 +48,7 @@ export function createSummaryCard(options: SummaryCardOptions): HTMLElement {
 
   // Middle Row: Big Metric Value
   const valueEl = createElement('div', {
-    className: 'text-2xl sm:text-3xl font-black text-[#012622] tracking-tight my-1.5 dir-rtl text-right',
+    className: 'text-2xl sm:text-3xl font-bold text-[rgb(var(--theme-primary))] tracking-tight my-1.5 dir-rtl text-right',
     textContent: String(value),
   });
 

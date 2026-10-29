@@ -35,14 +35,14 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
 
     const headerText = createElement('div', { className: 'space-y-1' });
     headerText.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('assignment', 'w-6 h-6 text-[#012622]')} مدیریت تکالیف و صندوق دریافت پاسخ‌ها
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('assignment', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} مدیریت تکالیف و صندوق دریافت پاسخ‌ها
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">تعریف تکلیف جدید، تنظیم مهلت تحویل، بررسی پاسخ‌های ارسالی دانش‌آموزان و درج نمره.</p>
     `;
 
     const addBtn = createElement('button', {
-      className: 'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
+      className: 'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> تعریف تکلیف جدید`,
     });
     addBtn.addEventListener('click', () => openAddAssignmentModal());
@@ -63,16 +63,16 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
         card.innerHTML = `
           <div class="space-y-2">
             <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-              <span class="font-bold text-xs text-[#012622] bg-[#ECE5F0] px-2.5 py-1 rounded-lg">${asg.className}</span>
+              <span class="font-bold text-xs text-[rgb(var(--theme-primary))] bg-[rgb(var(--theme-subtle))] px-2.5 py-1 rounded-lg">${asg.className}</span>
               <span class="text-[11px] text-gray-500 font-mono">مهلت: ${asg.dueDate}</span>
             </div>
-            <h3 class="font-extrabold text-sm text-gray-900">${asg.title}</h3>
+            <h3 class="font-semibold text-sm text-gray-900">${asg.title}</h3>
             <p class="text-xs text-gray-600 leading-relaxed line-clamp-2">${asg.description}</p>
           </div>
 
           <div class="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
             <span class="text-gray-500">تعداد پاسخ‌های دریافتی: <strong class="text-gray-900 font-mono">${submissions.length} مورد</strong></span>
-            <button class="view-sub-btn px-3 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
+            <button class="view-sub-btn px-3 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
               صندوق پاسخ‌ها (${submissions.length})
             </button>
           </div>
@@ -188,7 +188,7 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
         `;
 
         const saveBtn = createElement('button', {
-          className: 'mt-2 px-3 py-1.5 bg-[#012622] text-white text-xs font-bold rounded-lg hover:bg-[#003B36]',
+          className: 'mt-2 px-3 py-1.5 bg-[rgb(var(--theme-primary))] text-white text-xs font-bold rounded-lg hover:bg-[rgb(var(--theme-hover))]',
           textContent: 'ذخیره نمره و بازخورد',
         });
 

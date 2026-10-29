@@ -13,7 +13,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { label: 'صفحه اصلی', path: '/' },
   { label: 'طرح‌ها و بسته‌ها', path: '/plans' },
-  { label: 'درباره پولاریس', path: '/about' },
+  { label: 'درباره سپهر', path: '/about' },
   { label: 'تماس با ما', path: '/contact' },
 ];
 
@@ -44,7 +44,7 @@ export function createPublicHeader(currentPath: string): HTMLElement {
   const logoText = createElement('div', { className: 'flex flex-col' });
   const brandName = createElement('span', {
     className: 'text-xl font-bold text-brand-evergreen tracking-tight',
-    textContent: 'پولاریس',
+    textContent: 'سپهر',
   });
   const brandSub = createElement('span', {
     className: 'text-[11px] font-medium text-gray-500 -mt-1',
@@ -80,8 +80,8 @@ export function createPublicHeader(currentPath: string): HTMLElement {
   const actionsContainer = createElement('div', { className: 'hidden md:flex items-center gap-2.5' });
 
   const demoBtn = createElement('button', {
-    className: 'px-3.5 py-2 rounded-xl text-xs font-extrabold bg-[#012622] hover:bg-[#003B36] text-white shadow-sm transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-    innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg> <span>ورود به نسخه دمو</span>`,
+    className: 'px-3.5 py-2 rounded-xl text-xs font-semibold bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white shadow-sm transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
+    innerHTML: `<svg class="w-4 h-4 text-[rgb(var(--theme-accent))]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg> <span>ورود به نسخه دمو</span>`,
   });
   demoBtn.addEventListener('click', () => {
     const modal = createDemoSwitcherModal(() => {
@@ -102,7 +102,7 @@ export function createPublicHeader(currentPath: string): HTMLElement {
 
   const registerBtn = createElement('a', {
     attributes: { href: '/register' },
-    className: 'px-4 py-2 rounded-xl text-xs font-bold bg-brand-amber hover:bg-amber-600 text-white shadow-sm hover:shadow transition-all transform hover:-translate-y-0.5',
+    className: 'px-4 py-2 rounded-xl text-xs font-bold bg-brand-amber hover:brightness-95 text-gray-900 shadow-sm hover:shadow transition-all transform hover:-translate-y-0.5',
     textContent: 'ثبت‌نام',
   });
   registerBtn.addEventListener('click', (e) => {
@@ -157,7 +157,7 @@ export function createPublicHeader(currentPath: string): HTMLElement {
 
   const mReg = createElement('a', {
     attributes: { href: '/register' },
-    className: 'w-full py-2.5 text-center font-bold text-white bg-brand-amber rounded-xl shadow',
+    className: 'w-full py-2.5 text-center font-bold text-gray-900 bg-brand-amber rounded-xl shadow',
     textContent: 'ثبت‌نام و مشاوره موسسات',
   });
   mReg.addEventListener('click', (e) => {

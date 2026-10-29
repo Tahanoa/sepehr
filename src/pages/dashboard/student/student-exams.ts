@@ -56,14 +56,14 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
     // Header
     const headerRow = createElement('div', { className: 'pb-2 border-b border-gray-200 space-y-1' });
     headerRow.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('exam', 'w-6 h-6 text-[#012622]')} آزمون‌های من
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('exam', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} آزمون‌های من
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">شرکت در آزمون‌های کلاسی، مشاهده زمان‌بندی، کارنامه و پاسخ‌نامه تشریحی.</p>
     `;
 
     // Tabs
-    const tabsNav = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 pb-1 text-xs font-extrabold' });
+    const tabsNav = createElement('div', { className: 'flex items-center gap-2 overflow-x-auto border-b border-gray-200 pb-2 text-sm font-semibold' });
     const tabList: { key: typeof activeTab; label: string; count: number }[] = [
       { key: 'available', label: 'آماده شرکت / در حال انجام', count: categorized.available.length },
       { key: 'upcoming', label: 'آزمون‌های پیش‌رو', count: categorized.upcoming.length },
@@ -75,7 +75,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
     tabList.forEach((t) => {
       const btn = createElement('button', {
         className: `px-3.5 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
-          activeTab === t.key ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          activeTab === t.key ? 'bg-[rgb(var(--theme-primary))] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
         textContent: `${t.label} (${t.count.toLocaleString('fa-IR')})`,
       });
@@ -100,10 +100,10 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
         card.innerHTML = `
           <div class="space-y-2">
             <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-              <span class="font-bold text-xs text-[#012622] bg-[#ECE5F0] px-2.5 py-1 rounded-lg">${ex.subjectName}</span>
+              <span class="font-bold text-xs text-[rgb(var(--theme-primary))] bg-[rgb(var(--theme-subtle))] px-2.5 py-1 rounded-lg">${ex.subjectName}</span>
               <span class="text-[11px] font-mono text-gray-500">تاریخ: ${ex.examDate}</span>
             </div>
-            <h3 class="font-extrabold text-sm text-gray-900">${ex.title}</h3>
+            <h3 class="font-semibold text-sm text-gray-900">${ex.title}</h3>
             <div class="text-xs text-gray-600 space-y-1">
               <div>مدت زمان: <strong>${ex.durationMinutes} دقیقه</strong> | سقف نمره: <strong>${ex.maxScore}</strong></div>
               <div>تعداد سوالات: <strong>${questions.length} سوال</strong></div>
@@ -122,7 +122,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
               ${attempt ? (attempt.totalScore !== undefined ? `نمره: ${attempt.totalScore} از ${ex.maxScore}` : 'در انتظار تصحیح معلم') : 'آماده شرکت'}
             </span>
 
-            <button class="exam-action-btn px-4 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
+            <button class="exam-action-btn px-4 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
               ${attempt ? (attempt.status === 'in_progress' ? 'ادامه آزمون' : 'مشاهده کارنامه') : 'ورود به جلسه آزمون'}
             </button>
           </div>
@@ -150,12 +150,12 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
 
     rulesContainer.innerHTML = `
       <div class="bg-amber-50/80 border border-amber-200 p-3.5 rounded-xl space-y-1">
-        <div class="font-extrabold text-amber-950 text-xs">مشخصات آزمون: ${ex.title}</div>
+        <div class="font-semibold text-amber-950 text-xs">مشخصات آزمون: ${ex.title}</div>
         <div class="text-amber-900">مدت زمان: <strong class="font-mono">${ex.durationMinutes} دقیقه</strong> | سقف نمره: <strong class="font-mono">${ex.maxScore}</strong></div>
       </div>
 
       <div class="space-y-2">
-        <h4 class="font-extrabold text-xs text-[#012622]">لطفاً پیش از شروع آزمون، قوانین زیر را با دقت مطالعه کنید:</h4>
+        <h4 class="font-semibold text-xs text-[rgb(var(--theme-primary))]">لطفاً پیش از شروع آزمون، قوانین زیر را با دقت مطالعه کنید:</h4>
         <ol class="list-decimal list-inside space-y-1.5 text-gray-700 bg-gray-50 p-3.5 rounded-xl border border-gray-200">
           <li>آزمون پس از تأیید شروع، زمان‌سنج فعال خواهد شد.</li>
           <li>مدت آزمون محدود است و پس از پایان زمان، پاسخ‌ها به‌صورت خودکار ثبت و ارسال می‌شوند.</li>
@@ -169,13 +169,13 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
       </div>
 
       <div class="flex items-center gap-2 pt-2 border-t border-gray-200">
-        <input type="checkbox" id="chk-accept-rules" class="w-4 h-4 text-[#012622] rounded cursor-pointer" />
+        <input type="checkbox" id="chk-accept-rules" class="w-4 h-4 text-[rgb(var(--theme-primary))] rounded cursor-pointer" />
         <label for="chk-accept-rules" class="font-bold text-gray-900 cursor-pointer">قوانین آزمون را مطالعه کرده‌ام و می‌پذیرم.</label>
       </div>
     `;
 
     const startBtn = createElement('button', {
-      className: 'px-5 py-2.5 bg-[#012622] text-white text-xs font-bold rounded-xl transition-all opacity-50 cursor-not-allowed',
+      className: 'px-5 py-2.5 bg-[rgb(var(--theme-primary))] text-white text-xs font-bold rounded-xl transition-all opacity-50 cursor-not-allowed',
       textContent: 'شروع آزمون',
     });
 
@@ -183,10 +183,10 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
     chk.addEventListener('change', () => {
       if (chk.checked) {
         startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        startBtn.classList.add('hover:bg-[#003B36]', 'cursor-pointer');
+        startBtn.classList.add('hover:bg-[rgb(var(--theme-hover))]', 'cursor-pointer');
       } else {
         startBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        startBtn.classList.remove('hover:bg-[#003B36]', 'cursor-pointer');
+        startBtn.classList.remove('hover:bg-[rgb(var(--theme-hover))]', 'cursor-pointer');
       }
     });
 
@@ -258,15 +258,15 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
     let remainingSec = calculateRemainingSec();
 
     // Top Bar
-    const topBar = createElement('div', { className: 'bg-[#012622] text-white p-4 flex items-center justify-between shadow-md shrink-0' });
+    const topBar = createElement('div', { className: 'bg-[rgb(var(--theme-primary))] text-white p-4 flex items-center justify-between shadow-md shrink-0' });
     topBar.innerHTML = `
       <div>
-        <h2 class="font-extrabold text-sm sm:text-base">${ex.title} (${ex.subjectName})</h2>
+        <h2 class="font-semibold text-sm sm:text-base">${ex.title} (${ex.subjectName})</h2>
         <span class="text-xs text-emerald-200">دانش‌آموز: ${attempt.studentName}</span>
       </div>
 
       <div class="flex items-center gap-4">
-        <div class="bg-[#003B36] border border-emerald-500/30 px-3.5 py-1.5 rounded-xl font-mono text-xs sm:text-sm font-black text-amber-400 flex items-center gap-2">
+        <div class="bg-[rgb(var(--theme-hover))] border border-emerald-500/30 px-3.5 py-1.5 rounded-xl font-mono text-xs sm:text-sm font-bold text-amber-400 flex items-center gap-2">
           <span>⏱️ زمان باقیمانده:</span>
           <span id="runner-timer">۰۰:۰۰</span>
         </div>
@@ -291,9 +291,9 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
         const isCurrent = idx === currentQIndex;
 
         const btn = createElement('button', {
-          className: `py-2 text-xs font-extrabold rounded-xl font-mono transition-all cursor-pointer ${
+          className: `py-2 text-xs font-semibold rounded-xl font-mono transition-all cursor-pointer ${
             isCurrent
-              ? 'bg-[#012622] text-white ring-2 ring-[#E98A15]'
+              ? 'bg-[rgb(var(--theme-primary))] text-white ring-2 ring-[rgb(var(--theme-accent))]'
               : isAnswered
               ? 'bg-emerald-100 text-emerald-950 border border-emerald-300'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -309,7 +309,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
       });
     };
 
-    navSidebar.appendChild(createElement('h3', { className: 'font-extrabold text-xs text-gray-900 mb-3', textContent: 'راهنمای سوالات:' }));
+    navSidebar.appendChild(createElement('h3', { className: 'font-semibold text-xs text-gray-900 mb-3', textContent: 'راهنمای سوالات:' }));
     navSidebar.appendChild(qNavGrid);
 
     // Active Question Box
@@ -324,8 +324,8 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
       const qHeader = createElement('div', { className: 'space-y-3' });
       qHeader.innerHTML = `
         <div class="flex items-center justify-between pb-3 border-b border-gray-100">
-          <span class="font-black text-sm text-[#012622]">سوال ${(currentQIndex + 1).toLocaleString('fa-IR')} از ${questions.length.toLocaleString('fa-IR')}</span>
-          <span class="font-bold text-xs bg-[#ECE5F0] text-[#012622] px-2.5 py-1 rounded-lg">بارم: ${q.points} نمره</span>
+          <span class="font-bold text-sm text-[rgb(var(--theme-primary))]">سوال ${(currentQIndex + 1).toLocaleString('fa-IR')} از ${questions.length.toLocaleString('fa-IR')}</span>
+          <span class="font-bold text-xs bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] px-2.5 py-1 rounded-lg">بارم: ${q.points} نمره</span>
         </div>
         <p class="font-bold text-sm text-gray-900 leading-relaxed">${q.prompt}</p>
       `;
@@ -338,11 +338,11 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
           const isSelected = studentAnswers[q.id] === opt.id;
           const lbl = createElement('label', {
             className: `flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-              isSelected ? 'bg-[#ECE5F0]/60 border-[#012622] font-bold' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+              isSelected ? 'bg-[rgb(var(--theme-subtle))]/60 border-[rgb(var(--theme-primary))] font-bold' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`,
           });
           lbl.innerHTML = `
-            <input type="radio" name="opt-${q.id}" value="${opt.id}" class="text-[#012622]" ${isSelected ? 'checked' : ''} />
+            <input type="radio" name="opt-${q.id}" value="${opt.id}" class="text-[rgb(var(--theme-primary))]" ${isSelected ? 'checked' : ''} />
             <span class="text-xs text-gray-900">${opt.text}</span>
           `;
           lbl.querySelector('input')!.addEventListener('change', () => {
@@ -362,11 +362,11 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
           const isSelected = currentArr.includes(opt.id);
           const lbl = createElement('label', {
             className: `flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-              isSelected ? 'bg-[#ECE5F0]/60 border-[#012622] font-bold' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+              isSelected ? 'bg-[rgb(var(--theme-subtle))]/60 border-[rgb(var(--theme-primary))] font-bold' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`,
           });
           lbl.innerHTML = `
-            <input type="checkbox" value="${opt.id}" class="text-[#012622] rounded" ${isSelected ? 'checked' : ''} />
+            <input type="checkbox" value="${opt.id}" class="text-[rgb(var(--theme-primary))] rounded" ${isSelected ? 'checked' : ''} />
             <span class="text-xs text-gray-900">${opt.text}</span>
           `;
           lbl.querySelector('input')!.addEventListener('change', (e) => {
@@ -451,7 +451,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
       });
 
       const nextBtn = createElement('button', {
-        className: `px-4 py-2 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl text-xs cursor-pointer ${currentQIndex === questions.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`,
+        className: `px-4 py-2 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white font-bold rounded-xl text-xs cursor-pointer ${currentQIndex === questions.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`,
         textContent: '⬅ بعدی',
       });
       nextBtn.addEventListener('click', () => {
@@ -583,7 +583,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
     const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800' });
     content.innerHTML = `
       <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl space-y-1.5 text-emerald-950">
-        <div class="font-extrabold text-sm">کارنامه آزمون: ${ex.title}</div>
+        <div class="font-semibold text-sm">کارنامه آزمون: ${ex.title}</div>
         <div>نمره ثبت شده: <strong class="font-mono text-sm">${attempt.totalScore ?? 'در انتظار تصحیح'} از ${ex.maxScore}</strong></div>
         <div>زمان تحویل: <span class="font-mono">${attempt.submittedAt}</span></div>
       </div>

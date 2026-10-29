@@ -44,9 +44,9 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('teacher', 'w-6 h-6 text-[#012622]')} مدیریت معلمان و همکاران آموزشی`;
+    title.innerHTML = `${getDashboardIcon('teacher', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} مدیریت معلمان و همکاران آموزشی`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',
@@ -60,8 +60,8 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
     const importBtn = createElement('button', {
       className:
-        'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-      innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود گروهی Excel`,
+        'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
+      innerHTML: `<svg class="w-4 h-4 text-[rgb(var(--theme-accent))]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود گروهی Excel`,
     });
     importBtn.addEventListener('click', () => {
       const modal = createExcelImportModal({
@@ -80,7 +80,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
     const addBtn = createElement('button', {
       className:
-        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> افزودن همکار جدید`,
     });
     addBtn.addEventListener('click', () => openAddStaffModal());
@@ -99,7 +99,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
     const searchWrapper = createElement('div', { className: 'relative' });
     const searchInput = createElement('input', {
       className:
-        'w-full bg-gray-50 border border-gray-300 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'w-full bg-gray-50 border border-gray-300 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       attributes: { type: 'text', placeholder: 'جستجو با نام، عنوان سمت یا شماره تماس...', value: searchQuery },
     });
     searchInput.addEventListener('input', (e) => {
@@ -116,7 +116,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
     const roleSelect = createElement('select', {
       className:
-        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     });
     roleSelect.innerHTML = `
       <option value="all" ${selectedRole === 'all' ? 'selected' : ''}>همه نقش‌های شغلی</option>
@@ -152,11 +152,11 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
         card.innerHTML = `
           <div class="space-y-3">
             <div class="flex items-center gap-3 border-b border-gray-100 pb-3">
-              <div class="w-10 h-10 rounded-full bg-[#012622] text-white font-bold flex items-center justify-center text-sm shrink-0">
+              <div class="w-10 h-10 rounded-full bg-[rgb(var(--theme-primary))] text-white font-bold flex items-center justify-center text-sm shrink-0">
                 ${st.fullName.slice(0, 1)}
               </div>
               <div class="min-w-0">
-                <h3 class="font-extrabold text-sm text-gray-900 truncate">${st.fullName}</h3>
+                <h3 class="font-semibold text-sm text-gray-900 truncate">${st.fullName}</h3>
                 <div class="text-[11px] text-gray-500 font-medium">${st.roleTitle}</div>
               </div>
             </div>
@@ -164,7 +164,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
             <div class="space-y-1.5 text-xs text-gray-700">
               <div class="flex items-center justify-between">
                 <span class="text-gray-500">ساعات موظفی هفتگی:</span>
-                <span class="font-bold text-[#012622] font-mono">${st.weeklyHours} ساعت</span>
+                <span class="font-bold text-[rgb(var(--theme-primary))] font-mono">${st.weeklyHours} ساعت</span>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-gray-500">شماره تماس:</span>
@@ -206,7 +206,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
         });
 
         const editBtn = createElement('button', {
-          className: 'px-3 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-lg cursor-pointer',
+          className: 'px-3 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white font-bold rounded-lg cursor-pointer',
           textContent: 'ویرایش همکار',
         });
         editBtn.addEventListener('click', () => openEditStaffModal(st, classes.map((c) => c.name)));

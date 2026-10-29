@@ -22,18 +22,18 @@ export function createActivityList(activities: DemoActivity[]): HTMLElement {
       act.badgeType === 'success'
         ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/80'
         : act.badgeType === 'primary'
-        ? 'bg-[#ECE5F0] text-[#012622] border border-[#012622]/10'
+        ? 'bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] border border-[rgb(var(--theme-primary))]/10'
         : act.badgeType === 'warning'
         ? 'bg-amber-50 text-amber-900 border border-amber-200/80'
         : 'bg-sky-50 text-sky-900 border border-sky-200/80';
 
     const categoryBadge = createElement('span', {
-      className: `px-2 py-0.5 rounded-md text-[11px] font-extrabold ${badgeClass}`,
+      className: `px-2 py-0.5 rounded-md text-[11px] font-semibold ${badgeClass}`,
       textContent: act.title,
     });
 
     const actor = createElement('span', {
-      className: 'text-xs font-bold text-gray-800 group-hover:text-[#012622] transition-colors',
+      className: 'text-xs font-bold text-gray-800 group-hover:text-[rgb(var(--theme-primary))] transition-colors',
       textContent: act.actorName,
     });
 

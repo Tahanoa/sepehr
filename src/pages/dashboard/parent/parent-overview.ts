@@ -29,15 +29,15 @@ export function createParentOverviewPage(membership: OrganizationMembership): HT
 
   // Welcome Hero
   const welcomeCard = createElement('div', {
-    className: 'bg-gradient-to-br from-[#012622] via-[#003B36] to-[#59114D] rounded-2xl p-6 text-white shadow-md space-y-2',
+    className: 'bg-gradient-to-br from-[rgb(var(--theme-primary))] via-[rgb(var(--theme-hover))] to-[rgb(var(--theme-secondary))] rounded-2xl p-6 text-white shadow-md space-y-2',
   });
 
   welcomeCard.innerHTML = `
     <div class="flex items-center gap-2">
-      <span class="px-3 py-1 bg-[#E98A15] text-[#012622] text-xs font-black rounded-full">پیش‌خوان خانواده و اولیا</span>
+      <span class="px-3 py-1 bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] text-xs font-bold rounded-full">پیش‌خوان خانواده و اولیا</span>
       <span class="text-xs text-amber-200">${membership.organization.name}</span>
     </div>
-    <h2 class="text-2xl font-black">جناب آقای/خانم ${user?.name || 'ولی محترم'}</h2>
+    <h2 class="text-2xl font-bold">جناب آقای/خانم ${user?.name || 'ولی محترم'}</h2>
     <p class="text-xs text-gray-200 opacity-90 max-w-xl">
       پایش یکپارچه وضعیت تحصیلی، حضور و غیاب، نمرات و یادداشت‌های معلمان برای فرزندان تحت سرپرستی.
     </p>
@@ -48,8 +48,8 @@ export function createParentOverviewPage(membership: OrganizationMembership): HT
 
   const sectionHeading = createElement('div', { className: 'flex items-center justify-between' });
   sectionHeading.innerHTML = `
-    <h3 class="text-base font-extrabold text-gray-900 flex items-center gap-2">
-      ${getDashboardIcon('users', 'w-5 h-5 text-[#012622]')} فرزندان تحت سرپرستی (${myChildren.length} نفر)
+    <h3 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+      ${getDashboardIcon('users', 'w-5 h-5 text-[rgb(var(--theme-primary))]')} فرزندان تحت سرپرستی (${myChildren.length} نفر)
     </h3>
   `;
   childrenContainer.appendChild(sectionHeading);
@@ -73,11 +73,11 @@ export function createParentOverviewPage(membership: OrganizationMembership): HT
         <div class="space-y-3">
           <div class="flex items-center justify-between pb-3 border-b border-gray-100">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-[#012622] text-white flex items-center justify-center font-bold text-sm">
+              <div class="w-10 h-10 rounded-full bg-[rgb(var(--theme-primary))] text-white flex items-center justify-center font-bold text-sm">
                 ${child.fullName.slice(0, 1)}
               </div>
               <div>
-                <h4 class="font-extrabold text-sm text-gray-900">${child.fullName}</h4>
+                <h4 class="font-semibold text-sm text-gray-900">${child.fullName}</h4>
                 <p class="text-xs text-gray-500">${child.className} (${child.gradeLevel})</p>
               </div>
             </div>
@@ -88,12 +88,12 @@ export function createParentOverviewPage(membership: OrganizationMembership): HT
           <div class="grid grid-cols-2 gap-2 text-xs">
             <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-100 space-y-0.5">
               <span class="text-[10px] text-gray-500 font-bold block">غیبت‌های ثبت‌شده</span>
-              <span class="text-sm font-black font-mono ${absentCount > 0 ? 'text-rose-700' : 'text-emerald-800'}">${absentCount} مورد</span>
+              <span class="text-sm font-bold font-mono ${absentCount > 0 ? 'text-rose-700' : 'text-emerald-800'}">${absentCount} مورد</span>
             </div>
 
             <div class="bg-amber-50/60 p-2.5 rounded-xl border border-amber-100 space-y-0.5">
               <span class="text-[10px] text-amber-900 font-bold block">یادداشت‌های معلم</span>
-              <span class="text-sm font-black font-mono text-amber-950">${childNotes.length} یادداشت جدید</span>
+              <span class="text-sm font-bold font-mono text-amber-950">${childNotes.length} یادداشت جدید</span>
             </div>
           </div>
 
@@ -120,7 +120,7 @@ export function createParentOverviewPage(membership: OrganizationMembership): HT
         </div>
 
         <div class="pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
-          <button class="open-detail-btn w-full py-2 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl transition-all cursor-pointer text-center">
+          <button class="open-detail-btn w-full py-2 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl transition-all cursor-pointer text-center">
             مشاهده پرونده جامع و کارنامه
           </button>
         </div>
@@ -138,8 +138,8 @@ export function createParentOverviewPage(membership: OrganizationMembership): HT
   // Parent Reminders & Action Bar
   const remindersBox = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-3' });
   remindersBox.innerHTML = `
-    <h3 class="text-xs sm:text-sm font-extrabold text-gray-900 flex items-center gap-2">
-      ${getDashboardIcon('attendance', 'w-4 h-4 text-[#012622]')} دسترسی سریع اولیا
+    <h3 class="text-xs sm:text-sm font-semibold text-gray-900 flex items-center gap-2">
+      ${getDashboardIcon('attendance', 'w-4 h-4 text-[rgb(var(--theme-primary))]')} دسترسی سریع اولیا
     </h3>
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
       <button onclick="window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: '/app/${orgId}/attendance' }))" class="p-3 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 font-bold text-gray-800 text-center transition-colors cursor-pointer">
@@ -159,7 +159,7 @@ export function createParentOverviewPage(membership: OrganizationMembership): HT
 
   // Announcements
   const ancBox = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 space-y-3' });
-  ancBox.innerHTML = `<h3 class="text-xs sm:text-sm font-black text-gray-900 flex items-center gap-2">${getDashboardIcon('announcement', 'w-4 h-4 text-[#E98A15]')} اطلاعیه‌های ویژه اولیا</h3>`;
+  ancBox.innerHTML = `<h3 class="text-xs sm:text-sm font-bold text-gray-900 flex items-center gap-2">${getDashboardIcon('announcement', 'w-4 h-4 text-[rgb(var(--theme-accent))]')} اطلاعیه‌های ویژه اولیا</h3>`;
 
   const ancBody = createElement('div', { className: 'space-y-2' });
   announcements.filter((a) => a.audience === 'all' || a.audience === 'parents').forEach((anc) => {
@@ -187,12 +187,12 @@ function openChildDetailModal(child: any, notes: any[], invoices: any[]) {
   const container = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800' });
 
   container.innerHTML = `
-    <div class="bg-[#ECE5F0]/70 p-3.5 rounded-2xl border border-[#012622]/20 flex items-center justify-between">
+    <div class="bg-[rgb(var(--theme-subtle))]/70 p-3.5 rounded-2xl border border-[rgb(var(--theme-primary))]/20 flex items-center justify-between">
       <div>
-        <div class="font-extrabold text-sm text-[#012622]">${child.fullName}</div>
+        <div class="font-semibold text-sm text-[rgb(var(--theme-primary))]">${child.fullName}</div>
         <div class="text-[11px] text-gray-600">${child.className} (${child.gradeLevel}) | شماره ملی: ${child.nationalId}</div>
       </div>
-      <span class="px-3 py-1 bg-[#012622] text-white rounded-xl text-xs font-mono font-bold">${child.studentCode}</span>
+      <span class="px-3 py-1 bg-[rgb(var(--theme-primary))] text-white rounded-xl text-xs font-mono font-bold">${child.studentCode}</span>
     </div>
 
     <!-- Notes Section -->

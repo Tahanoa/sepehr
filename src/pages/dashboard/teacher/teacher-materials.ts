@@ -34,14 +34,14 @@ export function createTeacherMaterialsPage(membership: OrganizationMembership): 
 
     const headerText = createElement('div', { className: 'space-y-1' });
     headerText.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('book', 'w-6 h-6 text-[#012622]')} کتابخانه و منابع آموزشی
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('book', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} کتابخانه و منابع آموزشی
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">بارگذاری جزوات، ویدیوهای آموزشی و فایل‌های تمرینی برای کلاس‌های انتسابی.</p>
     `;
 
     const addBtn = createElement('button', {
-      className: 'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
+      className: 'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> بارگذاری محتوای جدید`,
     });
     addBtn.addEventListener('click', () => openUploadMaterialModal());
@@ -60,14 +60,14 @@ export function createTeacherMaterialsPage(membership: OrganizationMembership): 
         card.innerHTML = `
           <div class="space-y-2">
             <div class="flex items-center justify-between">
-              <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#ECE5F0] text-[#012622]">${mat.category}</span>
+              <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))]">${mat.category}</span>
               <span class="text-[10px] font-mono text-gray-400">${mat.uploadDate}</span>
             </div>
-            <h3 class="font-extrabold text-xs text-gray-900 leading-snug">${mat.title}</h3>
+            <h3 class="font-semibold text-xs text-gray-900 leading-snug">${mat.title}</h3>
             <p class="text-[11px] text-gray-500 line-clamp-2">${mat.description}</p>
             <div class="bg-gray-50 p-2 rounded-xl text-[11px] text-gray-700 font-mono flex items-center justify-between">
               <span>📄 ${mat.fileName}</span>
-              <span class="font-bold text-[#012622]">${mat.fileType} (${mat.fileSize})</span>
+              <span class="font-bold text-[rgb(var(--theme-primary))]">${mat.fileType} (${mat.fileSize})</span>
             </div>
           </div>
 

@@ -37,16 +37,16 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   const attendanceRate =
     todayAttendance.length > 0
       ? ((presentCount / todayAttendance.length) * 100).toFixed(1)
-      : '۹۶.۴';
+      : '—';
   const attendanceSubLabel =
     todayAttendance.length > 0
       ? `${presentCount} حاضر / ${absentCount} غایب`
-      : 'ارزیابی ۳۰ روز اخیر';
+      : 'هنوز داده‌ای ثبت نشده';
 
   // 1. Welcome Header Banner
   const welcomeCard = createElement('div', {
     className:
-      'bg-gradient-to-br from-[#012622] via-[#003B36] to-[#59114D] rounded-2xl p-5 sm:p-7 text-white shadow-md relative overflow-hidden',
+      'sepehr-panel relative overflow-hidden',
   });
 
   const welcomeContent = createElement('div', { className: 'relative z-10 space-y-2.5 max-w-2xl' });
@@ -60,12 +60,12 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
 
   const badge = createElement('div', {
     className:
-      'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-[#E98A15] text-[#012622] shadow-2xs',
+      'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] shadow-2xs',
     textContent: orgTitleLabel,
   });
 
   const dateBadge = createElement('div', {
-    className: 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/15 text-white',
+    className: 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-gray-50 text-gray-600',
     textContent: `سال تحصیلی ${membership.organization.academicYear || '۱۴۰۳ - ۱۴۰۲'}`,
   });
 
@@ -73,8 +73,8 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   badgeGroup.appendChild(dateBadge);
 
   const title = createElement('h2', {
-    className: 'text-xl sm:text-2xl lg:text-3xl font-black tracking-tight',
-    textContent: `خوش آمدید، ${membership.organization.name}`,
+    className: 'text-xl sm:text-2xl font-bold tracking-tight',
+    textContent: `${membership.organization.name}`,
   });
 
   let welcomeDesc = 'نگاه کلی به وضعیت آموزشی، شاخص‌های عملکردی و حضور و غیاب مرکز در یک نگاه.';
@@ -87,7 +87,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   }
 
   const desc = createElement('p', {
-    className: 'text-xs sm:text-sm text-gray-200 leading-relaxed font-normal opacity-90 max-w-xl',
+    className: 'text-sm text-gray-600 leading-relaxed font-normal opacity-90 max-w-xl',
     textContent: welcomeDesc,
   });
 
@@ -95,13 +95,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   welcomeContent.appendChild(title);
   welcomeContent.appendChild(desc);
 
-  const bgPattern = createElement('div', {
-    className: 'absolute end-0 top-0 bottom-0 opacity-10 pointer-events-none p-6 hidden sm:block',
-    innerHTML: `<svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`,
-  });
-
   welcomeCard.appendChild(welcomeContent);
-  welcomeCard.appendChild(bgPattern);
 
   // 2. Summary KPI Cards Grid
   const statsGrid = createElement('div', {
@@ -110,37 +104,29 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
 
   const card1 = createSummaryCard({
     title: orgType === 'elementary_school' ? 'دانش‌آموزان ثبت‌نامی' : 'کل دانش‌آموزان فعال',
-    value: activeStudentsCount > 0 ? activeStudentsCount.toLocaleString('fa-IR') : '۱,۴۵۰',
+    value: activeStudentsCount.toLocaleString('fa-IR'),
     iconName: 'users',
-    changePercent: 8.5,
-    changeType: 'increase',
-    periodLabel: 'نسبت به ترم قبل',
+    periodLabel: 'وضعیت فعلی مرکز',
   });
 
   const card2 = createSummaryCard({
     title: 'کادر آموزشی و معلمان',
-    value: activeStaffCount > 0 ? activeStaffCount.toLocaleString('fa-IR') : '۶۸',
+    value: activeStaffCount.toLocaleString('fa-IR'),
     iconName: 'teacher',
-    changePercent: 2.1,
-    changeType: 'increase',
     periodLabel: 'کادر فعال',
   });
 
   const card3 = createSummaryCard({
     title: 'کلاس‌ها و گروه‌ها',
-    value: activeClassesCount > 0 ? activeClassesCount.toLocaleString('fa-IR') : '۴۲',
+    value: activeClassesCount.toLocaleString('fa-IR'),
     iconName: 'classes',
-    changePercent: 0,
-    changeType: 'neutral',
     periodLabel: 'در حال برگزاری',
   });
 
   const card4 = createSummaryCard({
-    title: 'نرخ حضور و غیاب',
-    value: `٪${attendanceRate}`,
+    title: 'حضور در سوابق ثبت‌شده',
+    value: todayAttendance.length ? `${Number(attendanceRate).toLocaleString('fa-IR')}٪` : '—',
     iconName: 'attendance',
-    changePercent: 1.4,
-    changeType: 'increase',
     periodLabel: attendanceSubLabel,
   });
 
@@ -162,7 +148,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   const chartHeader = createElement('div', { className: 'flex items-center justify-between pb-3.5 border-b border-gray-100 flex-wrap gap-2' });
   const chartTitleGroup = createElement('div', { className: 'flex items-center gap-2.5' });
   const chartIcon = createElement('div', {
-    className: 'p-2.5 bg-[#ECE5F0] text-[#012622] rounded-xl shrink-0 shadow-2xs',
+    className: 'p-2.5 bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] rounded-xl shrink-0 shadow-2xs',
     innerHTML: getDashboardIcon('chart', 'w-5 h-5'),
   });
 
@@ -172,7 +158,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   else if (orgType === 'general_school') chartTitleText = 'مقایسه آماری مقاطع سه‌گانه مجتمع آموزشی';
 
   const chartTitle = createElement('h3', {
-    className: 'text-xs sm:text-sm font-black text-gray-900 tracking-tight',
+    className: 'text-xs sm:text-sm font-bold text-gray-900 tracking-tight',
     textContent: chartTitleText,
   });
 
@@ -193,21 +179,21 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
 
   if (orgType === 'elementary_school') {
     itemsData = [
-      { label: 'پایه‌های اول و دوم (دوره اول ابتدایی)', percent: 96, sub: 'حضور آنلاین کامل - ۴۶ دانش‌آموز', color: 'bg-[#012622]' },
-      { label: 'پایه‌های سوم و چهارم', percent: 94, sub: '۴۷ دانش‌آموز در ۲ کلاس', color: 'bg-[#003B36]' },
-      { label: 'پایه‌های پنجم و ششم', percent: 98, sub: '۵۰ دانش‌آموز - برنامه‌های آمادگی آزمون', color: 'bg-[#E98A15]' },
+      { label: 'پایه‌های اول و دوم (دوره اول ابتدایی)', percent: 96, sub: 'حضور آنلاین کامل - ۴۶ دانش‌آموز', color: 'bg-[rgb(var(--theme-primary))]' },
+      { label: 'پایه‌های سوم و چهارم', percent: 94, sub: '۴۷ دانش‌آموز در ۲ کلاس', color: 'bg-[rgb(var(--theme-hover))]' },
+      { label: 'پایه‌های پنجم و ششم', percent: 98, sub: '۵۰ دانش‌آموز - برنامه‌های آمادگی آزمون', color: 'bg-[rgb(var(--theme-accent))]' },
     ];
   } else if (orgType === 'secondary_school') {
     itemsData = [
-      { label: 'پایه دهم (ریاضی و تجربی)', percent: 92, sub: '۲۸ دانش‌آموز - میانگین نمرات ۱۷.۸', color: 'bg-[#012622]' },
-      { label: 'پایه یازدهم (تجربی و انسانی)', percent: 95, sub: '۵۱ دانش‌آموز - درصد تکمیل امتحانات ۹۰٪', color: 'bg-[#003B36]' },
-      { label: 'پایه دوازدهم (متقاضیان کنکور سراسری)', percent: 98, sub: '۲۹ دانش‌آموز - پایش مستمر و مشاوره', color: 'bg-[#E98A15]' },
+      { label: 'پایه دهم (ریاضی و تجربی)', percent: 92, sub: '۲۸ دانش‌آموز - میانگین نمرات ۱۷.۸', color: 'bg-[rgb(var(--theme-primary))]' },
+      { label: 'پایه یازدهم (تجربی و انسانی)', percent: 95, sub: '۵۱ دانش‌آموز - درصد تکمیل امتحانات ۹۰٪', color: 'bg-[rgb(var(--theme-hover))]' },
+      { label: 'پایه دوازدهم (متقاضیان کنکور سراسری)', percent: 98, sub: '۲۹ دانش‌آموز - پایش مستمر و مشاوره', color: 'bg-[rgb(var(--theme-accent))]' },
     ];
   } else {
     itemsData = [
-      { label: 'مقطع دبستان و نوآموزان', percent: 97, sub: '۷۱ دانش‌آموز در ۳ کلاس فعال', color: 'bg-[#012622]' },
-      { label: 'مقطع متوسطه اول', percent: 94, sub: '۲۶ دانش‌آموز در دوره عمومی', color: 'bg-[#003B36]' },
-      { label: 'مقطع متوسطه دوم و کنکور', percent: 96, sub: '۲۴ دانش‌آموز رشته‌های نظری', color: 'bg-[#E98A15]' },
+      { label: 'مقطع دبستان و نوآموزان', percent: 97, sub: '۷۱ دانش‌آموز در ۳ کلاس فعال', color: 'bg-[rgb(var(--theme-primary))]' },
+      { label: 'مقطع متوسطه اول', percent: 94, sub: '۲۶ دانش‌آموز در دوره عمومی', color: 'bg-[rgb(var(--theme-hover))]' },
+      { label: 'مقطع متوسطه دوم و کنکور', percent: 96, sub: '۲۴ دانش‌آموز رشته‌های نظری', color: 'bg-[rgb(var(--theme-accent))]' },
     ];
   }
 
@@ -216,7 +202,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
     const rowHeader = createElement('div', { className: 'flex justify-between text-xs font-bold text-gray-700' });
     const labelSpan = createElement('span', { textContent: item.label });
     const valSpan = createElement('span', {
-      className: 'font-mono text-[#012622] font-black',
+      className: 'font-mono text-[rgb(var(--theme-primary))] font-bold',
       textContent: `٪${item.percent} (${item.sub})`,
     });
 
@@ -242,9 +228,9 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   // Quick Actions Section
   const actionsCard = createElement('div', { className: 'space-y-3.5' });
   const actionsHeader = createElement('h3', {
-    className: 'text-xs sm:text-sm font-black text-gray-900 tracking-tight flex items-center gap-2',
+    className: 'text-xs sm:text-sm font-bold text-gray-900 tracking-tight flex items-center gap-2',
   });
-  actionsHeader.innerHTML = `${getDashboardIcon('classes', 'w-4 h-4 text-[#012622]')} میان‌برهای عملیاتی و دسترسی سریع`;
+  actionsHeader.innerHTML = `${getDashboardIcon('classes', 'w-4 h-4 text-[rgb(var(--theme-primary))]')} میان‌برهای عملیاتی و دسترسی سریع`;
 
   const actionsGrid = createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 gap-3.5' });
 
@@ -328,10 +314,10 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   });
 
   const ancTitleGroup = createElement('div', { className: 'flex items-center gap-2' });
-  ancTitleGroup.innerHTML = `${getDashboardIcon('announcement', 'w-4 h-4 text-[#E98A15]')} <span class="text-xs sm:text-sm font-black text-gray-900">آخرین اطلاعیه‌های مرکز</span>`;
+  ancTitleGroup.innerHTML = `${getDashboardIcon('announcement', 'w-4 h-4 text-[rgb(var(--theme-accent))]')} <span class="text-xs sm:text-sm font-bold text-gray-900">آخرین اطلاعیه‌های مرکز</span>`;
 
   const ancBtn = createElement('a', {
-    className: 'text-[11px] font-bold text-[#012622] hover:underline cursor-pointer',
+    className: 'text-[11px] font-bold text-[rgb(var(--theme-primary))] hover:underline cursor-pointer',
     attributes: { href: `/app/${orgId}/announcements` },
     textContent: 'مشاهده همه',
   });
@@ -353,7 +339,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
       const itemHeader = createElement('div', { className: 'flex items-center justify-between font-bold text-gray-900' });
       const itemTitle = createElement('span', { textContent: anc.title });
       const badge = createElement('span', {
-        className: 'px-2 py-0.5 rounded text-[10px] bg-amber-100 text-amber-900 font-extrabold',
+        className: 'px-2 py-0.5 rounded text-[10px] bg-amber-100 text-amber-900 font-semibold',
         textContent: anc.priority === 'urgent' ? 'فوری' : 'مهم',
       });
       itemHeader.appendChild(itemTitle);
@@ -383,10 +369,10 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
 
   const actTitleGroup = createElement('div', { className: 'flex items-center gap-2.5' });
   const actIcon = createElement('div', {
-    className: 'p-2 bg-[#ECE5F0] text-[#012622] rounded-xl shrink-0',
+    className: 'p-2 bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] rounded-xl shrink-0',
     innerHTML: getDashboardIcon('bell', 'w-4 h-4'),
   });
-  const actTitle = createElement('h3', { className: 'text-xs sm:text-sm font-black text-gray-900 tracking-tight', textContent: 'فعالیت‌های اخیر سیستم' });
+  const actTitle = createElement('h3', { className: 'text-xs sm:text-sm font-bold text-gray-900 tracking-tight', textContent: 'فعالیت‌های اخیر سیستم' });
 
   actTitleGroup.appendChild(actIcon);
   actTitleGroup.appendChild(actTitle);

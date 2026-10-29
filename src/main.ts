@@ -6,6 +6,10 @@ import './styles/global.css';
 import './styles/layout.css';
 import './styles/components.css';
 import './styles/utilities.css';
+import './styles/redesign.css';
+import { applyTheme, readTheme } from './theme/theme';
+
+applyTheme(readTheme());
 
 import { initializeApp } from './app/app';
 

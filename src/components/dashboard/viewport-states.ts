@@ -19,7 +19,7 @@ export function createLoadingState(message: string = 'در حال بارگذار
   });
 
   const spinner = createElement('div', {
-    className: 'w-10 h-10 border-4 border-[#ECE5F0] border-t-[#012622] rounded-full animate-spin mb-4',
+    className: 'w-10 h-10 border-4 border-[rgb(var(--theme-subtle))] border-t-[rgb(var(--theme-primary))] rounded-full animate-spin mb-4',
   });
 
   const text = createElement('p', {
@@ -61,7 +61,7 @@ export function createErrorState(options: ViewportStateOptions): HTMLElement {
 
   if (onAction) {
     const btn = createElement('button', {
-      className: 'px-4 py-2 bg-[#012622] text-white text-xs font-semibold rounded-lg hover:bg-[#003B36] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      className: 'px-4 py-2 bg-[rgb(var(--theme-primary))] text-white text-xs font-semibold rounded-lg hover:bg-[rgb(var(--theme-hover))] transition-colors focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       textContent: actionText,
     });
     btn.addEventListener('click', onAction);

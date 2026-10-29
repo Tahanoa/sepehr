@@ -28,8 +28,8 @@ export function createStudentPaymentsPage(membership: OrganizationMembership): H
     // Header
     const headerRow = createElement('div', { className: 'pb-2 border-b border-gray-200 space-y-1' });
     headerRow.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('payment', 'w-6 h-6 text-[#012622]')} شهریه و پرداخت آنلاین آموزشگاه
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('payment', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} شهریه و پرداخت آنلاین آموزشگاه
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">مشاهده صورت‌حساب‌های صادرشده، پرداخت آنلاین آزمایشی و دریافت رسید رسمی.</p>
     `;
@@ -73,7 +73,7 @@ export function createStudentPaymentsPage(membership: OrganizationMembership): H
 
         const actionTd = createElement('td', { className: 'text-center' });
         const payBtn = createElement('button', {
-          className: 'px-3.5 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white rounded-xl text-xs font-bold transition-colors cursor-pointer',
+          className: 'px-3.5 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white rounded-xl text-xs font-bold transition-colors cursor-pointer',
           textContent: inv.status === 'paid' ? 'مشاهده رسید' : 'پرداخت آنلاین دمو',
         });
 
@@ -102,9 +102,9 @@ export function createStudentPaymentsPage(membership: OrganizationMembership): H
     const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800' });
     content.innerHTML = `
       <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl space-y-2">
-        <div class="font-extrabold text-[#012622]">درگاه پرداخت آنلاین شبیه‌سازی‌شده پولاریس</div>
+        <div class="font-semibold text-[rgb(var(--theme-primary))]">درگاه پرداخت آنلاین شبیه‌سازی‌شده سپهر</div>
         <div><strong>عنوان دوره:</strong> ${inv.title}</div>
-        <div><strong>مبلغ قابل پرداخت:</strong> <span class="font-mono text-base font-black text-emerald-800">${remaining.toLocaleString('fa-IR')} تومان</span></div>
+        <div><strong>مبلغ قابل پرداخت:</strong> <span class="font-mono text-base font-bold text-emerald-800">${remaining.toLocaleString('fa-IR')} تومان</span></div>
       </div>
       <p class="text-gray-500 leading-relaxed">
         توجه: این یک شبیه‌سازی محلی بوده و هیچ وجه واقعی منتقل نخواهد شد. با کلیک بر روی تایید، فیش واریزی در سیستم ثبت می‌گردد.
@@ -130,7 +130,7 @@ export function createStudentPaymentsPage(membership: OrganizationMembership): H
     const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800 p-4 bg-gray-50 border border-gray-200 rounded-2xl' });
     content.innerHTML = `
       <div class="text-center pb-3 border-b border-gray-300">
-        <h4 class="text-sm font-black text-[#012622]">رسید پرداخت آنلاین شهریه آموزشگاه</h4>
+        <h4 class="text-sm font-bold text-[rgb(var(--theme-primary))]">رسید پرداخت آنلاین شهریه آموزشگاه</h4>
         <p class="text-[11px] text-gray-500 mt-0.5">کد رسید: ${lastTrn?.receiptNumber || 'RCP-10023'}</p>
       </div>
       <div class="grid grid-cols-2 gap-2 text-gray-700">

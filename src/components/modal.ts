@@ -13,12 +13,16 @@ export interface ModalOptions {
   cancelText?: string;
   onConfirm?: () => void;
   onCancel?: () => void;
+  onClose?: () => void;
 }
 
 export class Modal {
   private backdropEl: HTMLElement;
   private modalEl: HTMLElement;
   private options: ModalOptions;
+  private previousFocus: HTMLElement | null = null;
+  private previousOverflow = "";
+  private closed = false;
   private keydownListener?: (e: KeyboardEvent) => void;
 
   constructor(options: ModalOptions) {
@@ -106,6 +110,14 @@ export class Modal {
 
     // Close on Escape key
     this.keydownListener = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        const items = Array.from(this.modalEl.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], input:not([disabled]):not([hidden]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]')).filter(el => el.getClientRects().length > 0);
+        const first = items[0], last = items[items.length - 1];
+        if (!first || !last) { e.preventDefault(); this.modalEl.focus(); }
+        else if (!this.modalEl.contains(document.activeElement) || document.activeElement === this.modalEl) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+        else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
       if (e.key === 'Escape') {
         this.close();
       }
@@ -114,14 +126,21 @@ export class Modal {
   }
 
   public open(): void {
+    this.previousFocus = document.activeElement as HTMLElement | null;
+    this.previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    this.modalEl.tabIndex = -1;
     document.body.appendChild(this.backdropEl);
-    // Trigger transition next frame
-    requestAnimationFrame(() => {
-      this.backdropEl.classList.add('polaris-modal-backdrop--open');
-    });
+    this.backdropEl.classList.add('polaris-modal-backdrop--open');
+    this.modalEl.focus();
   }
 
   public close(): void {
+    if (this.closed) return;
+    this.closed = true;
+    this.options.onClose?.();
+    document.body.style.overflow = this.previousOverflow;
+    this.previousFocus?.focus();
     if (this.keydownListener) {
       document.removeEventListener('keydown', this.keydownListener);
     }

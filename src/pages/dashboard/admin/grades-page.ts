@@ -36,9 +36,9 @@ export function createGradesPage(membership: OrganizationMembership): HTMLElemen
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('award', 'w-6 h-6 text-[#012622]')} ${
+    title.innerHTML = `${getDashboardIcon('award', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} ${
       isElementary ? 'ارزیابی توصیفی و کارنامه ابتدایی' : 'کارنامه‌ها، نمرات و معدل کل'
     }`;
 
@@ -62,7 +62,7 @@ export function createGradesPage(membership: OrganizationMembership): HTMLElemen
     const leftBox = createElement('div', { className: 'flex items-center gap-3 min-w-0' });
     const classLabel = createElement('label', { className: 'text-xs font-bold text-gray-700 shrink-0', textContent: 'انتخاب کلاس:' });
     const classSelect = createElement('select', {
-      className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     });
 
     classes.forEach((c) => {
@@ -80,7 +80,7 @@ export function createGradesPage(membership: OrganizationMembership): HTMLElemen
     leftBox.appendChild(classSelect);
 
     const classStatsBadge = createElement('div', {
-      className: 'px-3 py-1.5 bg-[#ECE5F0] text-[#012622] rounded-xl text-xs font-bold font-mono',
+      className: 'px-3 py-1.5 bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] rounded-xl text-xs font-bold font-mono',
       textContent: `تعداد دانش‌آموزان: ${classStudents.length} نفر | تعداد آزمون‌ها: ${classExams.length}`,
     });
 
@@ -120,7 +120,7 @@ export function createGradesPage(membership: OrganizationMembership): HTMLElemen
         const stdTd = createElement('td', {
           innerHTML: `
             <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-full bg-[#012622] text-white flex items-center justify-center font-bold text-xs shrink-0">${std.fullName.slice(0, 1)}</div>
+              <div class="w-8 h-8 rounded-full bg-[rgb(var(--theme-primary))] text-white flex items-center justify-center font-bold text-xs shrink-0">${std.fullName.slice(0, 1)}</div>
               <div>
                 <div class="font-bold text-xs text-gray-900">${std.fullName}</div>
                 <div class="text-[10px] text-gray-500">${std.className}</div>
@@ -160,7 +160,7 @@ export function createGradesPage(membership: OrganizationMembership): HTMLElemen
 
           const previewTd = createElement('td', { className: 'text-center' });
           const previewBtn = createElement('button', {
-            className: 'px-3 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white rounded-lg text-xs font-bold transition-all cursor-pointer',
+            className: 'px-3 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white rounded-lg text-xs font-bold transition-all cursor-pointer',
             textContent: 'مشاهده کارنامه توصیفی',
           });
           previewBtn.addEventListener('click', () => openReportCardPreviewModal(std, latestDescriptive, '۱۹.۵', classExams));
@@ -172,7 +172,7 @@ export function createGradesPage(membership: OrganizationMembership): HTMLElemen
           tr.appendChild(previewTd);
         } else {
           const gpaTd = createElement('td', {
-            className: 'text-center font-mono font-black text-sm text-[#012622]',
+            className: 'text-center font-mono font-bold text-sm text-[rgb(var(--theme-primary))]',
             textContent: studentGpa,
           });
 
@@ -183,7 +183,7 @@ export function createGradesPage(membership: OrganizationMembership): HTMLElemen
 
           const actionTd = createElement('td', { className: 'text-center' });
           const previewBtn = createElement('button', {
-            className: 'px-3 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white rounded-lg text-xs font-bold transition-all cursor-pointer',
+            className: 'px-3 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white rounded-lg text-xs font-bold transition-all cursor-pointer',
             textContent: 'پیش‌نمایش کارنامه',
           });
           previewBtn.addEventListener('click', () => openReportCardPreviewModal(std, 'عالی', studentGpa, classExams));
@@ -212,10 +212,10 @@ export function createGradesPage(membership: OrganizationMembership): HTMLElemen
     const cardEl = createElement('div', { className: 'space-y-4 dir-rtl text-xs text-gray-800' });
 
     cardEl.innerHTML = `
-      <div class="bg-gradient-to-r from-[#012622] to-[#003B36] text-white p-4 rounded-2xl space-y-2">
+      <div class="bg-gradient-to-r from-[rgb(var(--theme-primary))] to-[rgb(var(--theme-hover))] text-white p-4 rounded-2xl space-y-2">
         <div class="flex items-center justify-between border-b border-white/10 pb-2">
-          <span class="font-extrabold text-sm">${membership.organization.name}</span>
-          <span class="text-[10px] bg-amber-500 text-[#012622] px-2 py-0.5 rounded font-black">کارنامه رسمی ترم</span>
+          <span class="font-semibold text-sm">${membership.organization.name}</span>
+          <span class="text-[10px] bg-amber-500 text-[rgb(var(--theme-primary))] px-2 py-0.5 rounded font-bold">کارنامه رسمی ترم</span>
         </div>
         <div class="grid grid-cols-2 gap-2 text-[11px] opacity-90">
           <div><strong>نام دانش‌آموز:</strong> ${std.fullName}</div>
@@ -246,7 +246,7 @@ export function createGradesPage(membership: OrganizationMembership): HTMLElemen
                         <tr>
                           <td class="p-2.5 font-bold text-gray-900">${ex.subjectName}</td>
                           <td class="p-2.5 text-center text-gray-500">${ex.term === 'term_1' ? 'دی‌ماه' : 'خردادماه'}</td>
-                          <td class="p-2.5 text-center font-mono font-bold text-[#012622]">
+                          <td class="p-2.5 text-center font-mono font-bold text-[rgb(var(--theme-primary))]">
                             ${isElementary ? (grd?.descriptiveScore || 'خیلی خوب') : (grd?.score !== undefined ? grd.score : '۲۰')}
                           </td>
                         </tr>
@@ -261,7 +261,7 @@ export function createGradesPage(membership: OrganizationMembership): HTMLElemen
       <div class="bg-amber-50 p-3.5 rounded-xl border border-amber-200 flex items-center justify-between text-xs">
         <div>
           <span class="font-bold text-amber-950">${isElementary ? 'ارزیابی کلی عملکرد:' : 'معدل کل نهایی:'}</span>
-          <span class="font-extrabold text-amber-900 font-mono ms-1">${isElementary ? summaryEval : numericGpa}</span>
+          <span class="font-semibold text-amber-900 font-mono ms-1">${isElementary ? summaryEval : numericGpa}</span>
         </div>
         <span class="text-[10px] text-amber-800">وضعیت: پیش‌نویس آماده تأیید</span>
       </div>

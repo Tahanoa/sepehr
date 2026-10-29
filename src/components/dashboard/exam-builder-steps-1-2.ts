@@ -21,7 +21,7 @@ export function renderExamBuilderStep1(
 
   container.innerHTML = `
     <div class="bg-gray-50/70 p-4 rounded-2xl border border-gray-200/80 space-y-4">
-      <h3 class="font-extrabold text-sm text-[#012622] flex items-center gap-2">
+      <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))] flex items-center gap-2">
         گام ۱ — اطلاعات پایه و مشخصات آزمون
       </h3>
 
@@ -99,7 +99,7 @@ export function renderExamBuilderStep1(
         </div>
 
         <div class="flex items-center gap-2 pt-2">
-          <input type="checkbox" id="bld-review" ${draft.canReviewAnswers ? 'checked' : ''} class="w-4 h-4 rounded text-[#012622]" />
+          <input type="checkbox" id="bld-review" ${draft.canReviewAnswers ? 'checked' : ''} class="w-4 h-4 rounded text-[rgb(var(--theme-primary))]" />
           <label for="bld-review" class="font-bold cursor-pointer">دانش‌آموز می‌تواند پاسخ‌های خود را پیش از ثبت نهایی مرور کند</label>
         </div>
       </div>
@@ -174,10 +174,10 @@ export function renderExamBuilderStep2(
     card.innerHTML = `
       <div class="flex items-center justify-between pb-2 border-b border-gray-200">
         <div>
-          <h3 class="font-extrabold text-sm text-[#012622]">گام ۲ — تخصیص کلاس‌ها و مخاطبان آزمون</h3>
+          <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))]">گام ۲ — تخصیص کلاس‌ها و مخاطبان آزمون</h3>
           <p class="text-[11px] text-gray-500">آزمون تنها به کلاس‌ها و گروه‌های تحت مسئولیت شما تخصیص می‌یابد.</p>
         </div>
-        <span class="px-3 py-1 bg-[#012622] text-white rounded-xl font-bold font-mono text-[11px]">
+        <span class="px-3 py-1 bg-[rgb(var(--theme-primary))] text-white rounded-xl font-bold font-mono text-[11px]">
           تعداد دریافت‌کنندگان نهایی: ${finalRecipients.length.toLocaleString('fa-IR')} نفر
         </span>
       </div>
@@ -190,9 +190,9 @@ export function renderExamBuilderStep2(
             .map((c) => {
               const isSelected = selectedClassIds.includes(c.id);
               return `
-                <label class="p-3 bg-white rounded-xl border ${isSelected ? 'border-[#012622] bg-[#ECE5F0]/40' : 'border-gray-200'} flex items-center justify-between cursor-pointer hover:border-[#012622]">
+                <label class="p-3 bg-white rounded-xl border ${isSelected ? 'border-[rgb(var(--theme-primary))] bg-[rgb(var(--theme-subtle))]/40' : 'border-gray-200'} flex items-center justify-between cursor-pointer hover:border-[rgb(var(--theme-primary))]">
                   <div class="flex items-center gap-2">
-                    <input type="checkbox" value="${c.id}" class="cls-chk text-[#012622] rounded" ${isSelected ? 'checked' : ''} />
+                    <input type="checkbox" value="${c.id}" class="cls-chk text-[rgb(var(--theme-primary))] rounded" ${isSelected ? 'checked' : ''} />
                     <div>
                       <div class="font-bold text-gray-900">${c.name}</div>
                       <div class="text-[10px] text-gray-500">${c.gradeLevel} | معلم: ${c.homeroomTeacherName}</div>

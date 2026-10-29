@@ -29,9 +29,9 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('classes', 'w-6 h-6 text-[#012622]')} کلاس‌ها و ساختار آموزشی`;
+    title.innerHTML = `${getDashboardIcon('classes', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} کلاس‌ها و ساختار آموزشی`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',
@@ -43,7 +43,7 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
     const addBtn = createElement('button', {
       className:
-        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ایجاد کلاس جدید`,
     });
     addBtn.addEventListener('click', () => openAddClassModal());
@@ -76,9 +76,9 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
           <div class="space-y-3">
             <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
               <div class="flex items-center gap-2">
-                <span class="p-2 rounded-xl bg-[#ECE5F0] text-[#012622] font-black text-xs">${cls.code}</span>
+                <span class="p-2 rounded-xl bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] font-bold text-xs">${cls.code}</span>
                 <div>
-                  <h3 class="font-extrabold text-sm text-gray-900">${cls.name}</h3>
+                  <h3 class="font-semibold text-sm text-gray-900">${cls.name}</h3>
                   <div class="text-[11px] text-gray-500">${cls.gradeLevel}</div>
                 </div>
               </div>
@@ -92,7 +92,7 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-gray-500">تعداد دانش‌آموزان:</span>
-                <span class="font-bold text-[#012622] font-mono">${classStudents.length} از ${cls.capacity} نفر</span>
+                <span class="font-bold text-[rgb(var(--theme-primary))] font-mono">${classStudents.length} از ${cls.capacity} نفر</span>
               </div>
             </div>
 
@@ -102,7 +102,7 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
                 <span class="font-mono">٪${fillPercent}</span>
               </div>
               <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                <div class="h-full ${fillPercent >= 100 ? 'bg-rose-500' : 'bg-[#012622]'} transition-all duration-500" style="width: ${fillPercent}%"></div>
+                <div class="h-full ${fillPercent >= 100 ? 'bg-rose-500' : 'bg-[rgb(var(--theme-primary))]'} transition-all duration-500" style="width: ${fillPercent}%"></div>
               </div>
             </div>
           </div>
@@ -115,7 +115,7 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
         const assignBtn = createElement('button', {
           className:
-            'px-3 py-1.5 bg-[#ECE5F0] hover:bg-[#DDD6E3] text-[#012622] font-bold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer',
+            'px-3 py-1.5 bg-[rgb(var(--theme-subtle))] hover:bg-[#DDD6E3] text-[rgb(var(--theme-primary))] font-bold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer',
           innerHTML: `${getDashboardIcon('users', 'w-3.5 h-3.5')} تخصیص دانش‌آموز`,
         });
         assignBtn.addEventListener('click', () => openAssignStudentsModal(cls));

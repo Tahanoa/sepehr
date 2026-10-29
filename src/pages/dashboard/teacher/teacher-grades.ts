@@ -51,8 +51,8 @@ export function createTeacherGradesPage(membership: OrganizationMembership): HTM
     const headerRow = createElement('div', { className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80' });
     const headerText = createElement('div', { className: 'space-y-1' });
     headerText.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('award', 'w-6 h-6 text-[#012622]')} دفتر ثبت نمرات و یادداشت‌های هفتگی
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('award', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} دفتر ثبت نمرات و یادداشت‌های هفتگی
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">ثبت نمرات، ارزشیابی توصیفی و یادداشت‌های روزانه استاد به تفکیک هفته‌های آموزشی.</p>
     `;
@@ -72,7 +72,7 @@ export function createTeacherGradesPage(membership: OrganizationMembership): HTM
     });
 
     const currentWeekBadge = createElement('span', {
-      className: 'px-4 py-2 bg-[#012622] text-white rounded-xl text-xs font-black',
+      className: 'px-4 py-2 bg-[rgb(var(--theme-primary))] text-white rounded-xl text-xs font-bold',
       textContent: activeWeek.label,
     });
 
@@ -148,7 +148,7 @@ export function createTeacherGradesPage(membership: OrganizationMembership): HTM
     toolbar.appendChild(examSelectGroup);
 
     const saveAllBtn = createElement('button', {
-      className: 'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center justify-center gap-1.5 cursor-pointer',
+      className: 'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center justify-center gap-1.5 cursor-pointer',
       innerHTML: `${getDashboardIcon('attendance', 'w-4 h-4')} <span>ثبت و ذخیره دفتر نمرات</span>`,
     });
 
@@ -188,7 +188,7 @@ export function createTeacherGradesPage(membership: OrganizationMembership): HTM
         tr.innerHTML = `
           <td>
             <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-full bg-[#012622] text-white font-bold flex items-center justify-center text-xs shrink-0">${std.fullName.slice(0, 1)}</div>
+              <div class="w-7 h-7 rounded-full bg-[rgb(var(--theme-primary))] text-white font-bold flex items-center justify-center text-xs shrink-0">${std.fullName.slice(0, 1)}</div>
               <span class="font-bold text-xs text-gray-900">${std.fullName}</span>
             </div>
           </td>
@@ -211,7 +211,7 @@ export function createTeacherGradesPage(membership: OrganizationMembership): HTM
           scoreTd.appendChild(select);
         } else {
           const inp = createElement('input', {
-            className: 'w-20 text-center bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs font-mono font-bold text-[#012622]',
+            className: 'w-20 text-center bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs font-mono font-bold text-[rgb(var(--theme-primary))]',
             attributes: { type: 'number', step: '0.25', max: '20', min: '0', value: (draftGrades[std.id]!.score ?? 18).toString() },
           });
           inp.addEventListener('input', (e) => {
@@ -273,8 +273,8 @@ export function createTeacherGradesPage(membership: OrganizationMembership): HTM
     const notesSection = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-4' });
     const notesTitle = createElement('div', { className: 'flex items-center justify-between pb-3 border-b border-gray-100' });
     notesTitle.innerHTML = `
-      <h3 class="font-extrabold text-sm text-gray-900 flex items-center gap-2">
-        ${getDashboardIcon('chat', 'w-4 h-4 text-[#012622]')} یادداشت‌های ثبت‌شده برای ${activeWeek.name}
+      <h3 class="font-semibold text-sm text-gray-900 flex items-center gap-2">
+        ${getDashboardIcon('chat', 'w-4 h-4 text-[rgb(var(--theme-primary))]')} یادداشت‌های ثبت‌شده برای ${activeWeek.name}
       </h3>
     `;
 
@@ -289,7 +289,7 @@ export function createTeacherGradesPage(membership: OrganizationMembership): HTM
         const noteCard = createElement('div', { className: 'bg-gray-50 rounded-xl p-3.5 border border-gray-200/80 space-y-2 relative' });
         noteCard.innerHTML = `
           <div class="flex items-center justify-between">
-            <span class="font-extrabold text-xs text-gray-900">${note.studentName}</span>
+            <span class="font-semibold text-xs text-gray-900">${note.studentName}</span>
             <span class="text-[10px] font-mono text-gray-500">${note.noteDate}</span>
           </div>
           <p class="text-xs text-gray-700 leading-relaxed">${note.content}</p>
@@ -347,7 +347,7 @@ export function createTeacherGradesPage(membership: OrganizationMembership): HTM
       </div>
 
       <div class="flex items-center gap-2 pt-1">
-        <input type="checkbox" id="note-[#visible-parent]" checked class="w-4 h-4 text-[#012622] rounded focus:ring-[#E98A15]" />
+        <input type="checkbox" id="note-[#visible-parent]" checked class="w-4 h-4 text-[rgb(var(--theme-primary))] rounded focus:ring-[rgb(var(--theme-accent))]" />
         <label for="note-[#visible-parent]" class="font-bold cursor-pointer">قابل مشاهده برای اولیا در کارنامه و پیش‌خوان اولیا</label>
       </div>
     `;

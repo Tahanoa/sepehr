@@ -21,14 +21,14 @@ export function createLandingPage(): HTMLElement {
   const heroText = createElement('div', { className: 'lg:col-span-6 space-y-6 text-right' });
   heroText.innerHTML = `
     <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-amber/10 border border-brand-amber/20 text-brand-amber text-xs font-bold">
-      <span class="w-2 h-2 rounded-full bg-brand-amber animate-pulse"></span>
-      نسخه جدید سامانه مدیریت هوشمند آموزش پولاریس
+      <span class="w-2 h-2 rounded-full bg-brand-amber"></span>
+      سپهر · همراه هر روز آموزش
     </div>
-    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-evergreen leading-[1.3] tracking-tight">
-      یکپارچگی و هوشمندی در <span class="text-brand-amber">مدیریت مدارس</span> و آموزشگاه‌ها
+    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold text-brand-evergreen leading-[1.3] tracking-tight">
+      کارهای مدرسه، <span class="text-brand-evergreen">روشن و هماهنگ.</span>
     </h1>
     <p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl">
-      پولاریس یک راهکار نرم‌افزاری ابری و ماژولار است که ارتباط میان دانش‌آموزان، معلمان، اولیا و کادر اجرایی مدارس ابتدایی، دبیرستان‌ها و موسسات آموزشی را ساده و بی‌نقص می‌سازد.
+      سپهر یک راهکار نرم‌افزاری ابری و ماژولار است که ارتباط میان دانش‌آموزان، معلمان، اولیا و کادر اجرایی مدارس ابتدایی، دبیرستان‌ها و موسسات آموزشی را ساده و بی‌نقص می‌سازد.
     </p>
   `;
 
@@ -36,8 +36,8 @@ export function createLandingPage(): HTMLElement {
 
   const primaryCta = createElement('a', {
     attributes: { href: '/register' },
-    className: 'px-7 py-3.5 rounded-xl bg-brand-amber hover:bg-amber-600 text-white font-bold text-sm shadow-lg shadow-brand-amber/20 hover:shadow-xl transition-all transform hover:-translate-y-0.5',
-    textContent: 'درخواست مشاوره و ثبت‌نام',
+    className: 'px-7 py-3.5 rounded-xl bg-brand-amber hover:brightness-95 text-gray-900 font-bold text-sm shadow-lg shadow-brand-amber/20 hover:shadow-xl transition-all transform hover:-translate-y-0.5',
+    textContent: 'درخواست مشاوره',
   });
   primaryCta.addEventListener('click', (e) => {
     e.preventDefault();
@@ -71,7 +71,7 @@ export function createLandingPage(): HTMLElement {
             <div class="w-3 h-3 rounded-full bg-amber-400"></div>
             <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
           </div>
-          <span class="text-xs font-semibold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">پیش‌خوان مدیریت پولاریس</span>
+          <span class="text-xs font-semibold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">پیش‌خوان مدیریت سپهر</span>
         </div>
         <!-- Mock Metric Cards -->
         <div class="grid grid-cols-3 gap-3">
@@ -94,7 +94,7 @@ export function createLandingPage(): HTMLElement {
           <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden flex">
             <div class="w-3/5 bg-brand-evergreen h-full"></div>
             <div class="w-1/4 bg-brand-amber h-full"></div>
-            <div class="w-3/20 bg-brand-purple h-full"></div>
+            <div class="w-[15%] bg-brand-purple h-full"></div>
           </div>
           <div class="flex justify-between text-[11px] text-gray-500 pt-1">
             <span>تکمیل شده (۶۰٪)</span>
@@ -116,7 +116,7 @@ export function createLandingPage(): HTMLElement {
   const benefitsSec = createElement('section', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' });
   benefitsSec.innerHTML = `
     <div class="text-center space-y-3 mb-12">
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-evergreen">مزایای کلیدی پلتفرم پولاریس</h2>
+      <h2 class="text-2xl sm:text-3xl font-semibold text-brand-evergreen">مزایای کلیدی پلتفرم سپهر</h2>
       <p class="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">طراحی بر پایه استانداردهای آموزشی کشور با تاکید بر سادگی، سرعت و انعطاف‌پذیری موسسات.</p>
     </div>
   `;
@@ -144,7 +144,7 @@ export function createLandingPage(): HTMLElement {
   plansInner.innerHTML = `
     <div class="text-center space-y-3">
       <span class="text-xs font-bold text-brand-amber uppercase tracking-wider">طرح‌های تخصصی</span>
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-evergreen">انتخاب طرح متناسب با ساختار آموزشی شما</h2>
+      <h2 class="text-2xl sm:text-3xl font-semibold text-brand-evergreen">انتخاب طرح متناسب با ساختار آموزشی شما</h2>
     </div>
   `;
 
@@ -160,7 +160,7 @@ export function createLandingPage(): HTMLElement {
   const faqSec = createElement('section', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8' });
   faqSec.innerHTML = `
     <div class="text-center space-y-3">
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-evergreen">پرسش‌های متداول</h2>
+      <h2 class="text-2xl sm:text-3xl font-semibold text-brand-evergreen">پرسش‌های متداول</h2>
       <p class="text-gray-600 text-sm">پاسخ به برخی از سوالات رایج مدیران و مسئولان آموزشی</p>
     </div>
   `;
@@ -173,14 +173,14 @@ export function createLandingPage(): HTMLElement {
     className: 'bg-gradient-to-r from-brand-evergreen via-brand-darkgreen to-brand-purple rounded-3xl p-8 sm:p-12 text-white text-center space-y-6 shadow-xl relative overflow-hidden',
   });
   ctaBox.innerHTML = `
-    <h2 class="text-2xl sm:text-4xl font-extrabold">آماده ارتقای سامانه آموزشی خود هستید؟</h2>
+    <h2 class="text-2xl sm:text-4xl font-semibold">آماده ارتقای سامانه آموزشی خود هستید؟</h2>
     <p class="text-gray-200 text-sm sm:text-base max-w-2xl mx-auto">
       همین امروز فرم درخواست مشاوره را تکمیل کنید تا کارشناسان ما جهت ارائه نسخه دمو و بررسی نیازهای دقیق مدرسه یا آموزشگاه شما تماس بگیرند.
     </p>
   `;
   const ctaBtn = createElement('a', {
     attributes: { href: '/register' },
-    className: 'inline-block px-8 py-4 rounded-xl bg-brand-amber hover:bg-amber-600 text-white font-extrabold text-base shadow-lg transition-transform transform hover:scale-105',
+    className: 'inline-block px-8 py-4 rounded-xl bg-brand-amber hover:brightness-95 text-gray-900 font-semibold text-base shadow-lg transition-transform transform hover:scale-105',
     textContent: 'ثبت درخواست مشاوره رایگان',
   });
   ctaBtn.addEventListener('click', (e) => {

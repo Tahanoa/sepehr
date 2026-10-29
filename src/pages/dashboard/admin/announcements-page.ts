@@ -41,9 +41,9 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('announcement', 'w-6 h-6 text-[#012622]')} اطلاعیه‌ها و ارتباطات مدرسه`;
+    title.innerHTML = `${getDashboardIcon('announcement', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} اطلاعیه‌ها و ارتباطات مدرسه`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',
@@ -55,7 +55,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
     const addBtn = createElement('button', {
       className:
-        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ایجاد اطلاعیه / ارسال کمپین`,
     });
     addBtn.addEventListener('click', () => openCampaignModal());
@@ -67,7 +67,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
     const tabBar = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 pb-2' });
     const tabAnnouncements = createElement('button', {
       className: `px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-        activeTab === 'announcements' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        activeTab === 'announcements' ? 'bg-[rgb(var(--theme-primary))] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
       }`,
       textContent: 'اطلاعیه‌های داخلی سامانه',
     });
@@ -78,7 +78,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
     const tabSMS = createElement('button', {
       className: `px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-        activeTab === 'sms' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        activeTab === 'sms' ? 'bg-[rgb(var(--theme-primary))] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
       }`,
       textContent: 'گزارش SMS شبیه‌سازی شده',
     });
@@ -92,10 +92,10 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
     const tabParentInbox = createElement('button', {
       className: `px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-        activeTab === 'parent_inbox' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        activeTab === 'parent_inbox' ? 'bg-[rgb(var(--theme-primary))] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
       }`,
       innerHTML: `<span>صندوق پیام‌های اولیا</span>${
-        unreadCount > 0 ? `<span class="px-1.5 py-0.5 bg-rose-500 text-white text-[10px] font-black rounded-full">${unreadCount}</span>` : ''
+        unreadCount > 0 ? `<span class="px-1.5 py-0.5 bg-rose-500 text-white text-[10px] font-bold rounded-full">${unreadCount}</span>` : ''
       }`,
     });
     tabParentInbox.addEventListener('click', () => {
@@ -115,7 +115,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
     const searchWrapper = createElement('div', { className: 'relative' });
     const searchInput = createElement('input', {
       className:
-        'w-full bg-gray-50 border border-gray-300 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'w-full bg-gray-50 border border-gray-300 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       attributes: { type: 'text', placeholder: 'جستجو در عنوان یا متن اطلاعیه...', value: searchQuery },
     });
     searchInput.addEventListener('input', (e) => {
@@ -131,7 +131,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
     searchWrapper.appendChild(searchInput);
 
     const audienceSelect = createElement('select', {
-      className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     });
     audienceSelect.innerHTML = `
       <option value="all" ${selectedAudience === 'all' ? 'selected' : ''}>همه گروه مخاطبان</option>
@@ -164,7 +164,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
           });
 
           let priorityBadge = 'bg-gray-100 text-gray-800';
-          if (anc.priority === 'urgent') priorityBadge = 'bg-rose-100 text-rose-900 font-extrabold';
+          if (anc.priority === 'urgent') priorityBadge = 'bg-rose-100 text-rose-900 font-semibold';
           else if (anc.priority === 'important') priorityBadge = 'bg-amber-100 text-amber-900 font-bold';
 
           let audienceText = 'عمومی (همه مخاطبان)';
@@ -175,14 +175,14 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
           card.innerHTML = `
             <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
               <div class="flex items-center gap-2">
-                <span class="font-extrabold text-sm text-gray-900">${anc.title}</span>
+                <span class="font-semibold text-sm text-gray-900">${anc.title}</span>
                 <span class="px-2 py-0.5 rounded text-[10px] ${priorityBadge}">${anc.priority === 'urgent' ? 'فوری' : 'مهم'}</span>
               </div>
               <div class="flex items-center gap-2">
                 <span class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg text-[10px] font-bold">${audienceText}</span>
                 <span class="px-2.5 py-1 ${
                   anc.isPublished ? 'bg-emerald-100 text-emerald-900' : 'bg-gray-200 text-gray-700'
-                } rounded-lg text-[10px] font-extrabold">
+                } rounded-lg text-[10px] font-semibold">
                   ${anc.isPublished ? 'منتشر شده' : 'پیش‌نویس'}
                 </span>
               </div>
@@ -252,7 +252,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
             <td class="text-xs text-gray-700 leading-relaxed">${log.messageText}</td>
             <td class="text-center font-mono text-xs text-gray-500">${log.sentAt}</td>
             <td class="text-center">
-              <span class="px-2.5 py-1 bg-amber-100 text-amber-900 border border-amber-200 rounded-lg text-[10px] font-black">
+              <span class="px-2.5 py-1 bg-amber-100 text-amber-900 border border-amber-200 rounded-lg text-[10px] font-bold">
                 شبیه‌سازی شده (دمو)
               </span>
             </td>
@@ -282,7 +282,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
       } else {
         convs.forEach((conv) => {
           const item = createElement('div', {
-            className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-3 cursor-pointer hover:border-[#012622] transition-colors',
+            className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-3 cursor-pointer hover:border-[rgb(var(--theme-primary))] transition-colors',
           });
 
           let statusBadge = 'bg-amber-100 text-amber-900 border-amber-200';
@@ -298,7 +298,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
           item.innerHTML = `
             <div class="flex items-center justify-between pb-2 border-b border-gray-100">
               <div class="flex items-center gap-2">
-                <span class="font-extrabold text-xs text-[#012622]">${conv.parentName} (ولی ${conv.studentName} — ${conv.className})</span>
+                <span class="font-semibold text-xs text-[rgb(var(--theme-primary))]">${conv.parentName} (ولی ${conv.studentName} — ${conv.className})</span>
                 <span class="text-[10px] text-gray-500 font-mono">${conv.parentPhone}</span>
               </div>
               <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold border ${statusBadge}">${statusText}</span>
@@ -343,7 +343,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
           <label class="block font-bold mb-1">کانال‌های ارسال *</label>
           <div class="flex items-center gap-4 bg-gray-50 p-2.5 rounded-xl border border-gray-300">
             <label class="flex items-center gap-1.5 font-bold cursor-pointer">
-              <input type="checkbox" id="cmp-ch-internal" checked class="w-4 h-4 text-[#012622] rounded" /> اطلاعیه سامانه
+              <input type="checkbox" id="cmp-ch-internal" checked class="w-4 h-4 text-[rgb(var(--theme-primary))] rounded" /> اطلاعیه سامانه
             </label>
             <label class="flex items-center gap-1.5 font-bold cursor-pointer text-amber-900">
               <input type="checkbox" id="cmp-ch-sms" checked class="w-4 h-4 text-amber-600 rounded" /> پیامک SMS (دمو)
@@ -373,7 +373,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
       <div class="flex items-center justify-between bg-emerald-50 p-2.5 rounded-xl border border-emerald-200">
         <span class="font-bold text-emerald-900">تعداد تخمینی گیرندگان:</span>
-        <span id="cmp-count-badge" class="px-3 py-1 bg-emerald-700 text-white rounded-lg font-mono font-black text-xs">...</span>
+        <span id="cmp-count-badge" class="px-3 py-1 bg-emerald-700 text-white rounded-lg font-mono font-bold text-xs">...</span>
       </div>
 
       <div>
@@ -528,7 +528,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
       msgBox.innerHTML = `
         <div class="flex items-center justify-between pb-1 border-b border-gray-200/60 text-[11px]">
-          <span class="font-extrabold ${isParent ? 'text-amber-900' : 'text-emerald-950'}">${msg.senderName}</span>
+          <span class="font-semibold ${isParent ? 'text-amber-900' : 'text-emerald-950'}">${msg.senderName}</span>
           <span class="font-mono text-gray-500 text-[10px]">${msg.sentAt}</span>
         </div>
         <p class="text-xs text-gray-800 leading-relaxed">${msg.content}</p>
@@ -546,7 +546,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
     const actionsRow = createElement('div', { className: 'flex items-center gap-2' });
 
     const sendReplyBtn = createElement('button', {
-      className: 'flex-1 py-2 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl transition-colors cursor-pointer',
+      className: 'flex-1 py-2 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white font-bold rounded-xl transition-colors cursor-pointer',
       textContent: 'ارسال پاسخ به ولی',
     });
 

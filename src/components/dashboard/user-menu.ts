@@ -21,13 +21,13 @@ export function createUserMenu(options: UserMenuOptions): HTMLElement {
 
   const trigger = createElement('button', {
     className:
-      'flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-    attributes: { 'aria-expanded': 'false', 'aria-haspopup': 'true', label: 'منوی کاربری' },
+      'flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
+    attributes: { 'aria-expanded': 'false', 'aria-haspopup': 'true', 'aria-label': 'منوی کاربری' },
   });
 
   // Avatar or Initials
   const avatarBox = createElement('div', {
-    className: 'w-9 h-9 rounded-full bg-[#012622] text-white flex items-center justify-center font-bold text-xs shadow-sm overflow-hidden border border-white/20 shrink-0',
+    className: 'w-9 h-9 rounded-full bg-[rgb(var(--theme-primary))] text-white flex items-center justify-center font-bold text-xs shadow-sm overflow-hidden border border-white/20 shrink-0',
   });
 
   if (user.avatarUrl) {
@@ -35,6 +35,7 @@ export function createUserMenu(options: UserMenuOptions): HTMLElement {
       className: 'w-full h-full object-cover',
       attributes: { src: user.avatarUrl, alt: user.name },
     });
+    img.addEventListener('error', () => { avatarBox.textContent = user.name.slice(0, 2); });
     avatarBox.appendChild(img);
   } else {
     avatarBox.textContent = user.name.slice(0, 2);
@@ -83,7 +84,7 @@ export function createUserMenu(options: UserMenuOptions): HTMLElement {
   const headerName = createElement('div', { className: 'font-bold text-gray-900 text-sm truncate', textContent: user.name });
   const headerEmail = createElement('div', { className: 'text-gray-500 text-[11px] truncate', textContent: user.email });
   const roleBadge = createElement('span', {
-    className: 'inline-block mt-1 px-2 py-0.5 bg-[#ECE5F0] text-[#012622] rounded-full text-[10px] font-bold',
+    className: 'inline-block mt-1 px-2 py-0.5 bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] rounded-full text-[10px] font-bold',
     textContent: getRoleLabel(membership.role),
   });
 
@@ -96,7 +97,7 @@ export function createUserMenu(options: UserMenuOptions): HTMLElement {
   // Dev Demo Switcher Link if in Dev Mode
   if (import.meta.env.DEV && onOpenDemoModal) {
     const demoBtn = createElement('button', {
-      className: 'w-full text-right px-4 py-2 hover:bg-amber-50 text-amber-900 font-semibold flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      className: 'w-full text-right px-4 py-2 hover:bg-amber-50 text-amber-900 font-semibold flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     });
     demoBtn.innerHTML = `${getDashboardIcon('swap', 'w-4 h-4 text-amber-700')} تغییر نقش دمو (توسعه)`;
     demoBtn.addEventListener('click', () => {
@@ -108,7 +109,7 @@ export function createUserMenu(options: UserMenuOptions): HTMLElement {
 
   // Sign out action
   const signOutBtn = createElement('button', {
-    className: 'w-full text-right px-4 py-2 hover:bg-rose-50 text-rose-700 font-semibold flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+    className: 'w-full text-right px-4 py-2 hover:bg-rose-50 text-rose-700 font-semibold flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
   });
   signOutBtn.innerHTML = `${getDashboardIcon('logout', 'w-4 h-4')} خروج از سامانه`;
   signOutBtn.addEventListener('click', async () => {
@@ -151,14 +152,14 @@ export function createNotificationButton(): HTMLElement {
 
   const btn = createElement('button', {
     className:
-      'p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors relative focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      'p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors relative focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     attributes: { 'aria-label': 'اعلان‌ها', 'aria-expanded': 'false' },
     innerHTML: getDashboardIcon('bell', 'w-5 h-5'),
   });
 
   // Demo notification dot
   const badge = createElement('span', {
-    className: 'absolute top-1.5 end-1.5 w-2 h-2 rounded-full bg-[#E98A15] ring-2 ring-white',
+    className: 'absolute top-1.5 end-1.5 w-2 h-2 rounded-full bg-[rgb(var(--theme-accent))] ring-2 ring-white',
   });
   btn.appendChild(badge);
 

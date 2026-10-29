@@ -39,14 +39,14 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
 
     const headerText = createElement('div', { className: 'space-y-1' });
     headerText.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('exam', 'w-6 h-6 text-[#012622]')} طراح هوشمند و مدیریت آزمون‌ها
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('exam', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} طراح هوشمند و مدیریت آزمون‌ها
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">تعریف آزمون‌های چندمرحله‌ای، بانک سوالات، تصحیح پاسخ‌های تشریحی و بررسی گزارش سلامت جلسه.</p>
     `;
 
     const addBtn = createElement('button', {
-      className: 'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
+      className: 'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ساخت آزمون جدید`,
     });
     addBtn.addEventListener('click', () => {
@@ -57,7 +57,7 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
     headerRow.appendChild(addBtn);
 
     // Tabs
-    const tabsNav = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 pb-1 overflow-x-auto text-xs font-extrabold' });
+    const tabsNav = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 pb-1 overflow-x-auto text-xs font-semibold' });
 
     const tabList: { key: typeof activeTab; label: string; count?: number }[] = [
       { key: 'all', label: 'همه آزمون‌ها', count: allExams.length },
@@ -73,7 +73,7 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
     tabList.forEach((t) => {
       const btn = createElement('button', {
         className: `px-3.5 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
-          activeTab === t.key ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          activeTab === t.key ? 'bg-[rgb(var(--theme-primary))] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
         textContent: `${t.label} (${(t.count || 0).toLocaleString('fa-IR')})`,
       });
@@ -111,16 +111,16 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
         if (ex.status === 'draft') { statusText = 'پیش‌نویس'; statusBg = 'bg-gray-100 text-gray-800'; }
         else if (ex.status === 'available' || ex.status === 'in_progress') { statusText = 'در حال برگزاری'; statusBg = 'bg-emerald-100 text-emerald-900'; }
         else if (ex.status === 'grading' || ex.status === 'submitted') { statusText = 'در انتظار تصحیح'; statusBg = 'bg-amber-100 text-amber-900'; }
-        else if (ex.status === 'published' || ex.status === 'completed') { statusText = 'منتشر شده'; statusBg = 'bg-[#012622] text-white'; }
+        else if (ex.status === 'published' || ex.status === 'completed') { statusText = 'منتشر شده'; statusBg = 'bg-[rgb(var(--theme-primary))] text-white'; }
         else if (ex.status === 'archived') { statusText = 'آرشیو شده'; statusBg = 'bg-rose-100 text-rose-900'; }
 
         card.innerHTML = `
           <div class="space-y-2.5">
             <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-              <span class="font-bold text-xs text-[#012622] bg-[#ECE5F0] px-2.5 py-1 rounded-lg">${ex.subjectName}</span>
+              <span class="font-bold text-xs text-[rgb(var(--theme-primary))] bg-[rgb(var(--theme-subtle))] px-2.5 py-1 rounded-lg">${ex.subjectName}</span>
               <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold ${statusBg}">${statusText}</span>
             </div>
-            <h3 class="font-extrabold text-sm text-gray-900">${ex.title}</h3>
+            <h3 class="font-semibold text-sm text-gray-900">${ex.title}</h3>
             <div class="text-xs text-gray-600 space-y-1">
               <div><strong>تاریخ برگزاری:</strong> <span class="font-mono">${ex.examDate} (${ex.durationMinutes} دقیقه)</span></div>
               <div><strong>تعداد سوالات / سقف نمره:</strong> <span class="font-mono font-bold">${questions.length} سوال (${ex.maxScore} نمره)</span></div>
@@ -129,10 +129,10 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
           </div>
 
           <div class="pt-3 border-t border-gray-100 flex items-center justify-between gap-2 text-xs flex-wrap">
-            <button class="edit-btn px-3 py-1.5 bg-[#ECE5F0] hover:bg-[#ECE5F0]/80 text-[#012622] font-bold rounded-xl transition-colors cursor-pointer">
+            <button class="edit-btn px-3 py-1.5 bg-[rgb(var(--theme-subtle))] hover:bg-[rgb(var(--theme-subtle))]/80 text-[rgb(var(--theme-primary))] font-bold rounded-xl transition-colors cursor-pointer">
               ✏️ ویرایش
             </button>
-            <button class="grade-btn px-3 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl transition-colors cursor-pointer">
+            <button class="grade-btn px-3 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white font-bold rounded-xl transition-colors cursor-pointer">
               تصحیح و نمره‌دهی
             </button>
             <button class="dup-btn px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl transition-colors cursor-pointer">
@@ -174,7 +174,7 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
     container.innerHTML = `
       <div class="flex items-center justify-between pb-3 border-b border-gray-100">
         <div>
-          <h3 class="font-black text-sm text-[#012622]">گزارشات فعالیت و سیگنال‌های سلامت جلسه آزمون</h3>
+          <h3 class="font-bold text-sm text-[rgb(var(--theme-primary))]">گزارشات فعالیت و سیگنال‌های سلامت جلسه آزمون</h3>
           <p class="text-gray-500 text-[11px]">رویدادهای ثبت‌شده توسط سیستم صرفاً جهت بررسی مدرس است و تخلف قطعی تلقی نمی‌گردد.</p>
         </div>
         <span class="px-3 py-1 bg-amber-100 text-amber-950 font-bold font-mono rounded-xl">

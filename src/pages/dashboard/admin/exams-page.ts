@@ -40,9 +40,9 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('exam', 'w-6 h-6 text-[#012622]')} امتحانات، ارزشیابی‌ها و نمره‌دهی`;
+    title.innerHTML = `${getDashboardIcon('exam', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} امتحانات، ارزشیابی‌ها و نمره‌دهی`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',
@@ -54,7 +54,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
     const addBtn = createElement('button', {
       className:
-        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ساخت آزمون جدید`,
     });
     addBtn.addEventListener('click', () => {
@@ -71,7 +71,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
     const termSelect = createElement('select', {
       className:
-        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     });
     termSelect.innerHTML = `
       <option value="all" ${selectedTerm === 'all' ? 'selected' : ''}>همه نوبت‌های امتحانی</option>
@@ -87,7 +87,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
     const statusSelect = createElement('select', {
       className:
-        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     });
     statusSelect.innerHTML = `
       <option value="all" ${selectedStatus === 'all' ? 'selected' : ''}>همه وضعیت‌های برگزاری</option>
@@ -130,7 +130,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
           statusBg = 'bg-emerald-100 text-emerald-900';
           statusText = 'نمرات نهایی شد';
         } else if (ex.status === 'published') {
-          statusBg = 'bg-[#012622] text-white';
+          statusBg = 'bg-[rgb(var(--theme-primary))] text-white';
           statusText = 'منتشر شده در کارنامه';
         }
 
@@ -143,10 +143,10 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
           <div class="space-y-3">
             <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
               <div>
-                <h3 class="font-black text-sm text-gray-900">${ex.title}</h3>
+                <h3 class="font-bold text-sm text-gray-900">${ex.title}</h3>
                 <div class="text-[11px] text-gray-500 font-semibold">${ex.subjectName} (${ex.gradeLevel})</div>
               </div>
-              <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold ${statusBg}">${statusText}</span>
+              <span class="px-2.5 py-1 rounded-lg text-[10px] font-semibold ${statusBg}">${statusText}</span>
             </div>
 
             <div class="grid grid-cols-2 gap-2 text-xs text-gray-700">
@@ -163,7 +163,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
         });
 
         const editBtn = createElement('button', {
-          className: 'px-3 py-2 bg-[#ECE5F0] hover:bg-[#ECE5F0]/80 text-[#012622] font-bold rounded-xl transition-all cursor-pointer',
+          className: 'px-3 py-2 bg-[rgb(var(--theme-subtle))] hover:bg-[rgb(var(--theme-subtle))]/80 text-[rgb(var(--theme-primary))] font-bold rounded-xl transition-all cursor-pointer',
           textContent: '✏️ ویرایش',
         });
         editBtn.addEventListener('click', () => {
@@ -172,7 +172,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
         const scoreEntryBtn = createElement('button', {
           className:
-            'px-3.5 py-2 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer',
+            'px-3.5 py-2 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer',
           innerHTML: `${getDashboardIcon('award', 'w-4 h-4')} ورود نمرات`,
         });
         scoreEntryBtn.addEventListener('click', () => openScoreEntryModal(ex, students));

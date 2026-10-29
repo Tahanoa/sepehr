@@ -38,9 +38,9 @@ export function createCounselingPage(membership: OrganizationMembership): HTMLEl
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('chat', 'w-6 h-6 text-[#012622]')} هماهنگی و خدمات مشاوره تحصیلی`;
+    title.innerHTML = `${getDashboardIcon('chat', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} هماهنگی و خدمات مشاوره تحصیلی`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',
@@ -52,7 +52,7 @@ export function createCounselingPage(membership: OrganizationMembership): HTMLEl
 
     const addBtn = createElement('button', {
       className:
-        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ثبت ارجاع مشاوره‌ای جدید`,
     });
     addBtn.addEventListener('click', () => openAddReferralModal());
@@ -66,7 +66,7 @@ export function createCounselingPage(membership: OrganizationMembership): HTMLEl
     });
 
     const prioritySelect = createElement('select', {
-      className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     });
     prioritySelect.innerHTML = `
       <option value="all" ${selectedPriority === 'all' ? 'selected' : ''}>همه اولویت‌ها</option>
@@ -80,7 +80,7 @@ export function createCounselingPage(membership: OrganizationMembership): HTMLEl
     });
 
     const statusSelect = createElement('select', {
-      className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     });
     statusSelect.innerHTML = `
       <option value="all" ${selectedStatus === 'all' ? 'selected' : ''}>همه وضعیت‌های رسیدگی</option>
@@ -112,7 +112,7 @@ export function createCounselingPage(membership: OrganizationMembership): HTMLEl
         });
 
         let priorityBadge = 'bg-gray-100 text-gray-800';
-        if (ref.priority === 'high') priorityBadge = 'bg-rose-100 text-rose-900 border border-rose-200 font-extrabold';
+        if (ref.priority === 'high') priorityBadge = 'bg-rose-100 text-rose-900 border border-rose-200 font-semibold';
         else if (ref.priority === 'medium') priorityBadge = 'bg-amber-100 text-amber-900 font-bold';
 
         let statusBadge = 'bg-blue-100 text-blue-900';
@@ -128,7 +128,7 @@ export function createCounselingPage(membership: OrganizationMembership): HTMLEl
         itemCard.innerHTML = `
           <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
             <div class="flex items-center gap-2">
-              <span class="font-extrabold text-sm text-gray-900">${ref.studentName}</span>
+              <span class="font-semibold text-sm text-gray-900">${ref.studentName}</span>
               <span class="text-xs text-gray-500">(${ref.className})</span>
             </div>
             <div class="flex items-center gap-2">

@@ -259,8 +259,8 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
         <button type="button" id="btn-back-exams" class="p-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-all cursor-pointer" title="بازگشت به فهرست آزمون‌ها">
           <svg class="w-5 h-5 dir-rtl-flip" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </button>
-        <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2">
-          ${getDashboardIcon('exam', 'w-6 h-6 text-[#012622]')}
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
+          ${getDashboardIcon('exam', 'w-6 h-6 text-[rgb(var(--theme-primary))]')}
           ${draftData.title ? draftData.title : 'سازنده و طراح جامع آزمون'}
         </h2>
         <span class="px-2.5 py-1 text-[11px] font-bold rounded-lg ${
@@ -298,7 +298,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     });
 
     const publishBtn = createElement('button', {
-      className: 'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
+      className: 'px-5 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
       innerHTML: `🚀 انتشار آزمون`,
     });
     publishBtn.addEventListener('click', () => {
@@ -338,12 +338,12 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       { num: 4, title: '۴. بازبینی و انتشار' },
     ];
 
-    const stepsRow = createElement('div', { className: 'grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-extrabold' });
+    const stepsRow = createElement('div', { className: 'grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-semibold' });
     stepsList.forEach((s) => {
       const isCurrent = currentStep === s.num;
       const btn = createElement('button', {
         className: `py-2.5 px-3 rounded-xl transition-all cursor-pointer ${
-          isCurrent ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+          isCurrent ? 'bg-[rgb(var(--theme-primary))] text-white shadow-2xs' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
         }`,
         textContent: s.title,
       });
@@ -389,7 +389,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     });
 
     const nextStepBtn = createElement('button', {
-      className: `px-5 py-2 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl transition-all cursor-pointer ${
+      className: `px-5 py-2 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl transition-all cursor-pointer ${
         currentStep === 4 ? 'hidden' : ''
       }`,
       textContent: 'گام بعدی ⬅',
@@ -424,14 +424,14 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
     card.innerHTML = `
       <div class="pb-3 border-b border-gray-100">
-        <h3 class="font-extrabold text-sm text-[#012622]">گام ۱ — اطلاعات پایه و عنوان آزمون</h3>
+        <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))]">گام ۱ — اطلاعات پایه و عنوان آزمون</h3>
         <p class="text-[11px] text-gray-500">مشخصات کلی، عنوان، درس مرتبط و قوانین زمانی آزمون را تعیین کنید.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="sm:col-span-2">
           <label class="block font-bold mb-1 text-gray-800">عنوان آزمون *</label>
-          <input type="text" id="bld-title" value="${draftData.title}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-extrabold focus:bg-white transition-all" placeholder="مثال: آزمون جامع حسابان ۲ — فصل مشتق و کاربردها" />
+          <input type="text" id="bld-title" value="${draftData.title}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-semibold focus:bg-white transition-all" placeholder="مثال: آزمون جامع حسابان ۲ — فصل مشتق و کاربردها" />
         </div>
 
         <div class="sm:col-span-2">
@@ -497,7 +497,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
         </div>
 
         <div class="sm:col-span-2 pt-2 border-t border-gray-100 flex items-center gap-2">
-          <input type="checkbox" id="bld-review" ${draftData.canReviewAnswers ? 'checked' : ''} class="w-4 h-4 rounded text-[#012622]" />
+          <input type="checkbox" id="bld-review" ${draftData.canReviewAnswers ? 'checked' : ''} class="w-4 h-4 rounded text-[rgb(var(--theme-primary))]" />
           <label for="bld-review" class="font-bold text-gray-800 cursor-pointer">دانش‌آموز می‌تواند پاسخ‌های خود را پیش از تحویل نهایی مرور کند.</label>
         </div>
       </div>
@@ -544,27 +544,27 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     card.innerHTML = `
       <div class="pb-3 border-b border-gray-100 flex items-center justify-between">
         <div>
-          <h3 class="font-extrabold text-sm text-[#012622]">گام ۲ — تعیین کلاس‌ها، مخاطبان و امنیت جلسه</h3>
+          <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))]">گام ۲ — تعیین کلاس‌ها، مخاطبان و امنیت جلسه</h3>
           <p class="text-[11px] text-gray-500">انتخاب کلاس‌های مجاز، لیست استثنا و قوانین قطع اتصال یا خروج از آزمون.</p>
         </div>
-        <span class="px-3 py-1.5 bg-[#012622] text-white rounded-xl font-bold font-mono text-xs">
+        <span class="px-3 py-1.5 bg-[rgb(var(--theme-primary))] text-white rounded-xl font-bold font-mono text-xs">
           دریافت‌کنندگان نهایی: ${finalRecipients.length.toLocaleString('fa-IR')} نفر
         </span>
       </div>
 
       <!-- Class Selection -->
       <div class="space-y-2">
-        <label class="block font-extrabold text-gray-900">کلاس‌های شرکت‌کننده در آزمون *</label>
+        <label class="block font-semibold text-gray-900">کلاس‌های شرکت‌کننده در آزمون *</label>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           ${availableClasses
             .map((c) => {
               const isChecked = draftData.selectedClassIds.includes(c.id);
               return `
                 <label class="p-3 rounded-xl border ${
-                  isChecked ? 'border-[#012622] bg-[#ECE5F0]/40' : 'border-gray-200 bg-gray-50/50'
-                } flex items-center justify-between cursor-pointer hover:border-[#012622] transition-all">
+                  isChecked ? 'border-[rgb(var(--theme-primary))] bg-[rgb(var(--theme-subtle))]/40' : 'border-gray-200 bg-gray-50/50'
+                } flex items-center justify-between cursor-pointer hover:border-[rgb(var(--theme-primary))] transition-all">
                   <div class="flex items-center gap-2">
-                    <input type="checkbox" value="${c.id}" class="cls-chk text-[#012622] rounded" ${isChecked ? 'checked' : ''} />
+                    <input type="checkbox" value="${c.id}" class="cls-chk text-[rgb(var(--theme-primary))] rounded" ${isChecked ? 'checked' : ''} />
                     <div>
                       <div class="font-bold text-gray-900">${c.name}</div>
                       <div class="text-[10px] text-gray-500">${c.gradeLevel}</div>
@@ -580,7 +580,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
       <!-- Security Policies -->
       <div class="pt-4 border-t border-gray-100 space-y-4">
-        <h4 class="font-extrabold text-xs text-gray-900">تنظیمات امنیتی و رفتار جلسه آزمون:</h4>
+        <h4 class="font-semibold text-xs text-gray-900">تنظیمات امنیتی و رفتار جلسه آزمون:</h4>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -594,19 +594,19 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
           <div class="space-y-2 pt-1">
             <label class="flex items-center gap-2 cursor-pointer font-bold">
-              <input type="checkbox" id="cfg-back" ${draftData.allowBackNavigation ? 'checked' : ''} class="w-4 h-4 text-[#012622] rounded" />
+              <input type="checkbox" id="cfg-back" ${draftData.allowBackNavigation ? 'checked' : ''} class="w-4 h-4 text-[rgb(var(--theme-primary))] rounded" />
               <span>امکان بازگشت به سوالات قبلی</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer font-bold">
-              <input type="checkbox" id="cfg-autoSubmit" ${draftData.autoSubmitOnTimeout ? 'checked' : ''} class="w-4 h-4 text-[#012622] rounded" />
+              <input type="checkbox" id="cfg-autoSubmit" ${draftData.autoSubmitOnTimeout ? 'checked' : ''} class="w-4 h-4 text-[rgb(var(--theme-primary))] rounded" />
               <span>تحویل خودکار هنگام اتمام تایمر</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer font-bold">
-              <input type="checkbox" id="cfg-randQ" ${draftData.randomizeQuestions ? 'checked' : ''} class="w-4 h-4 text-[#012622] rounded" />
+              <input type="checkbox" id="cfg-randQ" ${draftData.randomizeQuestions ? 'checked' : ''} class="w-4 h-4 text-[rgb(var(--theme-primary))] rounded" />
               <span>ترتیب تصادفی سوالات (Randomize)</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer font-bold">
-              <input type="checkbox" id="cfg-randOpt" ${draftData.randomizeOptions ? 'checked' : ''} class="w-4 h-4 text-[#012622] rounded" />
+              <input type="checkbox" id="cfg-randOpt" ${draftData.randomizeOptions ? 'checked' : ''} class="w-4 h-4 text-[rgb(var(--theme-primary))] rounded" />
               <span>ترتیب تصادفی گزینه‌ها در تست‌ها</span>
             </label>
           </div>
@@ -647,7 +647,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     const header = createElement('div', { className: 'flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100' });
     header.innerHTML = `
       <div>
-        <h3 class="font-extrabold text-sm text-[#012622]">گام ۳ — ویرایشگر سؤالات و پاسخ‌نامه کلید</h3>
+        <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))]">گام ۳ — ویرایشگر سؤالات و پاسخ‌نامه کلید</h3>
         <p class="text-[11px] text-gray-500">طراحی انواع سؤالات تستی، تشریحی، عددی، صحیح/غلط و کوتاه‌پاسخ همراه با تعیین بارم‌بندی.</p>
       </div>
 
@@ -664,11 +664,11 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     `;
 
     // Add Bar
-    const addBar = createElement('div', { className: 'p-3 bg-[#ECE5F0]/60 rounded-2xl border border-[#012622]/20 space-y-2' });
+    const addBar = createElement('div', { className: 'p-3 bg-[rgb(var(--theme-subtle))]/60 rounded-2xl border border-[rgb(var(--theme-primary))]/20 space-y-2' });
     addBar.innerHTML = `
       <div class="flex items-center justify-between flex-wrap gap-2">
-        <span class="font-extrabold text-xs text-[#012622]">افزودن سؤال جدید به آزمون:</span>
-        <button type="button" id="btn-open-question-bank" class="px-3 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl text-xs transition-all cursor-pointer">
+        <span class="font-semibold text-xs text-[rgb(var(--theme-primary))]">افزودن سؤال جدید به آزمون:</span>
+        <button type="button" id="btn-open-question-bank" class="px-3 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white font-bold rounded-xl text-xs transition-all cursor-pointer">
           📚 انتخاب از بانک سوالات
         </button>
       </div>
@@ -728,8 +728,8 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
         qCard.innerHTML = `
           <div class="flex items-center justify-between pb-2 border-b border-gray-200">
             <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-full bg-[#012622] text-white flex items-center justify-center text-xs font-extrabold font-mono">${(idx + 1).toLocaleString('fa-IR')}</span>
-              <span class="font-extrabold text-xs text-[#012622]">
+              <span class="w-6 h-6 rounded-full bg-[rgb(var(--theme-primary))] text-white flex items-center justify-center text-xs font-semibold font-mono">${(idx + 1).toLocaleString('fa-IR')}</span>
+              <span class="font-semibold text-xs text-[rgb(var(--theme-primary))]">
                 ${
                   q.type === 'single_choice' ? 'سؤال تک‌گزینه‌ای (MCQ)' :
                   q.type === 'multiple_select' ? 'سؤال چندگزینه‌ای' :
@@ -770,7 +770,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
                 ${q.options
                   .map((opt, oIdx) => `
                     <div class="flex items-center gap-2">
-                      <input type="${q.type === 'multiple_select' ? 'checkbox' : 'radio'}" name="correct-q-${q.id}" value="${opt.id}" class="q-correct-opt text-[#012622]" ${
+                      <input type="${q.type === 'multiple_select' ? 'checkbox' : 'radio'}" name="correct-q-${q.id}" value="${opt.id}" class="q-correct-opt text-[rgb(var(--theme-primary))]" ${
                         q.type === 'multiple_select'
                           ? (q.correctOptionIds || []).includes(opt.id) ? 'checked' : ''
                           : q.correctOptionId === opt.id ? 'checked' : ''
@@ -788,11 +788,11 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
             <div class="flex items-center gap-4 pt-2 border-t border-gray-200">
               <span class="font-bold text-gray-800">پاسخ صحیح کلید:</span>
               <label class="flex items-center gap-1.5 cursor-pointer font-bold text-emerald-800">
-                <input type="radio" name="tf-${q.id}" value="true" class="q-tf-opt text-[#012622]" ${q.correctBool === true ? 'checked' : ''} />
+                <input type="radio" name="tf-${q.id}" value="true" class="q-tf-opt text-[rgb(var(--theme-primary))]" ${q.correctBool === true ? 'checked' : ''} />
                 <span>صحیح (درست)</span>
               </label>
               <label class="flex items-center gap-1.5 cursor-pointer font-bold text-rose-800">
-                <input type="radio" name="tf-${q.id}" value="false" class="q-tf-opt text-[#012622]" ${q.correctBool === false ? 'checked' : ''} />
+                <input type="radio" name="tf-${q.id}" value="false" class="q-tf-opt text-[rgb(var(--theme-primary))]" ${q.correctBool === false ? 'checked' : ''} />
                 <span>غلط (نادرست)</span>
               </label>
             </div>
@@ -956,7 +956,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
     card.innerHTML = `
       <div class="pb-3 border-b border-gray-100">
-        <h3 class="font-extrabold text-sm text-[#012622]">گام ۴ — بازبینی نهایی و تأیید انتشار</h3>
+        <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))]">گام ۴ — بازبینی نهایی و تأیید انتشار</h3>
         <p class="text-[11px] text-gray-500">بررسی کامل صحت نمرات، کلید پاسخ‌ها، مخاطبان و آمادگی نهایی جهت انتشار.</p>
       </div>
 
@@ -964,7 +964,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
         warnings.length > 0
           ? `
         <div class="p-4 bg-amber-50 border border-amber-300 text-amber-950 rounded-2xl space-y-1.5">
-          <div class="font-extrabold text-xs flex items-center gap-1.5">
+          <div class="font-semibold text-xs flex items-center gap-1.5">
             <span>⚠️ هشدارهای بررسی صحت داده‌ها پیش از انتشار:</span>
           </div>
           <ul class="list-disc list-inside space-y-1 text-[11px]">
@@ -1006,7 +1006,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       .join('، ');
 
     sidebar.innerHTML = `
-      <h3 class="font-extrabold text-xs text-[#012622] pb-2 border-b border-gray-100 flex items-center justify-between">
+      <h3 class="font-semibold text-xs text-[rgb(var(--theme-primary))] pb-2 border-b border-gray-100 flex items-center justify-between">
         <span>خلاصه وضعیت آزمون</span>
         <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-mono">گام ${currentStep.toLocaleString('fa-IR')} از ۴</span>
       </h3>
@@ -1048,7 +1048,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
             </span>
           </div>
           <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
-            <div class="bg-[#012622] h-full" style="width: ${Math.min(100, (totalQScore / (draftData.maxScore || 1)) * 100)}%"></div>
+            <div class="bg-[rgb(var(--theme-primary))] h-full" style="width: ${Math.min(100, (totalQScore / (draftData.maxScore || 1)) * 100)}%"></div>
           </div>
         </div>
       </div>
@@ -1065,7 +1065,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       <div class="bg-indigo-900 text-white p-4 rounded-xl flex items-center justify-between">
         <div>
           <span class="text-xs text-amber-300 font-bold">👁️ حالت پیش‌نمایش دانش‌آموز (Student Exam View)</span>
-          <h2 class="font-extrabold text-base">${draftData.title || 'عنوان آزمون'} (${draftData.subjectName})</h2>
+          <h2 class="font-semibold text-base">${draftData.title || 'عنوان آزمون'} (${draftData.subjectName})</h2>
         </div>
         <div class="bg-indigo-800 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-amber-300">
           ⏱️ زمان: ${draftData.durationMinutes} دقیقه | بارم: ${draftData.maxScore}
@@ -1088,7 +1088,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
         ` : questions.map((q, idx) => `
           <div class="p-5 bg-gray-50 rounded-2xl border border-gray-200 space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-gray-200">
-              <span class="font-extrabold text-xs text-[#012622]">سوال ${(idx + 1).toLocaleString('fa-IR')} از ${questions.length.toLocaleString('fa-IR')}</span>
+              <span class="font-semibold text-xs text-[rgb(var(--theme-primary))]">سوال ${(idx + 1).toLocaleString('fa-IR')} از ${questions.length.toLocaleString('fa-IR')}</span>
               <span class="font-bold text-xs bg-gray-200 px-2 py-0.5 rounded">${q.points} نمره</span>
             </div>
             <p class="font-bold text-sm text-gray-900">${q.prompt}</p>
@@ -1098,7 +1098,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
               <div class="space-y-2 pt-2">
                 ${q.options.map((opt) => `
                   <label class="flex items-center gap-2.5 p-2.5 bg-white border border-gray-200 rounded-xl cursor-pointer">
-                    <input type="radio" name="prev-q-${q.id}" class="text-[#012622]" />
+                    <input type="radio" name="prev-q-${q.id}" class="text-[rgb(var(--theme-primary))]" />
                     <span class="text-xs text-gray-900">${opt.text}</span>
                   </label>
                 `).join('')}
@@ -1109,7 +1109,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
               <div class="space-y-2 pt-2">
                 ${q.options.map((opt) => `
                   <label class="flex items-center gap-2.5 p-2.5 bg-white border border-gray-200 rounded-xl cursor-pointer">
-                    <input type="checkbox" class="text-[#012622] rounded" />
+                    <input type="checkbox" class="text-[rgb(var(--theme-primary))] rounded" />
                     <span class="text-xs text-gray-900">${opt.text}</span>
                   </label>
                 `).join('')}
@@ -1164,9 +1164,9 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
             : bankItems
                 .map(
                   (qb) => `
-            <label class="p-2.5 bg-white rounded-xl border border-gray-200 flex items-start justify-between cursor-pointer hover:border-[#012622]">
+            <label class="p-2.5 bg-white rounded-xl border border-gray-200 flex items-start justify-between cursor-pointer hover:border-[rgb(var(--theme-primary))]">
               <div class="flex items-start gap-2">
-                <input type="checkbox" value="${qb.id}" class="qb-modal-chk text-[#012622] rounded mt-0.5" />
+                <input type="checkbox" value="${qb.id}" class="qb-modal-chk text-[rgb(var(--theme-primary))] rounded mt-0.5" />
                 <div>
                   <div class="font-bold text-gray-900">${qb.prompt}</div>
                   <div class="text-[10px] text-gray-500">${qb.subjectName} | بارم: ${qb.points} نمره</div>

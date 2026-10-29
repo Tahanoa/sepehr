@@ -89,9 +89,9 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('calendar', 'w-6 h-6 text-[#012622]')} مدیریت برنامه هفتگی و زمان‌بندی آموزشی`;
+    title.innerHTML = `${getDashboardIcon('calendar', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} مدیریت برنامه هفتگی و زمان‌بندی آموزشی`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',
@@ -145,24 +145,24 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       const tabsNav = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 pb-1' });
 
       const classTab = createElement('button', {
-        className: `px-4 py-2 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
-          activeTab === 'class' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        className: `px-4 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+          activeTab === 'class' ? 'bg-[rgb(var(--theme-primary))] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
         textContent: 'برنامه کلاس‌ها',
       });
       classTab.addEventListener('click', () => { activeTab = 'class'; render(); });
 
       const teacherTab = createElement('button', {
-        className: `px-4 py-2 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
-          activeTab === 'teacher' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        className: `px-4 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+          activeTab === 'teacher' ? 'bg-[rgb(var(--theme-primary))] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
         textContent: 'برنامه دبیران و معلمان',
       });
       teacherTab.addEventListener('click', () => { activeTab = 'teacher'; render(); });
 
       const configTab = createElement('button', {
-        className: `px-4 py-2 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
-          activeTab === 'config' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        className: `px-4 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+          activeTab === 'config' ? 'bg-[rgb(var(--theme-primary))] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
         textContent: 'تنظیمات زنگ‌ها و روزهای آموزشی',
       });
@@ -194,7 +194,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     if (activeTab === 'teacher' || (isTeacherRole && !isManagement)) {
       const teacherLabel = createElement('label', { className: 'text-xs font-bold text-gray-700 shrink-0', textContent: 'دبیر / مدرس:' });
       const teacherSelect = createElement('select', {
-        className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15] max-w-xs',
+        className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))] max-w-xs',
       });
 
       staff.forEach((st) => {
@@ -213,7 +213,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     } else {
       const classLabel = createElement('label', { className: 'text-xs font-bold text-gray-700 shrink-0', textContent: 'انتخاب کلاس:' });
       const classSelect = createElement('select', {
-        className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15] max-w-xs',
+        className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))] max-w-xs',
       });
 
       classes.forEach((c) => {
@@ -265,7 +265,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
 
     activeDaysList.forEach((day) => {
       const tr = createElement('tr');
-      const dayTd = createElement('td', { className: 'font-extrabold text-xs text-gray-900 text-center bg-gray-50/80', textContent: day.title });
+      const dayTd = createElement('td', { className: 'font-semibold text-xs text-gray-900 text-center bg-gray-50/80', textContent: day.title });
       tr.appendChild(dayTd);
 
       periodsList.forEach((period) => {
@@ -282,10 +282,10 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
         if (slot) {
           const clsObj = classes.find((c) => c.id === slot.classId);
           const slotBox = createElement('div', {
-            className: 'p-2.5 rounded-xl bg-[#ECE5F0]/80 border border-[#012622]/20 text-right space-y-1 relative group shadow-2xs hover:border-[#012622] transition-all cursor-pointer',
+            className: 'p-2.5 rounded-xl bg-[rgb(var(--theme-subtle))]/80 border border-[rgb(var(--theme-primary))]/20 text-right space-y-1 relative group shadow-2xs hover:border-[rgb(var(--theme-primary))] transition-all cursor-pointer',
           });
           slotBox.innerHTML = `
-            <div class="font-bold text-xs text-[#012622]">${slot.subjectName}</div>
+            <div class="font-bold text-xs text-[rgb(var(--theme-primary))]">${slot.subjectName}</div>
             <div class="text-[10px] text-gray-600 font-medium">${activeTab === 'teacher' ? `کلاس: ${clsObj ? clsObj.name : 'نامشخص'}` : slot.teacherName}</div>
             <div class="text-[10px] text-gray-500 font-mono">${slot.timeLabel || `${period.startTime} - ${period.endTime}`} | ${slot.roomNumber || '۱۰۱'}</div>
           `;
@@ -298,7 +298,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
         } else {
           if (isManagement) {
             const emptyBtn = createElement('button', {
-              className: 'w-full py-3 rounded-xl border border-dashed border-gray-200 text-gray-400 hover:border-[#012622] hover:text-[#012622] text-[11px] font-bold transition-all cursor-pointer',
+              className: 'w-full py-3 rounded-xl border border-dashed border-gray-200 text-gray-400 hover:border-[rgb(var(--theme-primary))] hover:text-[rgb(var(--theme-primary))] text-[11px] font-bold transition-all cursor-pointer',
               textContent: '+ افزودن درس',
             });
             emptyBtn.addEventListener('click', () => openSlotModal(periodsList, day.key, period.number));
@@ -328,7 +328,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     // Active Weekdays Config Card
     const daysCard = createElement('div', { className: 'bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-3' });
     daysCard.innerHTML = `
-      <h3 class="font-extrabold text-sm text-[#012622] flex items-center gap-2">
+      <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))] flex items-center gap-2">
         📅 روزهای آموزشی فعال مدرسه / مرکز
       </h3>
       <p class="text-gray-500 text-[11px]">روزهایی که کلاس‌های آموزشی در آن‌ها برگزار می‌شوند را مشخص کنید.</p>
@@ -337,8 +337,8 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
         ${ALL_WEEKDAYS.map((d) => {
           const isActive = activeDays.includes(d.key);
           return `
-            <label class="p-2.5 px-4 rounded-xl border ${isActive ? 'bg-[#012622] text-white border-[#012622]' : 'bg-gray-50 text-gray-700 border-gray-200'} flex items-center gap-2 cursor-pointer font-bold transition-all">
-              <input type="checkbox" value="${d.key}" class="day-chk text-[#E98A15]" ${isActive ? 'checked' : ''} />
+            <label class="p-2.5 px-4 rounded-xl border ${isActive ? 'bg-[rgb(var(--theme-primary))] text-white border-[rgb(var(--theme-primary))]' : 'bg-gray-50 text-gray-700 border-gray-200'} flex items-center gap-2 cursor-pointer font-bold transition-all">
+              <input type="checkbox" value="${d.key}" class="day-chk text-[rgb(var(--theme-accent))]" ${isActive ? 'checked' : ''} />
               <span>${d.title}</span>
             </label>
           `;
@@ -360,10 +360,10 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     const pHeader = createElement('div', { className: 'flex items-center justify-between border-b border-gray-100 pb-3' });
     pHeader.innerHTML = `
       <div>
-        <h3 class="font-extrabold text-sm text-[#012622]">⏰ زنگ‌های درسی و تفریح</h3>
+        <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))]">⏰ زنگ‌های درسی و تفریح</h3>
         <p class="text-gray-500 text-[11px]">تعریف نام، زمان شروع و پایان و نوع زنگ (آموزشی یا تفریح).</p>
       </div>
-      <button type="button" id="btn-add-period" class="px-3.5 py-2 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl text-xs transition-all cursor-pointer">
+      <button type="button" id="btn-add-period" class="px-3.5 py-2 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white font-bold rounded-xl text-xs transition-all cursor-pointer">
         + افزودن زنگ جدید
       </button>
     `;
@@ -375,7 +375,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
 
       row.innerHTML = `
         <div class="flex items-center gap-2 flex-1">
-          <span class="w-6 h-6 rounded-full bg-[#012622] text-white flex items-center justify-center font-bold text-xs font-mono">${(idx + 1).toLocaleString('fa-IR')}</span>
+          <span class="w-6 h-6 rounded-full bg-[rgb(var(--theme-primary))] text-white flex items-center justify-center font-bold text-xs font-mono">${(idx + 1).toLocaleString('fa-IR')}</span>
           <input type="text" value="${p.name}" class="p-name-input bg-white border border-gray-300 rounded-lg p-1.5 text-xs font-bold w-48" placeholder="نام زنگ..." />
         </div>
 
@@ -471,7 +471,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">کلاس / گروه آموزشی *</label>
-          <select id="slot-class" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-extrabold">
+          <select id="slot-class" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-semibold">
             ${classes.map((c) => `<option value="${c.id}" ${currentClassVal === c.id ? 'selected' : ''}>${c.name} (${c.gradeLevel})</option>`).join('')}
           </select>
         </div>

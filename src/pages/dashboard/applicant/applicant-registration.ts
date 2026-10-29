@@ -19,8 +19,8 @@ export function createApplicantRegistrationPage(membership: OrganizationMembersh
 
     const headerRow = createElement('div', { className: 'pb-2 border-b border-gray-200 space-y-1' });
     headerRow.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('assignment', 'w-6 h-6 text-[#012622]')} ثبت‌نام آنلاین و درخواست پذیرش
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('assignment', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} ثبت‌نام آنلاین و درخواست پذیرش
       </h2>
       <p class="text-xs sm:text-sm text-gray-600">تکمیل مشخصات فردی، انتخاب دوره آموزشی و صدور کد رهگیری پذیرش.</p>
     `;
@@ -32,35 +32,35 @@ export function createApplicantRegistrationPage(membership: OrganizationMembersh
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block font-bold mb-1">نام و نام خانوادگی متقاضی *</label>
-          <input type="text" id="app-name" required value="مریم صبوری" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-[#E98A15]" />
+          <input type="text" id="app-name" required value="مریم صبوری" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-[rgb(var(--theme-accent))]" />
         </div>
         <div>
           <label class="block font-bold mb-1">کد ملی *</label>
-          <input type="text" id="app-nid" required value="۰۰۲۴۵۱۸۹۷۲" maxlength="10" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-[#E98A15]" />
+          <input type="text" id="app-nid" required value="۰۰۲۴۵۱۸۹۷۲" maxlength="10" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-[rgb(var(--theme-accent))]" />
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block font-bold mb-1">شماره تلفن همراه *</label>
-          <input type="tel" id="app-phone" required value="۰۹۱۲۳۳۳۲۲۱۱" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-[#E98A15]" />
+          <input type="tel" id="app-phone" required value="۰۹۱۲۳۳۳۲۲۱۱" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-[rgb(var(--theme-accent))]" />
         </div>
         <div>
           <label class="block font-bold mb-1">پست الکترونیکی</label>
-          <input type="email" id="app-email" value="m.sabouri@gmail.com" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-[#E98A15]" />
+          <input type="email" id="app-email" value="m.sabouri@gmail.com" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-[rgb(var(--theme-accent))]" />
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block font-bold mb-1">انتخاب دوره آموزشی *</label>
-          <select id="app-course" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#E98A15]">
+          <select id="app-course" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[rgb(var(--theme-accent))]">
             ${classes.map((c) => `<option value="${c.id}">${c.name} (${c.gradeLevel})</option>`).join('')}
           </select>
         </div>
         <div>
           <label class="block font-bold mb-1">شهریه اولیه دوره</label>
-          <input type="text" readonly value="۴,۵۰۰,۰۰۰ تومان" class="w-full bg-gray-100 border border-gray-200 rounded-xl p-2.5 text-xs font-bold text-[#012622]" />
+          <input type="text" readonly value="۴,۵۰۰,۰۰۰ تومان" class="w-full bg-gray-100 border border-gray-200 rounded-xl p-2.5 text-xs font-bold text-[rgb(var(--theme-primary))]" />
         </div>
       </div>
 
@@ -69,7 +69,7 @@ export function createApplicantRegistrationPage(membership: OrganizationMembersh
         <textarea id="app-notes" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs" placeholder="مثال: ترجیحاً کلاس‌های نوبت عصر پنج‌شنبه..."></textarea>
       </div>
 
-      <button type="submit" class="w-full py-3 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-black rounded-xl shadow transition-colors flex items-center justify-center gap-2">
+      <button type="submit" class="w-full py-3 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center justify-center gap-2">
         <span>ثبت نهایی درخواست و دریافت کد رهگیری</span>
       </button>
     `;

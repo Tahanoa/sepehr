@@ -18,7 +18,7 @@ export interface SMSModalOptions {
 
 const SMS_TEMPLATES = [
   { id: 'absent', name: 'هشدار غیبت غیرموجه', text: 'اولیا محترم؛ فرزند شما در تاریخ {تاریخ} در کلاس درس حاضر نشده است. لطفاً جهت اطلاع علت غیبت با دفتر مدرسه تماس حاصل فرمایید.' },
-  { id: 'grades', name: 'اعلام کارنامه و نمرات', text: 'اولیا محترم؛ نمرات ارزشیابی دوره جدید فرزند شما در سامانه پولاریس ثبت شد. جهت مشاهده به پنل اولیا مراجعه کنید.' },
+  { id: 'grades', name: 'اعلام کارنامه و نمرات', text: 'اولیا محترم؛ نمرات ارزشیابی دوره جدید فرزند شما در سامانه سپهر ثبت شد. جهت مشاهده به پنل اولیا مراجعه کنید.' },
   { id: 'tuition', name: 'یادآوری سررسید شهریه', text: 'سرپرست محترم؛ صورت‌حساب شهریه ترم جدید فرزند شما صادر گردید. لطفاً نسبت به تسویه حساب اقدام فرمایید.' },
   { id: 'event', name: 'دعوت به جلسه اولیا و مربیان', text: 'اولیای گرامی؛ جلسه تعاملی ماهانه روز {روز} ساعت {ساعت} در سالن همایش مرکز برگزار می‌گردد. حضور شما موجب امتنان است.' },
 ];
@@ -36,15 +36,15 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
 
   // Header
   const header = createElement('div', {
-    className: 'bg-[#012622] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
+    className: 'bg-[rgb(var(--theme-primary))] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
   });
   header.innerHTML = `
     <div class="flex items-center gap-3">
-      <div class="p-2 bg-[#E98A15] text-[#012622] rounded-xl font-bold">
+      <div class="p-2 bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] rounded-xl font-bold">
         ${getDashboardIcon('chat', 'w-5 h-5')}
       </div>
       <div>
-        <h3 class="text-base font-extrabold text-white">ارسال پیامک اطلاع‌رسانی اولیا (شبیه‌ساز SMS)</h3>
+        <h3 class="text-base font-semibold text-white">ارسال پیامک اطلاع‌رسانی اولیا (شبیه‌ساز SMS)</h3>
         <p class="text-xs text-amber-200">ارسال پیامک آزمایشی به شماره تماس اولیا با قالب‌های آماده</p>
       </div>
     </div>
@@ -73,7 +73,7 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
   form.innerHTML = `
     <div class="space-y-1 text-right">
       <label class="block text-xs font-bold text-gray-700">گیرنده پیامک:</label>
-      <select id="sms-recipient" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs font-bold text-gray-800 focus:border-[#E98A15] focus:ring-1 focus:ring-[#E98A15]">
+      <select id="sms-recipient" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs font-bold text-gray-800 focus:border-[rgb(var(--theme-accent))] focus:ring-1 focus:ring-[rgb(var(--theme-accent))]">
         <option value="all">کلیه اولیا و سرپرستان (همگانی)</option>
         ${students
           .map(
@@ -88,7 +88,7 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
 
     <div class="space-y-1 text-right">
       <label class="block text-xs font-bold text-gray-700">انتخاب قالب آماده پیامک:</label>
-      <select id="sms-template" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-800 focus:border-[#E98A15] focus:ring-1 focus:ring-[#E98A15]">
+      <select id="sms-template" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-800 focus:border-[rgb(var(--theme-accent))] focus:ring-1 focus:ring-[rgb(var(--theme-accent))]">
         <option value="">متن سفارشی (بدون قالب)</option>
         ${SMS_TEMPLATES.map((t) => `<option value="${t.id}">${t.name}</option>`).join('')}
       </select>
@@ -99,7 +99,7 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
         <label class="block text-xs font-bold text-gray-700">متن پیامک:</label>
         <span id="char-counter" class="text-[11px] text-gray-500 font-semibold">۰ کاراکتر (۱ پیامک)</span>
       </div>
-      <textarea id="sms-text" rows="4" required class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 leading-relaxed focus:border-[#E98A15] focus:ring-1 focus:ring-[#E98A15]" placeholder="متن پیامک خود را بنویسید...">${
+      <textarea id="sms-text" rows="4" required class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 leading-relaxed focus:border-[rgb(var(--theme-accent))] focus:ring-1 focus:ring-[rgb(var(--theme-accent))]" placeholder="متن پیامک خود را بنویسید...">${
         SMS_TEMPLATES[0]!.text
       }</textarea>
     </div>
@@ -141,7 +141,7 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
   cancelBtn.addEventListener('click', onClose);
 
   const sendBtn = createElement('button', {
-    className: 'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5',
+    className: 'px-5 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5',
     innerHTML: `${getDashboardIcon('announcement', 'w-4 h-4')} <span>شبیه‌سازی ارسال SMS</span>`,
   });
 

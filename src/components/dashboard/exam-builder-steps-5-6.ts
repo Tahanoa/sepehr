@@ -16,7 +16,7 @@ export function renderExamBuilderStep5(
   container.innerHTML = `
     <div class="bg-gray-50/70 p-4 rounded-2xl border border-gray-200/80 space-y-4">
       <div>
-        <h3 class="font-extrabold text-sm text-[#012622]">گام ۵ — تنظیمات امنیتی و رفتار جلسه آزمون</h3>
+        <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))]">گام ۵ — تنظیمات امنیتی و رفتار جلسه آزمون</h3>
         <p class="text-[11px] text-gray-500">پیکربندی قوانین تصادفی‌سازی، ناوبری، قطع اتصال و بازگشت دانش‌آموز.</p>
       </div>
 
@@ -40,27 +40,27 @@ export function renderExamBuilderStep5(
 
         <div class="space-y-2 pt-2 border-t border-gray-200 sm:col-span-2">
           <div class="flex items-center gap-2">
-            <input type="checkbox" id="cfg-back" ${draft.allowBackNavigation !== false ? 'checked' : ''} class="w-4 h-4 rounded text-[#012622]" />
+            <input type="checkbox" id="cfg-back" ${draft.allowBackNavigation !== false ? 'checked' : ''} class="w-4 h-4 rounded text-[rgb(var(--theme-primary))]" />
             <label for="cfg-back" class="font-bold cursor-pointer">امکان پیمایش به سوالات قبلی و تغییر پاسخ‌ها فعال باشد</label>
           </div>
 
           <div class="flex items-center gap-2">
-            <input type="checkbox" id="cfg-unanswered" ${draft.allowUnansweredSubmission !== false ? 'checked' : ''} class="w-4 h-4 rounded text-[#012622]" />
+            <input type="checkbox" id="cfg-unanswered" ${draft.allowUnansweredSubmission !== false ? 'checked' : ''} class="w-4 h-4 rounded text-[rgb(var(--theme-primary))]" />
             <label for="cfg-unanswered" class="font-bold cursor-pointer">اجازه ثبت نهایی با سوالات بدون پاسخ داده شود</label>
           </div>
 
           <div class="flex items-center gap-2">
-            <input type="checkbox" id="cfg-autoSubmit" ${draft.autoSubmitOnTimeout !== false ? 'checked' : ''} class="w-4 h-4 rounded text-[#012622]" />
+            <input type="checkbox" id="cfg-autoSubmit" ${draft.autoSubmitOnTimeout !== false ? 'checked' : ''} class="w-4 h-4 rounded text-[rgb(var(--theme-primary))]" />
             <label for="cfg-autoSubmit" class="font-bold cursor-pointer">تحویل خودکار پاسخ‌ها بلافاصله پس از اتمام زمان‌سنج</label>
           </div>
 
           <div class="flex items-center gap-2">
-            <input type="checkbox" id="cfg-randQ" ${draft.randomizeQuestions ? 'checked' : ''} class="w-4 h-4 rounded text-[#012622]" />
+            <input type="checkbox" id="cfg-randQ" ${draft.randomizeQuestions ? 'checked' : ''} class="w-4 h-4 rounded text-[rgb(var(--theme-primary))]" />
             <label for="cfg-randQ" class="font-bold cursor-pointer">چیدمان تصادفی سوالات برای هر دانش‌آموز (Randomize Questions)</label>
           </div>
 
           <div class="flex items-center gap-2">
-            <input type="checkbox" id="cfg-randOpt" ${draft.randomizeOptions ? 'checked' : ''} class="w-4 h-4 rounded text-[#012622]" />
+            <input type="checkbox" id="cfg-randOpt" ${draft.randomizeOptions ? 'checked' : ''} class="w-4 h-4 rounded text-[rgb(var(--theme-primary))]" />
             <label for="cfg-randOpt" class="font-bold cursor-pointer">چیدمان تصادفی گزینه‌ها در سوالات تستی (Randomize Options)</label>
           </div>
         </div>
@@ -119,13 +119,13 @@ export function renderExamBuilderStep6(
   container.innerHTML = `
     <div class="bg-gray-50/70 p-5 rounded-2xl border border-gray-200 space-y-4">
       <div>
-        <h3 class="font-extrabold text-sm text-[#012622]">گام ۶ — بازبینی نهایی و انتشار آزمون</h3>
+        <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))]">گام ۶ — بازبینی نهایی و انتشار آزمون</h3>
         <p class="text-[11px] text-gray-500">بررسی کامل مشخصات، سوالات و هشدارهای سیستم پیش از قرارگیری در دسترسی دانش‌آموزان.</p>
       </div>
 
       ${warnings.length > 0 ? `
         <div class="p-3.5 bg-amber-50 border border-amber-300 text-amber-950 rounded-xl space-y-1">
-          <div class="font-extrabold text-xs">⚠️ هشدارهای بررسی پیش از انتشار:</div>
+          <div class="font-semibold text-xs">⚠️ هشدارهای بررسی پیش از انتشار:</div>
           <ul class="list-disc list-inside space-y-0.5">
             ${warnings.map((w) => `<li>${w}</li>`).join('')}
           </ul>

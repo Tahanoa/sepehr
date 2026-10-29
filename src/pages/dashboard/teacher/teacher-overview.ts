@@ -23,14 +23,14 @@ export function createTeacherOverviewPage(membership: OrganizationMembership): H
 
   // Welcome Card
   const welcomeCard = createElement('div', {
-    className: 'bg-gradient-to-br from-[#012622] via-[#003B36] to-[#59114D] rounded-2xl p-6 text-white shadow-md space-y-2',
+    className: 'bg-gradient-to-br from-[rgb(var(--theme-primary))] via-[rgb(var(--theme-hover))] to-[rgb(var(--theme-secondary))] rounded-2xl p-6 text-white shadow-md space-y-2',
   });
   welcomeCard.innerHTML = `
     <div class="flex items-center gap-2">
-      <span class="px-3 py-1 bg-[#E98A15] text-[#012622] text-xs font-black rounded-full">${isInstitute ? 'پیش‌خوان استاد / مدرس' : 'پیش‌خوان معلم / دبیر'}</span>
+      <span class="px-3 py-1 bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] text-xs font-bold rounded-full">${isInstitute ? 'پیش‌خوان استاد / مدرس' : 'پیش‌خوان معلم / دبیر'}</span>
       <span class="text-xs text-amber-200">${membership.title || 'استاد کادر آموزشی'}</span>
     </div>
-    <h2 class="text-2xl font-black">خوش آمدید، ${user?.name || 'استاد محترم'}</h2>
+    <h2 class="text-2xl font-bold">خوش آمدید، ${user?.name || 'استاد محترم'}</h2>
     <p class="text-xs text-gray-200 opacity-90 max-w-xl">
       مدیریت کلاس‌های تحصیلی، ثبت حضور و غیاب، بررسی تکالیف ارسالی دانش‌آموزان و استفاده از دستیار تصحیح هوشمند.
     </p>
@@ -41,25 +41,25 @@ export function createTeacherOverviewPage(membership: OrganizationMembership): H
   metricsGrid.innerHTML = `
     <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs">
       <span class="text-xs font-bold text-gray-500">${isInstitute ? 'دوره‌های تحت تدریس' : 'کلاس‌های انتسابی'}</span>
-      <div class="text-2xl font-black text-[#012622] font-mono mt-1">${classes.length.toLocaleString('fa-IR')}</div>
+      <div class="text-2xl font-bold text-[rgb(var(--theme-primary))] font-mono mt-1">${classes.length.toLocaleString('fa-IR')}</div>
     </div>
     <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs">
       <span class="text-xs font-bold text-gray-500">تکالیف فعال</span>
-      <div class="text-2xl font-black text-amber-800 font-mono mt-1">${assignments.length.toLocaleString('fa-IR')}</div>
+      <div class="text-2xl font-bold text-amber-800 font-mono mt-1">${assignments.length.toLocaleString('fa-IR')}</div>
     </div>
     <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs">
       <span class="text-xs font-bold text-gray-500">آزمون‌های برنامه‌ریزی‌شده</span>
-      <div class="text-2xl font-black text-emerald-800 font-mono mt-1">${exams.length.toLocaleString('fa-IR')}</div>
+      <div class="text-2xl font-bold text-emerald-800 font-mono mt-1">${exams.length.toLocaleString('fa-IR')}</div>
     </div>
     <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs">
       <span class="text-xs font-bold text-gray-500">جزوات و منابع آموزشی</span>
-      <div class="text-2xl font-black text-purple-900 font-mono mt-1">${materials.length.toLocaleString('fa-IR')}</div>
+      <div class="text-2xl font-bold text-purple-900 font-mono mt-1">${materials.length.toLocaleString('fa-IR')}</div>
     </div>
   `;
 
   // Quick Action Links Grid
   const actionsCard = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 space-y-4' });
-  actionsCard.innerHTML = `<h3 class="text-sm font-black text-gray-900 flex items-center gap-2">${getDashboardIcon('classes', 'w-4 h-4 text-[#012622]')} دسترسی‌های سریع آموزگار / مدرس</h3>`;
+  actionsCard.innerHTML = `<h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">${getDashboardIcon('classes', 'w-4 h-4 text-[rgb(var(--theme-primary))]')} دسترسی‌های سریع آموزگار / مدرس</h3>`;
 
   const actionsGrid = createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-3 gap-3' });
 
@@ -72,12 +72,12 @@ export function createTeacherOverviewPage(membership: OrganizationMembership): H
   links.forEach((link) => {
     const btn = createElement('a', {
       attributes: { href: link.path },
-      className: 'p-4 rounded-xl border border-gray-200 hover:border-[#012622] hover:bg-gray-50/80 transition-all flex items-center gap-3 text-right cursor-pointer',
+      className: 'p-4 rounded-xl border border-gray-200 hover:border-[rgb(var(--theme-primary))] hover:bg-gray-50/80 transition-all flex items-center gap-3 text-right cursor-pointer',
     });
     btn.innerHTML = `
-      <div class="p-2.5 bg-[#ECE5F0] text-[#012622] rounded-xl shrink-0 font-bold">${getDashboardIcon(link.icon, 'w-5 h-5')}</div>
+      <div class="p-2.5 bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] rounded-xl shrink-0 font-bold">${getDashboardIcon(link.icon, 'w-5 h-5')}</div>
       <div>
-        <div class="font-extrabold text-xs text-gray-900">${link.title}</div>
+        <div class="font-semibold text-xs text-gray-900">${link.title}</div>
         <div class="text-[11px] text-gray-500 mt-0.5">${link.desc}</div>
       </div>
     `;

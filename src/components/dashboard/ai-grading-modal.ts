@@ -43,16 +43,16 @@ export function createAIGradingModal(options: AIGradingModalOptions): HTMLElemen
 
   // Header
   const header = createElement('div', {
-    className: 'bg-[#012622] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
+    className: 'bg-[rgb(var(--theme-primary))] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
   });
   header.innerHTML = `
     <div class="flex items-center gap-3">
-      <div class="p-2 bg-[#E98A15] text-[#012622] rounded-xl font-bold">
+      <div class="p-2 bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] rounded-xl font-bold">
         ${getDashboardIcon('award', 'w-5 h-5')}
       </div>
       <div>
         <div class="flex items-center gap-2">
-          <h3 class="text-base font-extrabold text-white">دستیار هوشمند تصحیح سوالات تشریحی (دستیار AI)</h3>
+          <h3 class="text-base font-semibold text-white">دستیار هوشمند تصحیح سوالات تشریحی (دستیار AI)</h3>
           <span class="px-2 py-0.5 bg-amber-500/20 text-amber-300 text-[10px] font-bold rounded border border-amber-400/30">شبیه‌سازی دمو</span>
         </div>
         <p class="text-xs text-amber-200">تحلیل هوشمند پاسخ دانش‌آموز بر اساس بارم‌بندی و پاسخ مرجع استاد</p>
@@ -102,8 +102,8 @@ export function createAIGradingModal(options: AIGradingModalOptions): HTMLElemen
   // Trigger Action
   const triggerBox = createElement('div', { className: 'text-center py-2' });
   const runAiBtn = createElement('button', {
-    className: 'px-6 py-3 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-extrabold rounded-xl shadow-md transition-all flex items-center gap-2 mx-auto focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-    innerHTML: `<svg class="w-4 h-4 text-[#E98A15] animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> <span>تحلیل و تولید پیشنهاد نمره با هوش مصنوعی</span>`,
+    className: 'px-6 py-3 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-semibold rounded-xl shadow-md transition-all flex items-center gap-2 mx-auto focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
+    innerHTML: `<svg class="w-4 h-4 text-[rgb(var(--theme-accent))] animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> <span>تحلیل و تولید پیشنهاد نمره با هوش مصنوعی</span>`,
   });
   triggerBox.appendChild(runAiBtn);
   body.appendChild(triggerBox);
@@ -145,10 +145,10 @@ export function createAIGradingModal(options: AIGradingModalOptions): HTMLElemen
       resultBox.innerHTML = `
         <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-extrabold text-amber-900 flex items-center gap-1.5">
-              ${getDashboardIcon('award', 'w-4 h-4 text-[#E98A15]')} نتیجه تحلیل هوشمند دمو
+            <span class="text-xs font-semibold text-amber-900 flex items-center gap-1.5">
+              ${getDashboardIcon('award', 'w-4 h-4 text-[rgb(var(--theme-accent))]')} نتیجه تحلیل هوشمند دمو
             </span>
-            <span class="text-sm font-black text-[#012622] bg-white px-3 py-1 rounded-lg border border-amber-300">
+            <span class="text-sm font-bold text-[rgb(var(--theme-primary))] bg-white px-3 py-1 rounded-lg border border-amber-300">
               نمره پیشنهادی: ${suggestion.proposedScore} از ${maxPoints}
             </span>
           </div>
@@ -166,7 +166,7 @@ export function createAIGradingModal(options: AIGradingModalOptions): HTMLElemen
                   <span class="font-bold text-gray-900">${crit.criterionTitle}:</span>
                   <span class="text-gray-600 me-2"> ${crit.feedback}</span>
                 </div>
-                <span class="font-bold text-[#012622] shrink-0">${crit.scoreGiven} / ${crit.maxPoints}</span>
+                <span class="font-bold text-[rgb(var(--theme-primary))] shrink-0">${crit.scoreGiven} / ${crit.maxPoints}</span>
               </div>
             `
               )
@@ -178,7 +178,7 @@ export function createAIGradingModal(options: AIGradingModalOptions): HTMLElemen
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div class="space-y-1 text-right">
               <label class="block text-xs font-bold text-gray-700">نمره نهایی استاد (قابل ویرایش):</label>
-              <input type="number" id="final-teacher-score" max="${maxPoints}" min="0" value="${suggestion.proposedScore}" step="0.5" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-xs font-bold text-[#012622]">
+              <input type="number" id="final-teacher-score" max="${maxPoints}" min="0" value="${suggestion.proposedScore}" step="0.5" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-xs font-bold text-[rgb(var(--theme-primary))]">
             </div>
             <div class="space-y-1 text-right">
               <label class="block text-xs font-bold text-gray-700">بازخورد آموزشی برای دانش‌آموز:</label>
@@ -202,7 +202,7 @@ export function createAIGradingModal(options: AIGradingModalOptions): HTMLElemen
   rejectBtn.addEventListener('click', onClose);
 
   const acceptBtn = createElement('button', {
-    className: 'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5',
+    className: 'px-5 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5',
     innerHTML: `${getDashboardIcon('attendance', 'w-4 h-4')} <span>تایید و ذخیره نمره</span>`,
   });
 

@@ -22,7 +22,7 @@ export function createFeaturePlaceholderPage(options: FeaturePlaceholderOptions)
   });
 
   const iconWrapper = createElement('div', {
-    className: 'p-4 rounded-2xl bg-[#ECE5F0] text-[#012622] mb-5 shadow-2xs',
+    className: 'p-4 rounded-2xl bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] mb-5 shadow-2xs',
     innerHTML: getDashboardIcon('info', 'w-10 h-10 sm:w-12 sm:h-12'),
   });
 
@@ -33,7 +33,7 @@ export function createFeaturePlaceholderPage(options: FeaturePlaceholderOptions)
   });
 
   const title = createElement('h2', {
-    className: 'text-xl sm:text-2xl font-black text-[#012622] mb-2.5 tracking-tight',
+    className: 'text-xl sm:text-2xl font-bold text-[rgb(var(--theme-primary))] mb-2.5 tracking-tight',
     textContent: sectionTitle,
   });
 
@@ -41,7 +41,7 @@ export function createFeaturePlaceholderPage(options: FeaturePlaceholderOptions)
     className: 'text-xs sm:text-sm text-gray-600 max-w-lg leading-relaxed mb-6 font-normal',
     textContent: `زیرساخت اختصاصی بخش «${sectionTitle}» برای نقش ${
       roleTitle ? `«${roleTitle}»` : ''
-    } تعریف شده و زیرسامانه‌های عملیاتی آن در فاز بعدی سامانه پولاریس فعال خواهند شد.`,
+    } تعریف شده و زیرسامانه‌های عملیاتی آن در فاز بعدی سامانه سپهر فعال خواهند شد.`,
   });
 
   const infoBox = createElement('div', {
@@ -64,7 +64,7 @@ export function createFeaturePlaceholderPage(options: FeaturePlaceholderOptions)
 
   const overviewBtn = createElement('a', {
     className:
-      'inline-flex items-center gap-2 px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#E98A15] min-h-[44px]',
+      'inline-flex items-center gap-2 px-5 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))] min-h-[44px]',
     attributes: { href: `/app/${organizationId}/overview` },
   });
   overviewBtn.innerHTML = `${getDashboardIcon('dashboard', 'w-4 h-4')} بازگشت به پیش‌خوان اصلی`;
@@ -97,7 +97,7 @@ export function createAccessDeniedPage(organizationId: string, userRole?: string
   });
 
   const title = createElement('h2', {
-    className: 'text-2xl font-extrabold text-gray-900 mb-2',
+    className: 'text-2xl font-semibold text-gray-900 mb-2',
     textContent: 'عدم سطح دسترسی کافی (۴۰۳)',
   });
 
@@ -110,7 +110,7 @@ export function createAccessDeniedPage(organizationId: string, userRole?: string
 
   const overviewBtn = createElement('a', {
     className:
-      'inline-flex items-center gap-2 px-5 py-2.5 bg-[#012622] text-white text-xs font-bold rounded-xl hover:bg-[#003B36] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      'inline-flex items-center gap-2 px-5 py-2.5 bg-[rgb(var(--theme-primary))] text-white text-xs font-bold rounded-xl hover:bg-[rgb(var(--theme-hover))] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     attributes: { href: `/app/${organizationId}/overview` },
   });
   overviewBtn.innerHTML = `${getDashboardIcon('dashboard', 'w-4 h-4')} بازگشت به پیش‌خوان مجاز`;
@@ -139,7 +139,7 @@ export function createDashboardNotFoundPage(organizationId: string): HTMLElement
   });
 
   const title = createElement('h2', {
-    className: 'text-2xl font-extrabold text-gray-900 mb-2',
+    className: 'text-2xl font-semibold text-gray-900 mb-2',
     textContent: 'صفحه مورد نظر در پنل کاربری یافت نشد (۴۰۴)',
   });
 
@@ -150,7 +150,7 @@ export function createDashboardNotFoundPage(organizationId: string): HTMLElement
 
   const overviewBtn = createElement('a', {
     className:
-      'inline-flex items-center gap-2 px-5 py-2.5 bg-[#012622] text-white text-xs font-bold rounded-xl hover:bg-[#003B36] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      'inline-flex items-center gap-2 px-5 py-2.5 bg-[rgb(var(--theme-primary))] text-white text-xs font-bold rounded-xl hover:bg-[rgb(var(--theme-hover))] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     attributes: { href: `/app/${organizationId}/overview` },
   });
   overviewBtn.innerHTML = `${getDashboardIcon('dashboard', 'w-4 h-4')} بازگشت به پیش‌خوان`;

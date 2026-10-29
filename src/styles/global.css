@@ -23,13 +23,13 @@ body {
   min-height: 100vh;
   margin: 0;
   overflow-x: hidden;
-  background-color: #F8F7FA;
+  background-color: var(--color-background);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
 :focus-visible {
-  outline: 2px solid #E98A15;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 

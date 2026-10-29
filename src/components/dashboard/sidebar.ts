@@ -31,14 +31,14 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
   } = options;
 
   const sidebar = createElement('aside', {
-    className: `bg-[#012622] text-white flex flex-col justify-between transition-all duration-300 h-full relative z-30 ${
+    className: `bg-[rgb(var(--theme-primary))] text-white flex flex-col justify-between transition-all duration-300 h-full relative z-30 ${
       isCollapsed ? 'w-20' : 'w-72'
     }`,
     attributes: { 'aria-label': 'منوی اصلی سامانه' },
   });
 
   // Top Section: Brand Header & Org Switcher
-  const topContainer = createElement('div', { className: 'flex flex-col' });
+  const topContainer = createElement('div', { className: 'flex flex-col flex-1 min-h-0' });
 
   // Brand Header
   const brandHeader = createElement('div', {
@@ -46,7 +46,7 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
   });
 
   const brandLink = createElement('a', {
-    className: 'flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-[#E98A15] rounded-xl p-1',
+    className: 'flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))] rounded-xl p-1',
     attributes: { href: `/app/${membership.organizationId}/overview` },
   });
 
@@ -58,15 +58,15 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
   // Polaris Logo Mark
   const logoMark = createElement('div', {
     className:
-      'w-10 h-10 rounded-xl bg-gradient-to-br from-[#E98A15] to-[#59114D] text-white flex items-center justify-center font-extrabold text-lg shadow-md shrink-0',
-    textContent: 'P',
+      'w-10 h-10 rounded-xl bg-gradient-to-br from-[rgb(var(--theme-accent))] to-[rgb(var(--theme-secondary))] text-white flex items-center justify-center font-semibold text-lg shadow-md shrink-0',
+    textContent: 'س',
   });
 
   const brandTextGroup = createElement('div', { className: `min-w-0 ${isCollapsed ? 'hidden' : 'block'}` });
 
   const brandName = createElement('div', {
-    className: 'text-base font-extrabold text-white tracking-tight truncate',
-    textContent: 'پولاریس',
+    className: 'text-base font-semibold text-white tracking-tight truncate',
+    textContent: 'سپهر',
   });
 
   const brandTag = createElement('div', {
@@ -86,7 +86,7 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
   if (onToggleCollapse) {
     const toggleBtn = createElement('button', {
       className:
-        'hidden lg:flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'hidden lg:flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       attributes: {
         'aria-label': isCollapsed ? 'گسترش منو' : 'جمع کردن منو',
       },
@@ -134,10 +134,10 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
     const li = createElement('li');
 
     const link = createElement('a', {
-      className: `group flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#E98A15] ${
+      className: `group flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))] ${
         isCurrent
-          ? 'bg-[#E98A15] text-[#012622] font-extrabold shadow-sm'
-          : 'text-gray-200 hover:bg-[#003B36] hover:text-white'
+          ? 'bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] font-semibold shadow-sm'
+          : 'text-gray-200 hover:bg-[rgb(var(--theme-hover))] hover:text-white'
       }`,
       attributes: {
         href: item.path,
@@ -149,7 +149,7 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
     const leftGroup = createElement('div', { className: 'flex items-center gap-3 min-w-0' });
 
     const iconWrapper = createElement('span', {
-      className: `shrink-0 ${isCurrent ? 'text-[#012622]' : 'text-gray-300 group-hover:text-white'}`,
+      className: `shrink-0 ${isCurrent ? 'text-[rgb(var(--theme-primary))]' : 'text-gray-300 group-hover:text-white'}`,
       innerHTML: getDashboardIcon(item.icon, 'w-5 h-5'),
     });
 
@@ -166,7 +166,7 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
     if (item.badge !== undefined && !isCollapsed) {
       const badgeSpan = createElement('span', {
         className: `px-2 py-0.5 rounded-full text-[10px] font-bold ${
-          isCurrent ? 'bg-[#012622] text-white' : 'bg-[#ECE5F0]/20 text-white'
+          isCurrent ? 'bg-[rgb(var(--theme-primary))] text-white' : 'bg-[rgb(var(--theme-subtle))]/20 text-white'
         }`,
         textContent: String(item.badge),
       });
@@ -187,7 +187,7 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
 
   // Footer Section
   const footerContainer = createElement('div', {
-    className: 'p-3 border-t border-white/10 bg-[#003B36]/60 flex flex-col gap-2',
+    className: 'shrink-0 p-3 border-t border-white/10 bg-[rgb(var(--theme-hover))]/60 flex flex-col gap-2',
   });
 
   if (!isCollapsed) {
@@ -195,7 +195,7 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
       className:
         'px-3 py-1.5 rounded-lg bg-amber-500/20 border border-amber-400/30 text-amber-200 text-[11px] font-semibold flex items-center justify-between dir-rtl',
     });
-    demoTag.innerHTML = `<span>داده‌های آزمایشی</span> <span class="bg-amber-400 text-gray-950 text-[9px] px-1.5 py-0.2 rounded font-extrabold">DEMO</span>`;
+    demoTag.innerHTML = `<span>داده‌های آزمایشی</span> <span class="bg-amber-400 text-gray-950 text-[9px] px-1.5 py-0.2 rounded font-semibold">DEMO</span>`;
     footerContainer.appendChild(demoTag);
   }
 
@@ -217,13 +217,21 @@ export function createMobileNavigationDrawer(
     document.body.style.overflow = '';
   }
 
+  const previousFocus = document.activeElement as HTMLElement | null;
   const handleClose = () => {
     document.body.style.overflow = '';
     document.removeEventListener('keydown', handleKeyDown);
     onClose();
+    previousFocus?.focus();
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Tab' && isOpen) {
+      const items = Array.from(drawer.querySelectorAll<HTMLElement>('button, a[href], select')).filter(el => el.getClientRects().length > 0);
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+    }
     if (e.key === 'Escape' && isOpen) {
       handleClose();
     }
@@ -240,7 +248,7 @@ export function createMobileNavigationDrawer(
   });
 
   const drawer = createElement('div', {
-    className: `fixed top-0 start-0 bottom-0 w-80 max-w-[85vw] bg-[#012622] text-white z-50 transition-transform duration-300 ease-out transform lg:hidden flex flex-col shadow-2xl ${
+    className: `fixed top-0 start-0 bottom-0 w-80 max-w-[85vw] bg-[rgb(var(--theme-primary))] text-white z-50 transition-transform duration-300 ease-out transform lg:hidden flex flex-col shadow-2xl ${
       isOpen ? 'translate-x-0' : 'translate-x-full'
     }`,
     attributes: {
@@ -251,7 +259,7 @@ export function createMobileNavigationDrawer(
   });
 
   const closeBtn = createElement('button', {
-    className: 'absolute top-3.5 end-3.5 p-2.5 text-gray-300 hover:text-white rounded-xl bg-white/10 hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15] z-10 min-w-[44px] min-h-[44px] flex items-center justify-center',
+    className: 'absolute top-3.5 end-3.5 p-2.5 text-gray-300 hover:text-white rounded-xl bg-white/10 hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))] z-40 min-w-[44px] min-h-[44px] flex items-center justify-center',
     attributes: { 'aria-label': 'بستن منو' },
     innerHTML: getDashboardIcon('close', 'w-5 h-5'),
   });
@@ -267,6 +275,8 @@ export function createMobileNavigationDrawer(
   });
 
   drawer.appendChild(closeBtn);
+  sidebarContent.classList.remove('w-72');
+  sidebarContent.classList.add('w-full');
   drawer.appendChild(sidebarContent);
 
   backdrop.appendChild(drawer);
@@ -275,5 +285,6 @@ export function createMobileNavigationDrawer(
     if (e.target === backdrop) handleClose();
   });
 
+  if (isOpen) requestAnimationFrame(() => closeBtn.focus());
   return backdrop;
 }

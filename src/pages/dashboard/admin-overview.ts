@@ -25,7 +25,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
       const skHeader = createElement('div', { className: 'flex items-center justify-between mb-4' });
       const toggleBtn = createElement('button', {
         className:
-          'px-3.5 py-2 bg-[#012622] text-white text-xs font-bold rounded-xl shadow-2xs hover:bg-[#003B36] transition-all flex items-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+          'px-3.5 py-2 bg-[rgb(var(--theme-primary))] text-white text-xs font-bold rounded-xl shadow-2xs hover:bg-[rgb(var(--theme-hover))] transition-all flex items-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
         innerHTML: `${getDashboardIcon('swap', 'w-4 h-4 text-amber-400')} خروج از حالت بارگذاری (نمایش داده‌ها)`,
       });
       toggleBtn.addEventListener('click', () => {
@@ -41,7 +41,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
     // 1. Welcome & Demo Banner Header
     const welcomeCard = createElement('div', {
       className:
-        'bg-gradient-to-br from-[#012622] via-[#003B36] to-[#59114D] rounded-2xl p-5 sm:p-7 text-white shadow-md relative overflow-hidden',
+        'bg-gradient-to-br from-[rgb(var(--theme-primary))] via-[rgb(var(--theme-hover))] to-[rgb(var(--theme-secondary))] rounded-2xl p-5 sm:p-7 text-white shadow-md relative overflow-hidden',
     });
 
     const welcomeContent = createElement('div', { className: 'relative z-10 space-y-2.5 max-w-2xl' });
@@ -50,13 +50,13 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
 
     const badge = createElement('div', {
       className:
-        'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-[#E98A15] text-[#012622] shadow-2xs',
+        'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] shadow-2xs',
       textContent: 'پنل مدیریت ارشد مرکز',
     });
 
     const skeletonToggleBtn = createElement('button', {
       className:
-        'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/15 hover:bg-white/25 text-white transition-colors cursor-pointer border border-white/20 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/15 hover:bg-white/25 text-white transition-colors cursor-pointer border border-white/20 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       innerHTML: `${getDashboardIcon('chart', 'w-3.5 h-3.5')} پیش‌نمایش حالت بارگذاری (Skeleton)`,
     });
     skeletonToggleBtn.addEventListener('click', () => {
@@ -68,7 +68,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
     badgeGroup.appendChild(skeletonToggleBtn);
 
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl lg:text-3xl font-black tracking-tight',
+      className: 'text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight',
       textContent: `خوش آمدید، ${membership.organization.name}`,
     });
 
@@ -101,7 +101,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
         <span class="p-2 bg-amber-200/80 text-amber-950 rounded-xl shrink-0 shadow-2xs">${getDashboardIcon('info', 'w-4 h-4')}</span>
         <span class="leading-relaxed truncate sm:whitespace-normal"><strong>داده‌های آزمایشی (Demo Mode):</strong> کلیه آمار، اطلاعات دانش‌آموزان و فعالیت‌های نمایش داده شده جنبه نمونه داشته و جهت بررسی سامانه است.</span>
       </div>
-      <span class="px-2.5 py-1 bg-amber-200/90 text-amber-950 rounded-lg font-black text-[10px] shrink-0">آزمایشی</span>
+      <span class="px-2.5 py-1 bg-amber-200/90 text-amber-950 rounded-lg font-bold text-[10px] shrink-0">آزمایشی</span>
     `;
 
     // 2. Summary KPI Cards Grid
@@ -164,11 +164,11 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
     const chartHeader = createElement('div', { className: 'flex items-center justify-between pb-3.5 border-b border-gray-100 flex-wrap gap-2' });
     const chartTitleGroup = createElement('div', { className: 'flex items-center gap-2.5' });
     const chartIcon = createElement('div', {
-      className: 'p-2.5 bg-[#ECE5F0] text-[#012622] rounded-xl shrink-0 shadow-2xs',
+      className: 'p-2.5 bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] rounded-xl shrink-0 shadow-2xs',
       innerHTML: getDashboardIcon('chart', 'w-5 h-5'),
     });
     const chartTitle = createElement('h3', {
-      className: 'text-xs sm:text-sm font-black text-gray-900 tracking-tight',
+      className: 'text-xs sm:text-sm font-bold text-gray-900 tracking-tight',
       textContent: 'نمودار تفکیکی حضور و غیاب پایه‌های تحصیلی',
     });
 
@@ -187,9 +187,9 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
     const chartBody = createElement('div', { className: 'space-y-4 pt-2' });
 
     const gradeData = [
-      { label: 'پایه دهم (ریاضی و تجربی)', percent: 96, count: '۴۸۰ دانش‌آموز', color: 'bg-[#012622]' },
-      { label: 'پایه یازدهم (علوم پایه و انسانی)', percent: 94, count: '۴۵۰ دانش‌آموز', color: 'bg-[#003B36]' },
-      { label: 'پایه دوازدهم (کنکور و فارغ‌التحصیلی)', percent: 98, count: '۵۲۰ دانش‌آموز', color: 'bg-[#E98A15]' },
+      { label: 'پایه دهم (ریاضی و تجربی)', percent: 96, count: '۴۸۰ دانش‌آموز', color: 'bg-[rgb(var(--theme-primary))]' },
+      { label: 'پایه یازدهم (علوم پایه و انسانی)', percent: 94, count: '۴۵۰ دانش‌آموز', color: 'bg-[rgb(var(--theme-hover))]' },
+      { label: 'پایه دوازدهم (کنکور و فارغ‌التحصیلی)', percent: 98, count: '۵۲۰ دانش‌آموز', color: 'bg-[rgb(var(--theme-accent))]' },
     ];
 
     gradeData.forEach((item) => {
@@ -198,7 +198,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
       const rowHeader = createElement('div', { className: 'flex justify-between text-xs font-bold text-gray-700' });
       const labelSpan = createElement('span', { textContent: item.label });
       const valSpan = createElement('span', {
-        className: 'font-mono text-[#012622] font-black',
+        className: 'font-mono text-[rgb(var(--theme-primary))] font-bold',
         textContent: `٪${item.percent} (${item.count})`,
       });
 
@@ -224,9 +224,9 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
     // Quick Actions Section
     const actionsCard = createElement('div', { className: 'space-y-3.5' });
     const actionsHeader = createElement('h3', {
-      className: 'text-xs sm:text-sm font-black text-gray-900 tracking-tight flex items-center gap-2',
+      className: 'text-xs sm:text-sm font-bold text-gray-900 tracking-tight flex items-center gap-2',
     });
-    actionsHeader.innerHTML = `${getDashboardIcon('classes', 'w-4 h-4 text-[#012622]')} دسترسی سریع و بخش‌های عملیاتی`;
+    actionsHeader.innerHTML = `${getDashboardIcon('classes', 'w-4 h-4 text-[rgb(var(--theme-primary))]')} دسترسی سریع و بخش‌های عملیاتی`;
 
     const actionsGrid = createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 gap-3.5' });
 
@@ -286,10 +286,10 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
 
     const actTitleGroup = createElement('div', { className: 'flex items-center gap-2.5' });
     const actIcon = createElement('div', {
-      className: 'p-2.5 bg-[#ECE5F0] text-[#012622] rounded-xl shrink-0 shadow-2xs',
+      className: 'p-2.5 bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] rounded-xl shrink-0 shadow-2xs',
       innerHTML: getDashboardIcon('announcement', 'w-5 h-5'),
     });
-    const actTitle = createElement('h3', { className: 'text-xs sm:text-sm font-black text-gray-900 tracking-tight', textContent: 'رویدادها و فعالیت‌های اخیر' });
+    const actTitle = createElement('h3', { className: 'text-xs sm:text-sm font-bold text-gray-900 tracking-tight', textContent: 'رویدادها و فعالیت‌های اخیر' });
 
     actTitleGroup.appendChild(actIcon);
     actTitleGroup.appendChild(actTitle);

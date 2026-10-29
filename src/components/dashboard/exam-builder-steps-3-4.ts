@@ -20,22 +20,22 @@ export function renderExamBuilderStep3(
   const header = createElement('div', { className: 'flex items-center justify-between pb-2 border-b border-gray-200' });
   header.innerHTML = `
     <div>
-      <h3 class="font-extrabold text-sm text-[#012622]">گام ۳ — ویرایشگر سوالات و کلید تصحیح</h3>
+      <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))]">گام ۳ — ویرایشگر سوالات و کلید تصحیح</h3>
       <p class="text-[11px] text-gray-500">طراحی انواع سوالات تستی، تشریحی، کوتاه‌پاسخ، عددی و صحیح/غلط با تعیین بارم‌بندی.</p>
     </div>
     <div class="flex items-center gap-2">
       <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-xl font-bold font-mono text-[11px]">
         تعداد سوالات: ${questions.length.toLocaleString('fa-IR')}
       </span>
-      <span class="px-3 py-1 bg-[#012622] text-white rounded-xl font-bold font-mono text-[11px]">
+      <span class="px-3 py-1 bg-[rgb(var(--theme-primary))] text-white rounded-xl font-bold font-mono text-[11px]">
         مجموع نمرات: ${totalScore.toLocaleString('fa-IR')}
       </span>
     </div>
   `;
 
-  const addBar = createElement('div', { className: 'flex items-center justify-between p-3 bg-[#ECE5F0]/60 rounded-xl border border-[#012622]/20' });
+  const addBar = createElement('div', { className: 'flex items-center justify-between p-3 bg-[rgb(var(--theme-subtle))]/60 rounded-xl border border-[rgb(var(--theme-primary))]/20' });
   addBar.innerHTML = `
-    <span class="font-bold text-xs text-[#012622]">افزودن سوال جدید به آزمون:</span>
+    <span class="font-bold text-xs text-[rgb(var(--theme-primary))]">افزودن سوال جدید به آزمون:</span>
     <div class="flex items-center gap-1.5 flex-wrap">
       <button type="button" data-type="single_choice" class="add-q-type-btn px-2.5 py-1.5 bg-white border border-gray-300 rounded-lg font-bold hover:bg-gray-100 cursor-pointer">+ تک‌گزینه‌ای</button>
       <button type="button" data-type="multiple_select" class="add-q-type-btn px-2.5 py-1.5 bg-white border border-gray-300 rounded-lg font-bold hover:bg-gray-100 cursor-pointer">+ چندگزینه‌ای</button>
@@ -84,8 +84,8 @@ export function renderExamBuilderStep3(
       card.innerHTML = `
         <div class="flex items-center justify-between pb-2 border-b border-gray-100">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#012622] text-white flex items-center justify-center text-xs font-extrabold font-mono">${(idx + 1).toLocaleString('fa-IR')}</span>
-            <span class="font-extrabold text-xs text-[#012622]">
+            <span class="w-6 h-6 rounded-full bg-[rgb(var(--theme-primary))] text-white flex items-center justify-center text-xs font-semibold font-mono">${(idx + 1).toLocaleString('fa-IR')}</span>
+            <span class="font-semibold text-xs text-[rgb(var(--theme-primary))]">
               ${q.type === 'single_choice' ? 'سوال تک‌گزینه‌ای (MCQ)' :
                 q.type === 'multiple_select' ? 'سوال چندگزینه‌ای' :
                 q.type === 'true_false' ? 'سوال صحیح / غلط' :
@@ -115,7 +115,7 @@ export function renderExamBuilderStep3(
             <div class="space-y-1.5">
               ${q.options.map((opt, oIdx) => `
                 <div class="flex items-center gap-2">
-                  <input type="${q.type === 'multiple_select' ? 'checkbox' : 'radio'}" name="correct-q-${q.id}" value="${opt.id}" class="q-correct-opt text-[#012622]" ${
+                  <input type="${q.type === 'multiple_select' ? 'checkbox' : 'radio'}" name="correct-q-${q.id}" value="${opt.id}" class="q-correct-opt text-[rgb(var(--theme-primary))]" ${
                     q.type === 'multiple_select'
                       ? (q.correctOptionIds || []).includes(opt.id) ? 'checked' : ''
                       : q.correctOptionId === opt.id ? 'checked' : ''
@@ -131,11 +131,11 @@ export function renderExamBuilderStep3(
           <div class="flex items-center gap-4 pt-2 border-t border-gray-100">
             <span class="font-bold">پاسخ صحیح کلید:</span>
             <label class="flex items-center gap-1.5 cursor-pointer">
-              <input type="radio" name="tf-${q.id}" value="true" class="q-tf-opt text-[#012622]" ${q.correctBool === true ? 'checked' : ''} />
+              <input type="radio" name="tf-${q.id}" value="true" class="q-tf-opt text-[rgb(var(--theme-primary))]" ${q.correctBool === true ? 'checked' : ''} />
               <span class="font-bold text-emerald-800">صحیح (درست)</span>
             </label>
             <label class="flex items-center gap-1.5 cursor-pointer">
-              <input type="radio" name="tf-${q.id}" value="false" class="q-tf-opt text-[#012622]" ${q.correctBool === false ? 'checked' : ''} />
+              <input type="radio" name="tf-${q.id}" value="false" class="q-tf-opt text-[rgb(var(--theme-primary))]" ${q.correctBool === false ? 'checked' : ''} />
               <span class="font-bold text-rose-800">غلط (نادرست)</span>
             </label>
           </div>
@@ -280,11 +280,11 @@ export function renderExamBuilderStep4(
     card.innerHTML = `
       <div class="flex items-center justify-between pb-2 border-b border-gray-200">
         <div>
-          <h3 class="font-extrabold text-sm text-[#012622]">گام ۴ — بهره‌گیری از بانک سوالات مرکز</h3>
+          <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))]">گام ۴ — بهره‌گیری از بانک سوالات مرکز</h3>
           <p class="text-[11px] text-gray-500">انتخاب و کپی سوالات استاندارد قبلی بدون تغییر بر روی نسخه اصلی بانک سوالات.</p>
         </div>
 
-        <button type="button" id="btn-import-selected" class="px-4 py-2 bg-[#012622] hover:bg-[#003B36] text-white font-bold text-xs rounded-xl transition-all cursor-pointer ${
+        <button type="button" id="btn-import-selected" class="px-4 py-2 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white font-bold text-xs rounded-xl transition-all cursor-pointer ${
           selectedBankIds.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
         }">
           افزودن موارد انتخابی به آزمون (${selectedBankIds.length.toLocaleString('fa-IR')})
@@ -326,9 +326,9 @@ export function renderExamBuilderStep4(
         ` : filtered.map((qb) => {
           const isSelected = selectedBankIds.includes(qb.id);
           return `
-            <label class="p-3 rounded-xl border ${isSelected ? 'border-[#012622] bg-[#ECE5F0]/50' : 'border-gray-200'} flex items-start justify-between cursor-pointer hover:border-[#012622] transition-all">
+            <label class="p-3 rounded-xl border ${isSelected ? 'border-[rgb(var(--theme-primary))] bg-[rgb(var(--theme-subtle))]/50' : 'border-gray-200'} flex items-start justify-between cursor-pointer hover:border-[rgb(var(--theme-primary))] transition-all">
               <div class="flex items-start gap-2.5">
-                <input type="checkbox" value="${qb.id}" class="qb-chk text-[#012622] rounded mt-0.5" ${isSelected ? 'checked' : ''} />
+                <input type="checkbox" value="${qb.id}" class="qb-chk text-[rgb(var(--theme-primary))] rounded mt-0.5" ${isSelected ? 'checked' : ''} />
                 <div class="space-y-1">
                   <div class="font-bold text-gray-900">${qb.prompt}</div>
                   <div class="text-[10px] text-gray-500 font-medium">${qb.subjectName} | بارم: ${qb.points} نمره | مدرس: ${qb.createdByTeacherName}</div>

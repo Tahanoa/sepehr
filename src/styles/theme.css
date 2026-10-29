@@ -4,43 +4,48 @@
  */
 
 :root {
+  --theme-primary: 18 62 56;
+  --theme-hover: 28 84 75;
+  --theme-accent: 229 174 88;
+  --theme-secondary: 99 82 124;
+  --theme-subtle: 238 245 242;
   /* ==========================================================================
      1. Brand Color Palette (Official Specifications)
      ========================================================================== */
-  --color-evergreen: #012622;      /* Deep primary brand dark */
-  --color-dark-green: #003B36;     /* Primary brand dark variant */
-  --color-lavender-mist: #ECE5F0;  /* Light background / surface accent */
-  --color-amber-earth: #E98A15;    /* Warm accent / CTA highlight */
-  --color-deep-purple: #59114D;   /* Secondary rich brand accent */
+  --color-evergreen: rgb(var(--theme-primary));      /* Deep primary brand dark */
+  --color-dark-green: rgb(var(--theme-hover));     /* Primary brand dark variant */
+  --color-lavender-mist: rgb(var(--theme-subtle));  /* Light background / surface accent */
+  --color-amber-earth: rgb(var(--theme-accent));    /* Warm accent / CTA highlight */
+  --color-deep-purple: rgb(var(--theme-secondary));   /* Secondary rich brand accent */
 
   /* Neutrals & Shades derived from Evergreen/Lavender Mist */
   --color-neutral-0: #FFFFFF;
   --color-neutral-50: #F8F7FA;
-  --color-neutral-100: #ECE5F0;     /* Same as lavender mist */
+  --color-neutral-100: rgb(var(--theme-subtle));     /* Same as lavender mist */
   --color-neutral-200: #DDD6E3;
   --color-neutral-300: #C5BDCC;
   --color-neutral-400: #93899C;
   --color-neutral-500: #685E71;
   --color-neutral-600: #4B4154;
   --color-neutral-700: #302838;
-  --color-neutral-800: #003B36;     /* Dark green */
-  --color-neutral-900: #012622;     /* Evergreen */
+  --color-neutral-800: rgb(var(--theme-hover));     /* Dark green */
+  --color-neutral-900: rgb(var(--theme-primary));     /* Evergreen */
 
   /* ==========================================================================
      2. Semantic Token Mapping
      ========================================================================== */
   --color-primary: var(--color-evergreen);
   --color-primary-hover: var(--color-dark-green);
-  --color-primary-active: #002824;
-  --color-primary-light: rgba(1, 38, 34, 0.08);
+  --color-primary-active: var(--color-primary-hover);
+  --color-primary-light: rgb(var(--theme-primary) / .08);
 
   --color-secondary: var(--color-deep-purple);
-  --color-secondary-hover: #480d3e;
-  --color-secondary-light: rgba(89, 17, 77, 0.08);
+  --color-secondary-hover: var(--color-secondary);
+  --color-secondary-light: rgb(var(--theme-secondary) / .08);
 
   --color-accent: var(--color-amber-earth);
-  --color-accent-hover: #d2790d;
-  --color-accent-light: rgba(233, 138, 21, 0.12);
+  --color-accent-hover: var(--color-accent);
+  --color-accent-light: rgb(var(--theme-accent) / .12);
 
   --color-background: var(--color-neutral-50);
   --color-surface: var(--color-neutral-0);
@@ -128,7 +133,7 @@
   --radius-full: 9999px;
 
   --shadow-sm: 0 1px 2px 0 rgba(1, 38, 34, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(1, 38, 34, 0.08), 0 2px 4px -1px rgba(1, 38, 34, 0.04);
+  --shadow-md: 0 4px 6px -1px rgb(var(--theme-primary) / .08), 0 2px 4px -1px rgba(1, 38, 34, 0.04);
   --shadow-lg: 0 10px 15px -3px rgba(1, 38, 34, 0.1), 0 4px 6px -2px rgba(1, 38, 34, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(1, 38, 34, 0.12), 0 10px 10px -5px rgba(1, 38, 34, 0.04);
 

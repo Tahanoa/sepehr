@@ -77,9 +77,9 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('users', 'w-6 h-6 text-[#012622]')} مدیریت و پرونده دانش‌آموزان`;
+    title.innerHTML = `${getDashboardIcon('users', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} مدیریت و پرونده دانش‌آموزان`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',
@@ -94,8 +94,8 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     if (isManagement) {
       const importBtn = createElement('button', {
         className:
-          'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
-        innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود گروهی Excel`,
+          'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
+        innerHTML: `<svg class="w-4 h-4 text-[rgb(var(--theme-accent))]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود گروهی Excel`,
       });
       importBtn.addEventListener('click', () => {
         const modal = createExcelImportModal({
@@ -114,7 +114,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
       const addBtn = createElement('button', {
         className:
-          'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+          'px-4 py-2.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
         innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ثبت دانش‌آموز جدید`,
       });
       addBtn.addEventListener('click', () => openAddStudentModal());
@@ -135,7 +135,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     const searchWrapper = createElement('div', { className: 'relative' });
     const searchInput = createElement('input', {
       className:
-        'w-full bg-gray-50 border border-gray-300 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'w-full bg-gray-50 border border-gray-300 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
       attributes: { type: 'text', placeholder: 'جستجو با نام، کدملی یا کد دانش‌آموزی...', value: searchQuery },
     });
     searchInput.addEventListener('input', (e) => {
@@ -154,7 +154,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     // Grade Select
     const gradeSelect = createElement('select', {
       className:
-        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     });
     gradeSelect.innerHTML = `<option value="all">همه پایه‌های تحصیلی</option>`;
     availableGrades.forEach((g) => {
@@ -171,7 +171,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     // Status Select
     const statusSelect = createElement('select', {
       className:
-        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     });
     statusSelect.innerHTML = `
       <option value="all" ${selectedStatus === 'all' ? 'selected' : ''}>همه وضعیت‌ها</option>
@@ -198,7 +198,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
         key: 'fullName',
         render: (row) => `
           <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-full bg-[#012622] text-white flex items-center justify-center font-bold text-xs shrink-0">
+            <div class="w-8 h-8 rounded-full bg-[rgb(var(--theme-primary))] text-white flex items-center justify-center font-bold text-xs shrink-0">
               ${row.fullName.slice(0, 1)}
             </div>
             <div>
@@ -230,7 +230,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
           const actionBox = createElement('div', { className: 'flex items-center justify-center gap-1.5' });
 
           const viewBtn = createElement('button', {
-            className: 'p-1.5 text-gray-600 hover:text-[#012622] hover:bg-gray-100 rounded-lg transition-colors title="مشاهده پرونده"',
+            className: 'p-1.5 text-gray-600 hover:text-[rgb(var(--theme-primary))] hover:bg-gray-100 rounded-lg transition-colors title="مشاهده پرونده"',
             innerHTML: getDashboardIcon('info', 'w-4 h-4'),
           });
           viewBtn.addEventListener('click', (e) => {
@@ -421,7 +421,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     content.innerHTML = `
       <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-2">
         <div class="flex items-center justify-between pb-2 border-b border-gray-200">
-          <span class="font-bold text-sm text-[#012622]">${std.fullName}</span>
+          <span class="font-bold text-sm text-[rgb(var(--theme-primary))]">${std.fullName}</span>
           <span class="px-2 py-0.5 rounded font-mono font-bold text-[11px] bg-emerald-100 text-emerald-800">کد: ${std.studentCode}</span>
         </div>
         <div class="grid grid-cols-2 gap-2 text-gray-600">
@@ -475,24 +475,24 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">نام و نام خانوادگی دانش‌آموز *</label>
-          <input type="text" id="std-fullName" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-[#E98A15]" placeholder="مثال: علی رضایی" />
+          <input type="text" id="std-fullName" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-[rgb(var(--theme-accent))]" placeholder="مثال: علی رضایی" />
         </div>
         <div>
           <label class="block font-bold mb-1">کد ملی دانش‌آموز *</label>
-          <input type="text" id="std-nationalId" required maxlength="10" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono focus:ring-2 focus:ring-[#E98A15]" placeholder="۱۰ رقم کد ملی" />
+          <input type="text" id="std-nationalId" required maxlength="10" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono focus:ring-2 focus:ring-[rgb(var(--theme-accent))]" placeholder="۱۰ رقم کد ملی" />
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">کلاس انتسابی *</label>
-          <select id="std-classId" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-[#E98A15]">
+          <select id="std-classId" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-[rgb(var(--theme-accent))]">
             ${classes.map((c) => `<option value="${c.id}">${c.name} (${c.gradeLevel})</option>`).join('')}
           </select>
         </div>
         <div>
           <label class="block font-bold mb-1">جنسیت *</label>
-          <select id="std-gender" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-[#E98A15]">
+          <select id="std-gender" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-[rgb(var(--theme-accent))]">
             <option value="male">پسر</option>
             <option value="female">دختر</option>
           </select>

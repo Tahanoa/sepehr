@@ -41,9 +41,9 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('payment', 'w-6 h-6 text-[#012622]')} امور شهریه و صورت‌حساب‌های مالی`;
+    title.innerHTML = `${getDashboardIcon('payment', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} امور شهریه و صورت‌حساب‌های مالی`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',
@@ -60,15 +60,15 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
     finSummary.innerHTML = `
       <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs space-y-1">
         <span class="text-xs font-bold text-gray-500">کل دریافتی‌های ثبت‌شده</span>
-        <div class="text-xl font-black text-emerald-800 font-mono">${totalRevenue.toLocaleString('fa-IR')} تومان</div>
+        <div class="text-xl font-bold text-emerald-800 font-mono">${totalRevenue.toLocaleString('fa-IR')} تومان</div>
       </div>
       <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs space-y-1">
         <span class="text-xs font-bold text-gray-500">مجموع مانده شهریه معوق</span>
-        <div class="text-xl font-black text-rose-800 font-mono">${totalOutstanding.toLocaleString('fa-IR')} تومان</div>
+        <div class="text-xl font-bold text-rose-800 font-mono">${totalOutstanding.toLocaleString('fa-IR')} تومان</div>
       </div>
       <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs space-y-1">
         <span class="text-xs font-bold text-gray-500">متقاضیان جدید ثبت‌نام</span>
-        <div class="text-xl font-black text-[#012622] font-mono">${applications.length.toLocaleString('fa-IR')} نفر</div>
+        <div class="text-xl font-bold text-[rgb(var(--theme-primary))] font-mono">${applications.length.toLocaleString('fa-IR')} نفر</div>
       </div>
     `;
 
@@ -77,8 +77,8 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
       const appCard = createElement('div', { className: 'bg-amber-50/80 border border-amber-200 rounded-2xl p-5 space-y-3' });
       appCard.innerHTML = `
         <div class="flex items-center justify-between">
-          <h3 class="text-xs font-extrabold text-amber-950 flex items-center gap-2">
-            ${getDashboardIcon('assignment', 'w-4 h-4 text-[#E98A15]')} درخواست‌های جدید ثبت‌نام آنلاین آموزشگاه
+          <h3 class="text-xs font-semibold text-amber-950 flex items-center gap-2">
+            ${getDashboardIcon('assignment', 'w-4 h-4 text-[rgb(var(--theme-accent))]')} درخواست‌های جدید ثبت‌نام آنلاین آموزشگاه
           </h3>
           <span class="px-2 py-0.5 bg-amber-200 text-amber-900 text-[10px] font-bold rounded">${applications.length} مورد</span>
         </div>
@@ -94,7 +94,7 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
           </div>
         `;
         const approveBtn = createElement('button', {
-          className: 'px-3 py-1.5 bg-[#012622] text-white font-bold rounded-lg text-xs hover:bg-[#003B36]',
+          className: 'px-3 py-1.5 bg-[rgb(var(--theme-primary))] text-white font-bold rounded-lg text-xs hover:bg-[rgb(var(--theme-hover))]',
           textContent: 'تایید پذیرش و صدور کارت',
         });
         approveBtn.addEventListener('click', () => {
@@ -168,7 +168,7 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
 
         const actionTd = createElement('td', { className: 'text-center' });
         const payBtn = createElement('button', {
-          className: 'px-3 py-1 bg-[#012622] hover:bg-[#003B36] text-white rounded text-xs font-bold',
+          className: 'px-3 py-1 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white rounded text-xs font-bold',
           textContent: inv.status === 'paid' ? 'رسید پرداخت' : 'ثبت پرداختی',
         });
         payBtn.addEventListener('click', () => {
@@ -239,7 +239,7 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
     const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800 p-4 bg-gray-50 border border-gray-200 rounded-2xl' });
     content.innerHTML = `
       <div class="text-center pb-3 border-b border-gray-300">
-        <h4 class="text-sm font-black text-[#012622]">رسید رسمی پرداخت شهریه (نسخه دمو)</h4>
+        <h4 class="text-sm font-bold text-[rgb(var(--theme-primary))]">رسید رسمی پرداخت شهریه (نسخه دمو)</h4>
         <p class="text-[11px] text-gray-500 mt-0.5">کد رسید: ${lastTrn?.receiptNumber || 'RCP-10023'}</p>
       </div>
       <div class="grid grid-cols-2 gap-2 text-gray-700">

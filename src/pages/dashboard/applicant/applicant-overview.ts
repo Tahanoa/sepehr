@@ -15,14 +15,14 @@ export function createApplicantOverviewPage(membership: OrganizationMembership):
 
   // Welcome Hero
   const welcomeCard = createElement('div', {
-    className: 'bg-gradient-to-br from-[#012622] via-[#003B36] to-[#59114D] rounded-2xl p-6 text-white shadow-md space-y-2',
+    className: 'bg-gradient-to-br from-[rgb(var(--theme-primary))] via-[rgb(var(--theme-hover))] to-[rgb(var(--theme-secondary))] rounded-2xl p-6 text-white shadow-md space-y-2',
   });
   welcomeCard.innerHTML = `
     <div class="flex items-center gap-2">
-      <span class="px-3 py-1 bg-[#E98A15] text-[#012622] text-xs font-black rounded-full">درخواست پذیرش آنلاین</span>
+      <span class="px-3 py-1 bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] text-xs font-bold rounded-full">درخواست پذیرش آنلاین</span>
       <span class="text-xs text-amber-200">${membership.organization.name}</span>
     </div>
-    <h2 class="text-2xl font-black">به آموزشگاه تخصصی خوش آمدید</h2>
+    <h2 class="text-2xl font-bold">به آموزشگاه تخصصی خوش آمدید</h2>
     <p class="text-xs text-gray-200 opacity-90 max-w-xl">
       مشاهده کاتالوگ دوره‌های زبان و علوم، ثبت‌نام آنلاین، پرداخت اولیه شهریه دمو و پیگیری کد رهگیری پذیرش.
     </p>
@@ -40,12 +40,12 @@ export function createApplicantOverviewPage(membership: OrganizationMembership):
   links.forEach((link) => {
     const card = createElement('a', {
       attributes: { href: link.path },
-      className: 'bg-white p-5 rounded-2xl border border-gray-200 hover:border-[#012622] hover:bg-gray-50 transition-all flex items-center gap-3 cursor-pointer text-right shadow-2xs',
+      className: 'bg-white p-5 rounded-2xl border border-gray-200 hover:border-[rgb(var(--theme-primary))] hover:bg-gray-50 transition-all flex items-center gap-3 cursor-pointer text-right shadow-2xs',
     });
     card.innerHTML = `
-      <div class="p-3 bg-[#ECE5F0] text-[#012622] rounded-xl shrink-0 font-bold">${getDashboardIcon(link.icon, 'w-6 h-6')}</div>
+      <div class="p-3 bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] rounded-xl shrink-0 font-bold">${getDashboardIcon(link.icon, 'w-6 h-6')}</div>
       <div>
-        <h3 class="font-extrabold text-xs text-gray-900">${link.title}</h3>
+        <h3 class="font-semibold text-xs text-gray-900">${link.title}</h3>
         <p class="text-[11px] text-gray-500 mt-1">${link.desc}</p>
       </div>
     `;
@@ -58,7 +58,7 @@ export function createApplicantOverviewPage(membership: OrganizationMembership):
 
   // Recent Applications Status
   const appCard = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs space-y-3' });
-  appCard.innerHTML = `<h3 class="text-xs sm:text-sm font-black text-gray-900 flex items-center gap-2">${getDashboardIcon('assignment', 'w-4 h-4 text-[#E98A15]')} درخواست‌های پذیرش فعال شما</h3>`;
+  appCard.innerHTML = `<h3 class="text-xs sm:text-sm font-bold text-gray-900 flex items-center gap-2">${getDashboardIcon('assignment', 'w-4 h-4 text-[rgb(var(--theme-accent))]')} درخواست‌های پذیرش فعال شما</h3>`;
 
   const appBody = createElement('div', { className: 'space-y-2' });
   if (applications.length === 0) {
@@ -69,7 +69,7 @@ export function createApplicantOverviewPage(membership: OrganizationMembership):
       item.innerHTML = `
         <div class="flex items-center justify-between font-bold text-gray-900">
           <span>${app.courseName}</span>
-          <span class="px-2.5 py-0.5 rounded text-[10px] bg-amber-100 text-amber-900 font-extrabold">کد رهگیری: ${app.refCode}</span>
+          <span class="px-2.5 py-0.5 rounded text-[10px] bg-amber-100 text-amber-900 font-semibold">کد رهگیری: ${app.refCode}</span>
         </div>
         <div class="text-gray-600">نام متقاضی: ${app.applicantName} | تاریخ ثبت: ${app.submissionDate}</div>
         <div class="text-emerald-800 font-bold">وضعیت پذیرش: در انتظار تایید و تخصیص کلاس</div>

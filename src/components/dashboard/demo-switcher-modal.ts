@@ -71,24 +71,24 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
 
   // Modal Header
   const header = createElement('div', {
-    className: 'bg-[#012622] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
+    className: 'bg-[rgb(var(--theme-primary))] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
   });
 
   const headerTitleGroup = createElement('div', { className: 'flex items-center gap-3' });
   const icon = createElement('div', {
-    className: 'p-2 bg-[#E98A15] text-[#012622] rounded-xl font-bold',
+    className: 'p-2 bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] rounded-xl font-bold',
     innerHTML: getDashboardIcon('swap', 'w-5 h-5'),
   });
 
   const titleText = createElement('div');
   const h3 = createElement('h3', {
     id: 'demo-switcher-title',
-    className: 'text-base font-extrabold text-white',
+    className: 'text-base font-semibold text-white',
     textContent: 'ورود به نسخه دمو — انتخاب نقش و طرح (۱۴ نقش)',
   });
   const sub = createElement('p', {
     className: 'text-xs text-amber-200/90 font-medium',
-    textContent: 'پیش‌نمایش کامل و تعاملی سامانه پولاریس بدون نیاز به رمز عبور',
+    textContent: 'پیش‌نمایش کامل و تعاملی سامانه سپهر بدون نیاز به رمز عبور',
   });
 
   titleText.appendChild(h3);
@@ -98,7 +98,7 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
   headerTitleGroup.appendChild(titleText);
 
   const closeBtn = createElement('button', {
-    className: 'text-gray-300 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+    className: 'text-gray-300 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     attributes: { 'aria-label': 'بستن پنجره' },
     innerHTML: getDashboardIcon('close', 'w-5 h-5'),
   });
@@ -130,7 +130,7 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
 
     const titleBox = createElement('div');
     const groupH4 = createElement('h4', {
-      className: 'text-sm font-bold text-[#012622]',
+      className: 'text-sm font-bold text-[rgb(var(--theme-primary))]',
       textContent: group.planTitle,
     });
     const groupDesc = createElement('p', {
@@ -159,9 +159,9 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
       const primaryMem = u.memberships[0]!;
 
       const card = createElement('button', {
-        className: `w-full border rounded-xl p-3 flex items-center justify-between gap-3 text-right transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#E98A15] ${
+        className: `w-full border rounded-xl p-3 flex items-center justify-between gap-3 text-right transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))] ${
           isCurrent
-            ? 'bg-[#ECE5F0] border-[#012622] ring-2 ring-[#012622]/20 shadow-sm'
+            ? 'bg-[rgb(var(--theme-subtle))] border-[rgb(var(--theme-primary))] ring-2 ring-[rgb(var(--theme-primary))]/20 shadow-sm'
             : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
         }`,
       });
@@ -170,7 +170,7 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
 
       // Avatar
       const avatar = createElement('div', {
-        className: 'w-9 h-9 rounded-full bg-[#012622] text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden',
+        className: 'w-9 h-9 rounded-full bg-[rgb(var(--theme-primary))] text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden',
       });
 
       if (u.avatarUrl) {
@@ -188,7 +188,7 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
       nameRow.appendChild(userName);
 
       const roleTitle = createElement('div', {
-        className: 'text-[11px] text-[#003B36] font-semibold truncate',
+        className: 'text-[11px] text-[rgb(var(--theme-hover))] font-semibold truncate',
         textContent: primaryMem.title || primaryMem.role,
       });
 
@@ -202,14 +202,14 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
 
       if (isCurrent) {
         const activeTag = createElement('span', {
-          className: 'px-2 py-0.5 bg-[#012622] text-white rounded text-[10px] font-bold inline-flex items-center gap-1',
+          className: 'px-2 py-0.5 bg-[rgb(var(--theme-primary))] text-white rounded text-[10px] font-bold inline-flex items-center gap-1',
           textContent: 'نقش فعال',
         });
         actionBox.appendChild(activeTag);
       } else {
         const selectBtn = createElement('span', {
           className:
-            'px-2.5 py-1 bg-gray-100 group-hover:bg-[#012622] text-gray-700 text-xs font-bold rounded transition-colors',
+            'px-2.5 py-1 bg-gray-100 group-hover:bg-[rgb(var(--theme-primary))] text-gray-700 text-xs font-bold rounded transition-colors',
           textContent: 'ورود',
         });
         actionBox.appendChild(selectBtn);
@@ -245,7 +245,7 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
   });
 
   const cancelBtn = createElement('button', {
-    className: 'px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+    className: 'px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
     textContent: 'انصراف',
   });
   cancelBtn.addEventListener('click', handleClose);

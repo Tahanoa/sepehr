@@ -9,10 +9,10 @@ export function createAboutPage(): HTMLElement {
 
   const hero = createElement('div', { className: 'text-center space-y-4 max-w-3xl mx-auto' });
   hero.innerHTML = `
-    <span class="px-3 py-1 rounded-full bg-brand-amber/10 text-brand-amber text-xs font-bold">درباره سامانه پولاریس</span>
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-brand-evergreen">تسهیل و هوشمندسازی مدیریت آموزش</h1>
+    <span class="px-3 py-1 rounded-full bg-brand-amber/10 text-brand-amber text-xs font-bold">درباره سامانه سپهر</span>
+    <h1 class="text-3xl sm:text-4xl font-semibold text-brand-evergreen">تسهیل و هوشمندسازی مدیریت آموزش</h1>
     <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
-      پولاریس یک پلتفرم ابری مدرن است که با هدف رفع چالش‌های متعدد مدیران، معلمان و اولیا در فرایندهای آموزشی کشور توسعه یافته است.
+      سپهر یک پلتفرم ابری مدرن است که با هدف رفع چالش‌های متعدد مدیران، معلمان و اولیا در فرایندهای آموزشی کشور توسعه یافته است.
     </p>
   `;
   container.appendChild(hero);
@@ -22,13 +22,13 @@ export function createAboutPage(): HTMLElement {
     <div class="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm space-y-4">
       <h2 class="text-xl font-bold text-brand-evergreen">مسئله‌ای که حل می‌کنیم</h2>
       <p class="text-sm text-gray-600 leading-relaxed">
-        بسیاری از مدارس و موسسات آموزشی مجبورند از چندین سامانه مجزا برای حضور و غیاب، نمره‌دهی، پیامک، و مالی استفاده کنند. پولاریس تمام این نیازها را در یک بستر یکپارچه و هوشمند فراهم کرده است.
+        بسیاری از مدارس و موسسات آموزشی مجبورند از چندین سامانه مجزا برای حضور و غیاب، نمره‌دهی، پیامک، و مالی استفاده کنند. سپهر تمام این نیازها را در یک بستر یکپارچه و هوشمند فراهم کرده است.
       </p>
     </div>
     <div class="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm space-y-4">
-      <h2 class="text-xl font-bold text-brand-evergreen">رویکرد ماژولار پولاریس</h2>
+      <h2 class="text-xl font-bold text-brand-evergreen">رویکرد ماژولار سپهر</h2>
       <p class="text-sm text-gray-600 leading-relaxed">
-        نیازهای یک دبستان با یک دبیرستان کنکوری یا یک آموزشگاه زبان کاملاً متفاوت است. ساختار ماژولار پولاریس اجازه می‌دهد هر مرکز تنها ابزارهای مورد نیاز خود را فعال کند.
+        نیازهای یک دبستان با یک دبیرستان کنکوری یا یک آموزشگاه زبان کاملاً متفاوت است. ساختار ماژولار سپهر اجازه می‌دهد هر مرکز تنها ابزارهای مورد نیاز خود را فعال کند.
       </p>
     </div>
   `;
@@ -42,7 +42,7 @@ export function createPrivacyPage(): HTMLElement {
   container.innerHTML = `
     <div class="border-b border-gray-100 pb-4 space-y-2">
       <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">پیش‌نویس جهت بررسی حقوقی</span>
-      <h1 class="text-3xl font-bold text-brand-evergreen">سیاست حریم خصوصی پولاریس</h1>
+      <h1 class="text-3xl font-bold text-brand-evergreen">سیاست حریم خصوصی سپهر</h1>
     </div>
     <div class="space-y-6 text-sm text-gray-700 leading-relaxed">
       <section class="space-y-2">
@@ -51,7 +51,7 @@ export function createPrivacyPage(): HTMLElement {
       </section>
       <section class="space-y-2">
         <h2 class="text-lg font-bold text-brand-evergreen">۲. حفاظت و امنیت اطلاعات</h2>
-        <p>پولاریس از بالاترین استانداردهای رمزنگاری داده‌ها استفاده نموده و متعهد به عدم افشای اطلاعات دانش‌آموزان و موسسات به اشخاص ثالث است.</p>
+        <p>سپهر از بالاترین استانداردهای رمزنگاری داده‌ها استفاده نموده و متعهد به عدم افشای اطلاعات دانش‌آموزان و موسسات به اشخاص ثالث است.</p>
       </section>
     </div>
   `;
@@ -72,7 +72,7 @@ export function createTermsPage(): HTMLElement {
       </section>
       <section class="space-y-2">
         <h2 class="text-lg font-bold text-brand-evergreen">۲. مالکیت معنوی</h2>
-        <p>تمامی حقوق مادی و معنوی علامت تجاری، کدهای نرم‌افزاری و رابط کاربری پولاریس متعلق به مجموعه پولاریس می‌باشد.</p>
+        <p>تمامی حقوق مادی و معنوی علامت تجاری، کدهای نرم‌افزاری و رابط کاربری سپهر متعلق به مجموعه سپهر می‌باشد.</p>
       </section>
     </div>
   `;
@@ -82,8 +82,8 @@ export function createTermsPage(): HTMLElement {
 export function createNotFoundPage(): HTMLElement {
   const container = createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center space-y-6' });
   container.innerHTML = `
-    <div class="w-24 h-24 mx-auto rounded-3xl bg-brand-lavender/60 text-brand-evergreen flex items-center justify-center text-4xl font-extrabold">۴۰۴</div>
-    <h1 class="text-3xl font-extrabold text-brand-evergreen">صفحه مورد نظر یافت نشد</h1>
+    <div class="w-24 h-24 mx-auto rounded-3xl bg-brand-lavender/60 text-brand-evergreen flex items-center justify-center text-4xl font-semibold">۴۰۴</div>
+    <h1 class="text-3xl font-semibold text-brand-evergreen">صفحه مورد نظر یافت نشد</h1>
     <p class="text-gray-600 text-sm max-w-md mx-auto">صفحه‌ای که به دنبال آن هستید ممکن است تغییر نام داده شده یا وجود نداشته باشد.</p>
   `;
 
