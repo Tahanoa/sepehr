@@ -8,7 +8,7 @@ import { createTeacherClassesPage } from './teacher-classes';
 import { createTeacherAssignmentsPage } from './teacher-assignments';
 import { createTeacherExamsPage } from './teacher-exams';
 import { createExamBuilderPage } from './exam-builder-page';
-import { createTeacherGradesPage } from './teacher-grades';
+import { createGradebookPage } from '../shared/gradebook-page';
 import { createTeacherMaterialsPage } from './teacher-materials';
 import { createAttendancePage } from '../admin/attendance-page';
 import { createTimetablePage } from '../admin/timetable-page';
@@ -35,7 +35,7 @@ export function renderTeacherSection(sectionKey: string, membership: Organizatio
     case 'exam-builder':
       return createExamBuilderPage(membership);
     case 'grades':
-      return createTeacherGradesPage(membership);
+      return createGradebookPage(membership);
     case 'materials':
       return createTeacherMaterialsPage(membership);
     case 'schedule':

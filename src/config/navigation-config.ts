@@ -19,6 +19,7 @@ export interface NavigationConfigEntry {
 }
 
 const MASTER_NAVIGATION: NavigationConfigEntry[] = [
+  { id: 'direct-messages', title: 'پیام‌رسان', sectionKey: 'messages', icon: 'chat', roles: ['school_admin','institute_admin','student'] },
   // School Administrator
   {
     id: 'school_admin-overview',

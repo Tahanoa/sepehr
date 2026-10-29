@@ -1,0 +1,43 @@
+import { OrganizationMembership } from '../../../types/auth';
+import { schoolStore } from '../../../services/school-store';
+import { classesFor, subjectsFor, descriptive, journal, saveJournal, marks, saveMarks, components, Component, entryOpen, Journal } from '../../../services/academic-store';
+import { el, heading, panel, field, select, input, button, status, guard, table, isoToday, faDate } from '../../../components/workspace';
+export function createGradebookPage(m: OrganizationMembership): HTMLElement {
+  const root=el('div',{className:'space-y-6'}), classes=classesFor(m), notice=status();
+  let classId=classes[0]?.id||'', subjectId=subjectsFor(m,classId)[0]?.id||'', week=isoToday(), tab='weekly', year=m.organization.academicYear||'۱۴۰۵–۱۴۰۶', component:Component='continuous1', dirty=false;
+  const change=(action:()=>void)=>{if(dirty && !confirm('تغییرات ذخیره نشده کنار گذاشته شوند؟'))return;dirty=false;action();render();};
+  const render=()=>{
+    root.replaceChildren(heading('دفتر کلاس و ارزشیابی','دانش‌آموزان در ردیف‌ها و روزهای هفته در ستون‌ها؛ یادداشت‌ها داخلی‌اند و فقط کارنامهٔ منتشرشده در اختیار خانواده است.'));
+    const toolbar=panel(), filters=el('div',{className:'workspace-filters'});
+    filters.append(field('کلاس',select(classes,classId,v=>change(()=>{classId=v;subjectId=subjectsFor(m,v)[0]?.id||'';}))),field('درس',select(subjectsFor(m,classId),subjectId,v=>change(()=>{subjectId=v;}))));
+    const tabs=el('div',{className:'flex flex-wrap gap-3'});for(const [id,label]of[['weekly','دفتر هفتگی'],['term','ثبت نمرات کارنامه']])tabs.append(button(label!,()=>change(()=>{tab=id!;}),tab===id));toolbar.append(filters,tabs);root.append(toolbar);
+    if(!classId||!subjectId){root.append(el('p',{textContent:'کلاس یا درس قابل دسترسی یافت نشد.',className:'sepehr-muted'}));return;}
+    const students=schoolStore.getStudents(m.organizationId).filter(s=>s.classId===classId), isDesc=descriptive(m,classId), card=panel();
+    notice.textContent=dirty?'تغییرات ذخیره نشده دارید.':'';
+    if(tab==='weekly'){
+      const date=input(week,'date');date.addEventListener('change',()=>{if(date.value)change(()=>{week=date.value;});});card.append(field('یک روز از هفتهٔ مورد نظر',date));
+      const start=new Date(week+'T12:00:00'); start.setDate(start.getDate()-((start.getDay()+1)%7));
+      const dates=Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;});
+      const names=['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'], t=table(['دانش‌آموز',...dates.map((d,i)=>`${names[i]} · ${faDate(d)}`)]), existing=journal(m), drafts:Journal[]=[];
+      for(const student of students){const row=el('tr');row.append(el('th',{textContent:student.fullName,attributes:{scope:'row'}}));for(const day of dates){const cell=el('td'), old=existing.find(v=>v.studentId===student.id&&v.subjectId===subjectId&&v.date===day), draft:Journal={studentId:student.id,subjectId,date:day,value:old?.value||'',note:old?.note||''};drafts.push(draft);
+        const value=isDesc?el('textarea',{attributes:{rows:'2',placeholder:'شرح پیشرفت'}}):input(draft.value,'number');value.value=draft.value;if(value instanceof HTMLInputElement){value.min='0';value.max='20';value.step='.25';}
+        value.setAttribute('aria-label',`${student.fullName} ${names[dates.indexOf(day)]} ${isDesc?'توصیف':'نمره'}`);value.addEventListener('input',()=>{draft.value=value.value;dirty=true;notice.textContent='تغییرات ذخیره نشده دارید.';});
+        const note=el('textarea',{attributes:{rows:'2',placeholder:'یادداشت روزانه','aria-label':`یادداشت ${student.fullName} ${names[dates.indexOf(day)]}`}});note.value=draft.note;note.addEventListener('input',()=>{draft.note=note.value;dirty=true;notice.textContent='تغییرات ذخیره نشده دارید.';});cell.append(value,note);row.append(cell);}t.body.append(row);}
+      card.append(t.wrap,button('ذخیرهٔ دفتر هفتگی',()=>guard(notice,()=>{saveJournal(m,classId,drafts);dirty=false;notice.textContent='دفتر هفتگی ذخیره شد.';}),true));
+    }else{
+      const yearInput=input(year);yearInput.addEventListener('change',()=>change(()=>{year=yearInput.value.trim();}));
+      card.append(field('سال تحصیلی',yearInput),field('بخش کارنامه',select(Object.entries(components).map(([id,name])=>({id,name})),component,v=>change(()=>{component=v as Component;}))));
+      const open=entryOpen(m,classId,year,component.endsWith('1')?'first':'second');card.append(el('p',{textContent:open?'ثبت نمرات این نوبت باز است.':'ثبت نمرات این نوبت توسط مدیر بسته شده است.',className:'workspace-notice'}));
+      const existing=marks(m), drafts:{studentId:string;subjectId:string;year:string;component:Component;value:string;feedback:string}[]=[], t=table(['دانش‌آموز',isDesc?'شرح پیشرفت و نیاز آموزشی':'نمره از ۲۰','بازخورد']);
+      for(const student of students){const old=existing.find(v=>v.studentId===student.id&&v.subjectId===subjectId&&v.year===year&&v.component===component), draft={studentId:student.id,subjectId,year,component,value:old?.value||'',feedback:old?.feedback||''};drafts.push(draft);const row=el('tr'),cell=el('td');row.append(el('th',{textContent:student.fullName,attributes:{scope:'row'}}));
+        const value=isDesc?el('textarea',{attributes:{rows:'3',placeholder:'شرح توانایی، شاهد یادگیری و گام بعدی'}}):input(draft.value,'number');value.value=draft.value;value.disabled=!open;value.setAttribute('aria-label',`${isDesc?'توصیف':'نمره'} ${student.fullName}`);if(value instanceof HTMLInputElement){value.min='0';value.max='20';value.step='.25';}
+        value.addEventListener('input',()=>{draft.value=value.value;dirty=true;notice.textContent='تغییرات ذخیره نشده دارید.';});cell.append(value);const feedback=el('textarea',{attributes:{rows:'2','aria-label':`بازخورد ${student.fullName}`}});feedback.value=draft.feedback;feedback.disabled=!open;feedback.addEventListener('input',()=>{draft.feedback=feedback.value;dirty=true;});const feedbackCell=el('td');feedbackCell.append(feedback);row.append(cell,feedbackCell);t.body.append(row);}
+      const save=button('ذخیرهٔ ارزشیابی کارنامه',()=>guard(notice,()=>{if(!year.trim())throw Error('سال تحصیلی را وارد کنید.');saveMarks(m,classId,drafts);dirty=false;notice.textContent='ارزشیابی ذخیره شد.';}),true);save.disabled=!open;card.append(t.wrap,save);
+    }
+    root.append(card,notice);
+  };render();
+  const leave=(e:Event)=>{if(dirty && !confirm('تغییرات دفتر ذخیره نشده؛ از صفحه خارج می‌شوید؟'))e.preventDefault();};
+  const unload=(e:BeforeUnloadEvent)=>{if(dirty){e.preventDefault();e.returnValue='';}};
+  window.addEventListener('sepehr-before-navigate',leave);window.addEventListener('beforeunload',unload);
+  window.addEventListener('sepehr-route-leave',()=>{window.removeEventListener('sepehr-before-navigate',leave);window.removeEventListener('beforeunload',unload);},{once:true});return root;
+}

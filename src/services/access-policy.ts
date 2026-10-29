@@ -197,6 +197,7 @@ export class AccessPolicy {
           'schedule',
           'exams',
           'exam-builder',
+          'messages',
           'grades',
           'counseling',
           'announcements',
@@ -214,6 +215,7 @@ export class AccessPolicy {
           'assignments',
           'exams',
           'exam-builder',
+          'messages',
           'grades',
           'materials',
           'schedule',
@@ -221,6 +223,7 @@ export class AccessPolicy {
 
       case 'student':
         return [
+          'messages',
           'overview',
           'classes',
           'assignments',
@@ -261,6 +264,7 @@ export class AccessPolicy {
           'schedule',
           'exams',
           'exam-builder',
+          'messages',
           'grades',
           'payments',
           'settings',
@@ -276,6 +280,7 @@ export class AccessPolicy {
           'assignments',
           'exams',
           'exam-builder',
+          'messages',
           'grades',
           'materials',
         ].includes(sectionKey);

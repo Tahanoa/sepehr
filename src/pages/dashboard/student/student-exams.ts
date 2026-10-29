@@ -1,10 +1,10 @@
+import { linkedStudents } from '../../../services/academic-store';
 /**
  * POLARIS STUDENT EXAM DASHBOARD, RULES MODAL & EXAM RUNNER
  * Dedicated "آزمون‌های من" area, Persian rules modal acknowledgment, and distraction-minimized exam runner.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
-import { authService } from '../../../services/auth-service';
 import { Exam, ExamQuestion, StudentExamAttempt } from '../../../types/school';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
@@ -16,9 +16,9 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
 
-  const user = authService.getCurrentUser();
-  const students = schoolStore.getStudents(orgId);
-  const currentStudent = students.find((s) => s.fullName === user?.name || s.studentCode === user?.phone) || students[0];
+
+  
+  const currentStudent = linkedStudents(membership)[0];
 
   let activeTab: 'available' | 'upcoming' | 'submitted' | 'graded' | 'expired' = 'available';
 
@@ -242,10 +242,12 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
   const openExamRunner = (ex: Exam, questions: ExamQuestion[], attempt: StudentExamAttempt) => {
     // Distraction Minimized Full Screen Runner Container
     const runnerEl = createElement('div', {
-      className: 'fixed inset-0 z-50 bg-gray-100 flex flex-col dir-rtl overflow-hidden animate-fade-in',
+      className: 'exam-runner fixed inset-0 z-50 bg-gray-100 flex flex-col dir-rtl overflow-hidden animate-fade-in',
     });
 
     let currentQIndex = 0;
+    runnerEl.setAttribute('role','dialog');runnerEl.setAttribute('aria-modal','true');runnerEl.setAttribute('aria-label','پاسخ‌گویی به آزمون');
+    const saveNotice=createElement('p',{className:'workspace-notice',textContent:'پاسخ‌ها در این مرورگر ذخیره می‌شوند؛ پس از پایان، ثبت نهایی را بزنید.',attributes:{role:'status'}});
     const studentAnswers = { ...attempt.answers };
 
     // Calculate remaining seconds based on stored timestamps
@@ -474,6 +476,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
     mainBody.appendChild(navSidebar);
 
     runnerEl.appendChild(topBar);
+    runnerEl.appendChild(saveNotice);
     runnerEl.appendChild(mainBody);
 
     document.body.appendChild(runnerEl);

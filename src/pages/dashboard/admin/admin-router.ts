@@ -1,3 +1,4 @@
+import { createMessengerPage } from '../shared/messenger-page';
 /**
  * POLARIS SCHOOL ADMINISTRATOR ROUTE DISPATCHER
  * Routes school_admin section requests to the appropriate page component
@@ -13,7 +14,7 @@ import { createAttendancePage } from './attendance-page';
 import { createTimetablePage } from './timetable-page';
 import { createExamsPage } from './exams-page';
 import { createExamBuilderPage } from '../teacher/exam-builder-page';
-import { createGradesPage } from './grades-page';
+import { createReportCardsPage } from '../shared/report-cards-page';
 import { createCounselingPage } from './counseling-page';
 import { createAnnouncementsPage } from './announcements-page';
 import { createReportsPage } from './reports-page';
@@ -25,6 +26,7 @@ export function renderSchoolAdminSection(sectionKey: string, membership: Organiz
   const orgId = membership.organizationId;
 
   switch (sectionKey) {
+    case 'messages': return createMessengerPage(membership);
     case 'overview':
       return createAdminOverviewPage(membership);
     case 'students':
@@ -44,7 +46,7 @@ export function renderSchoolAdminSection(sectionKey: string, membership: Organiz
     case 'exam-builder':
       return createExamBuilderPage(membership);
     case 'grades':
-      return createGradesPage(membership);
+      return createReportCardsPage(membership);
     case 'counseling':
       return createCounselingPage(membership);
     case 'announcements':

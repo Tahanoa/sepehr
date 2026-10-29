@@ -56,6 +56,22 @@ try {
     await page.screenshot({ path: `/tmp/sepehr-mobile-${width}.png`, fullPage: true, animations: 'disabled' });
     await page.keyboard.press('Escape');
   }
+  await page.evaluate(() => {localStorage.setItem('polaris_demo_user_id','usr-sec-admin');localStorage.removeItem('polaris_active_membership_id');});
+  await page.goto('http://127.0.0.1:4174/app/org-101/grades');
+  await page.getByRole('heading', {name:'کارنامه‌های الکترونیک',exact:true}).waitFor();
+  await page.getByRole('button',{name:'بستن ورود نمرات دبیران',exact:true}).click();
+  await page.getByRole('button',{name:'باز کردن ورود نمرات دبیران',exact:true}).waitFor();
+  await page.getByRole('button',{name:'باز کردن ورود نمرات دبیران',exact:true}).click();
+  await page.goto('http://127.0.0.1:4174/app/org-101/messages');
+  await page.getByRole('heading',{name:'پیام‌رسان مرکز',exact:true}).waitFor();
+  await page.getByLabel('مخاطب').selectOption({index:1});
+  await page.getByLabel('متن پیام').fill('<script>unsafe</script> پیگیری حضور');
+  await page.getByRole('button',{name:'ارسال پیام',exact:true}).click();
+  await page.getByRole('log').getByText('<script>unsafe</script> پیگیری حضور',{exact:true}).waitFor();
+  await page.goto('http://127.0.0.1:4174/app/org-101/attendance');
+  await page.getByRole('button',{name:'همه حاضر',exact:true}).click();
+  await page.getByRole('button',{name:'ثبت نهایی جلسه',exact:true}).click();
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'attendance overflow');
   assert.deepEqual(errors, []);
   console.log('PASS: theme palettes, validation, persistence, preview rollback, learner identity, dates, desktop/mobile layout and drawer/modal interaction');
 } finally { await browser.close(); await server.close(); }

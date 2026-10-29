@@ -1,3 +1,4 @@
+import { createMessengerPage } from '../shared/messenger-page';
 /**
  * POLARIS PARENT ROUTE DISPATCHER
  */
@@ -5,8 +6,7 @@
 import { OrganizationMembership } from '../../../types/auth';
 import { createParentOverviewPage } from './parent-overview';
 import { createParentAttendancePage } from './parent-attendance';
-import { createParentGradesPage } from './parent-grades';
-import { createParentMessagesPage } from './parent-messages';
+import { createReportCardsPage } from '../shared/report-cards-page';
 import { createStudentPaymentsPage } from '../student/student-payments';
 import { createAnnouncementsPage } from '../admin/announcements-page';
 import { createStudentsPage } from '../admin/students-page';
@@ -24,11 +24,11 @@ export function renderParentSection(sectionKey: string, membership: Organization
     case 'attendance':
       return createParentAttendancePage(membership);
     case 'grades':
-      return createParentGradesPage(membership);
+      return createReportCardsPage(membership);
     case 'announcements':
       return createAnnouncementsPage(membership);
     case 'messages':
-      return createParentMessagesPage(membership);
+      return createMessengerPage(membership);
     case 'schedule':
       return createTimetablePage(membership);
     case 'payments':

@@ -346,6 +346,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           isCurrent ? 'bg-[rgb(var(--theme-primary))] text-white shadow-2xs' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
         }`,
         textContent: s.title,
+        attributes: { 'aria-current': isCurrent ? 'step' : 'false' },
       });
       btn.addEventListener('click', () => {
         currentStep = s.num as any;
@@ -355,6 +356,8 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     });
     stepsNav.appendChild(stepsRow);
     rootWrapper.appendChild(stepsNav);
+    const guide = createElement('p', { className: 'workspace-notice', textContent: ['نام، درس و زمان آزمون را مشخص کنید؛ تنظیمات تکمیلی را در ادامه بررسی کنید.','کلاس‌های مجاز و شرایط شرکت دانش‌آموزان را انتخاب کنید.','سؤال‌ها، پاسخ مرجع و معیار تصحیح را وارد کنید؛ مجموع بارم را کنترل کنید.','پیش‌نمایش دانش‌آموز و هشدارها را بررسی کنید؛ سپس آزمون را منتشر کنید.'][currentStep - 1] || '' });
+    rootWrapper.appendChild(guide);
 
     // Main 2-Column Grid: Form Content + Persistent Summary Sidebar
     const mainGrid = createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-3 gap-6' });
