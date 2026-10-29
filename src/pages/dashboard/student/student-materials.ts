@@ -1,3 +1,4 @@
+import { notify } from '../../../components/feedback';
 /**
  * POLARIS STUDENT LEARNING MATERIALS PAGE
  */
@@ -55,7 +56,7 @@ export function createStudentMaterialsPage(membership: OrganizationMembership): 
 
         const dlBtn = card.querySelector('.dl-btn') as HTMLButtonElement;
         dlBtn.addEventListener('click', () => {
-          alert(`شبیه‌سازی دریافت فایل آموزشی: ${mat.fileName}\n(فایل به‌صورت محلی ذخیره گردید)`);
+          notify('فایل این منبع به سرویس ذخیره‌سازی متصل نیست؛ دانلودی انجام نشد.');
         });
 
         grid.appendChild(card);
@@ -69,3 +70,4 @@ export function createStudentMaterialsPage(membership: OrganizationMembership): 
   render();
   return rootWrapper;
 }
+

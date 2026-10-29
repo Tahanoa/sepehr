@@ -1,63 +1,25 @@
-/**
- * POLARIS TOAST NOTIFICATION COMPONENT
- * Feedback banner notifications with auto-dismissal.
- */
-
-import { createElement } from '../utils/dom';
-
+import { createElement as el } from '../utils/dom';
 export interface ToastOptions {
-  title: string;
-  message: string;
-  type?: 'success' | 'warning' | 'error' | 'info';
-  duration?: number; // in ms
+  title: string; message: string; type?: 'success' | 'warning' | 'error' | 'info' | 'loading';
+  duration?: number; position?: 'top' | 'bottom'; action?: { label: string; onClick: () => void };
 }
-
-class ToastContainer {
-  private static instance: ToastContainer;
-  private containerEl: HTMLElement;
-
-  private constructor() {
-    this.containerEl = createElement('div', { className: 'polaris-toast-container' });
-    document.body.appendChild(this.containerEl);
-  }
-
-  public static getInstance(): ToastContainer {
-    if (!ToastContainer.instance) {
-      ToastContainer.instance = new ToastContainer();
-    }
-    return ToastContainer.instance;
-  }
-
-  public show(options: ToastOptions): void {
-    const { title, message, type = 'info', duration = 4000 } = options;
-
-    const toast = createElement('div', { className: `polaris-toast polaris-toast--${type}` });
-
-    const content = createElement('div', { className: 'polaris-toast-content' });
-    const titleEl = createElement('div', { className: 'polaris-toast-title', textContent: title });
-    const messageEl = createElement('div', { className: 'polaris-toast-message', textContent: message });
-
-    content.appendChild(titleEl);
-    content.appendChild(messageEl);
-    toast.appendChild(content);
-
-    this.containerEl.appendChild(toast);
-
-    if (duration > 0) {
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(10px)';
-        toast.style.transition = 'all 0.3s ease-in';
-        setTimeout(() => {
-          if (toast.parentNode === this.containerEl) {
-            this.containerEl.removeChild(toast);
-          }
-        }, 300);
-      }, duration);
-    }
-  }
-}
-
-export function showToast(options: ToastOptions): void {
-  ToastContainer.getInstance().show(options);
+export function showToast(options: ToastOptions): () => void {
+  const position = options.position || 'bottom';
+  let container = document.querySelector<HTMLElement>(`.toast-stack[data-position="${position}"]`);
+  if (!container) { container = el('div', { className: 'toast-stack', attributes: { 'data-position': position, 'aria-label': 'اعلان‌ها' } }); document.body.append(container); }
+  const type = options.type || 'info';
+  const toast = el('div', { className: `product-toast toast-${type}`, attributes: { role: type === 'error' ? 'alert' : 'status', 'aria-atomic': 'true' } });
+  const icon = el('span', { className: 'toast-symbol', textContent: ({ success: '✓', error: '!', warning: '!', info: 'i', loading: '◌' })[type], attributes: { 'aria-hidden': 'true' } });
+  const copy = el('div'); copy.append(el('strong', { textContent: options.title }), el('p', { textContent: options.message }));
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const dismiss = () => { clearTimeout(timer); toast.classList.add('toast-exit'); setTimeout(() => toast.remove(), 180); };
+  const close = el('button', { textContent: '×', attributes: { type: 'button', 'aria-label': 'بستن اعلان' } }); close.addEventListener('click', dismiss);
+  if (options.action) { const action = el('button', { textContent: options.action.label, className: 'toast-action' }); action.addEventListener('click', () => { options.action!.onClick(); dismiss(); }); copy.append(action); }
+  toast.append(icon, copy, close); container.append(toast);
+  while (container.children.length > 4) container.firstElementChild?.remove();
+  const duration = options.duration ?? (type === 'loading' ? 0 : 6000);
+  const schedule = () => { if (duration > 0) timer = setTimeout(dismiss, duration); };
+  toast.addEventListener('mouseenter', () => clearTimeout(timer)); toast.addEventListener('mouseleave', schedule);
+  toast.addEventListener('focusin', () => clearTimeout(timer)); toast.addEventListener('focusout', schedule); schedule();
+  return dismiss;
 }

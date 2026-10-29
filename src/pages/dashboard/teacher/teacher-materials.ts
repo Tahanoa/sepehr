@@ -1,3 +1,4 @@
+import { notify, confirmAction } from '../../../components/feedback';
 /**
  * POLARIS TEACHER LEARNING MATERIALS PAGE
  * File uploads, categories (جزوه، ویدیو، تمرین), file metadata, open/download simulation, and deletion.
@@ -85,11 +86,11 @@ export function createTeacherMaterialsPage(membership: OrganizationMembership): 
         const delBtn = card.querySelector('.del-btn') as HTMLButtonElement;
 
         dlBtn.addEventListener('click', () => {
-          alert(`شبیه‌سازی دانلود فایل: ${mat.fileName}\n(فایل به‌صورت محلی در سامانه ذخیره شده است)`);
+          notify('فایل این منبع به سرویس ذخیره‌سازی متصل نیست؛ دانلودی انجام نشد.');
         });
 
-        delBtn.addEventListener('click', () => {
-          if (confirm(`آیا از حذف محتوای «${mat.title}» اطمینان دارید؟`)) {
+        delBtn.addEventListener('click', async () => {
+          if (await confirmAction(`آیا از حذف محتوای «${mat.title}» اطمینان دارید؟`)) {
             schoolStore.deleteMaterial(mat.id);
             showToast({ title: 'حذف گردید', message: 'محتوا حذف شد.', type: 'info' });
             render();
@@ -137,14 +138,14 @@ export function createTeacherMaterialsPage(membership: OrganizationMembership): 
       <div>
         <label class="block font-bold mb-1">انتخاب فایل از رایانه *</label>
         <input type="file" id="mat-file" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" />
-        <p class="text-[10px] text-gray-500 mt-1">توضیح: فایل انتخابی محلی جهت شبیه‌سازی بارگذاری ذخیره خواهد شد.</p>
+        <p class="text-[10px] text-gray-500 mt-1">توضیح: در این دمو فقط مشخصات فایل ذخیره می‌شود؛ محتوای فایل بارگذاری نمی‌شود.</p>
       </div>
     `;
 
     const modal = new Modal({
       title: 'بارگذاری محتوای آموزشی جدید',
       content: form,
-      confirmText: 'آپلود و انتشار',
+      confirmText: 'ثبت مشخصات منبع',
       cancelText: 'انصراف',
       onConfirm: () => {
         const title = (form.querySelector('#mat-title') as HTMLInputElement).value.trim();
@@ -154,6 +155,7 @@ export function createTeacherMaterialsPage(membership: OrganizationMembership): 
         const fileInput = form.querySelector('#mat-file') as HTMLInputElement;
 
         const file = fileInput.files?.[0];
+        if (!title || !file) { showToast({title:'اطلاعات ناقص',message:'عنوان و فایل را انتخاب کنید.',type:'error'}); return false; }
         const fileName = file ? file.name : 'Document.pdf';
         const fileType = file ? file.name.split('.').pop()?.toUpperCase() || 'PDF' : 'PDF';
         const fileSize = file ? `${(file.size / (1024 * 1024)).toFixed(1)} مگابایت` : '۲.۴ مگابایت';
@@ -179,6 +181,7 @@ export function createTeacherMaterialsPage(membership: OrganizationMembership): 
 
         showToast({ title: 'فایل بارگذاری شد', message: 'محتوای جدید با موفقیت منتشر گردید.', type: 'success' });
         render();
+        return true;
       },
     });
 
@@ -188,3 +191,4 @@ export function createTeacherMaterialsPage(membership: OrganizationMembership): 
   render();
   return rootWrapper;
 }
+

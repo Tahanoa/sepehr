@@ -1,3 +1,5 @@
+import { installCommandShortcut } from './components/command-menu';
+import { installControls } from './components/controls';
 /**
  * POLARIS MAIN ENTRY POINT
  */
@@ -7,6 +9,7 @@ import './styles/layout.css';
 import './styles/components.css';
 import './styles/utilities.css';
 import './styles/redesign.css';
+import './styles/product.css';
 import { applyTheme, readTheme } from './theme/theme';
 
 applyTheme(readTheme());
@@ -18,5 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (appRoot) {
     const shell = initializeApp();
     appRoot.appendChild(shell.getRootElement());
+    installControls();
+    installCommandShortcut();
   }
 });
+

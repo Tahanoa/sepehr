@@ -90,7 +90,7 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
       const activeStudents = students.filter((s) => s.status === 'active').length;
       const activeStaff = staff.filter((st) => st.status === 'active').length;
       const presentCount = attendance.filter((a) => a.status === 'present').length;
-      const attRate = attendance.length > 0 ? ((presentCount / attendance.length) * 100).toFixed(1) : '۹۶.۴';
+      const attRate = attendance.length > 0 ? ((presentCount / attendance.length) * 100).toFixed(1) : '—';
 
       const statsGrid = createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4' });
       statsGrid.innerHTML = `
@@ -130,7 +130,7 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
           ${classes
             .map((c) => {
               const cStudents = students.filter((s) => s.classId === c.id);
-              const percent = Math.min(100, Math.round((cStudents.length / c.capacity) * 100));
+              const percent = Math.min(100, Math.round((cStudents.length / (c.capacity || 1)) * 100));
               return `
                 <div class="space-y-1">
                   <div class="flex justify-between font-bold text-gray-800">
@@ -319,3 +319,4 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
   render();
   return rootWrapper;
 }
+

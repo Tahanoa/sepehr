@@ -1,3 +1,4 @@
+import { linkedStudents } from '../../../services/academic-store';
 /**
  * POLARIS PARENT DASHBOARD OVERVIEW PAGE
  * Child selector, student overview, grades, attendance alerts, teacher announcements.
@@ -16,14 +17,7 @@ export function createParentOverviewPage(membership: OrganizationMembership): HT
   const orgId = membership.organizationId;
   const user = authService.getCurrentUser();
 
-  const students = schoolStore.getStudents(orgId);
-  const myChildren = students.filter(
-    (s) =>
-      (user && s.guardianPhone === user.phone) ||
-      s.guardianName.includes('رضایی') ||
-      s.guardianName.includes('عباسی') ||
-      s.guardianName.includes('تهرانی')
-  );
+  const myChildren = linkedStudents(membership);
 
   const announcements = schoolStore.getAnnouncements(orgId);
 
@@ -229,3 +223,4 @@ function openChildDetailModal(child: any, notes: any[], invoices: any[]) {
 
   modal.open();
 }
+

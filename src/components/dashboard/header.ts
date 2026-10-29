@@ -1,3 +1,4 @@
+import { openCommandMenu } from '../command-menu';
 import { openThemePanel } from '../../theme/theme-panel';
 /**
  * POLARIS DASHBOARD HEADER COMPONENT
@@ -23,7 +24,7 @@ export function createDashboardHeader(options: DashboardHeaderOptions): HTMLElem
 
   const header = createElement('header', {
     className:
-      'bg-white/90 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-20 px-3.5 sm:px-6 h-[68px] flex items-center justify-between gap-3 dir-rtl shadow-2xs transition-all duration-200',
+      'product-header bg-white/90 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-20 px-3.5 sm:px-6 h-[68px] flex items-center justify-between gap-3 dir-rtl shadow-2xs transition-all duration-200',
   });
 
   // Right Side: Mobile Drawer Toggle & Page Context
@@ -51,6 +52,8 @@ export function createDashboardHeader(options: DashboardHeaderOptions): HTMLElem
   // Center/Left Actions: Search Bar & Notifications & User Controls
   const leftGroup = createElement('div', { className: 'flex items-center gap-2 sm:gap-3 shrink-0' });
 
+  const search = createElement('button', { className: 'shell-search', textContent: 'جستجو در سپهر  ⌘ K', attributes: { type: 'button', 'aria-label': 'جستجو در سپهر' } });
+  search.addEventListener('click', openCommandMenu); leftGroup.append(search);
   const appearance = createElement('button', {
     className: 'sepehr-secondary min-h-[44px]',
     attributes: { type: 'button', 'aria-label': 'تنظیم رنگ و ظاهر سپهر' },
@@ -72,3 +75,4 @@ export function createDashboardHeader(options: DashboardHeaderOptions): HTMLElem
 
   return header;
 }
+

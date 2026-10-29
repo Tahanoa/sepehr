@@ -1,3 +1,4 @@
+import { notify } from '../feedback';
 /**
  * POLARIS LOCAL SIMULATED PARENT SMS MODAL
  * Interactive SMS notification composer with templates, estimated character count,
@@ -150,7 +151,7 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
     const msgText = textarea.value.trim();
 
     if (!msgText) {
-      alert('لطفاً متن پیامک را وارد کنید.');
+      notify('لطفاً متن پیامک را وارد کنید.');
       return;
     }
 
@@ -168,7 +169,7 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
       triggerReason: 'ارسال مستقیم توسط کاربر در پنل دمو',
     });
 
-    alert('پیامک شبیه‌سازی‌شده با موفقیت ارسال و در سوابق ذخیره شد.');
+    notify('پیامک شبیه‌سازی‌شده با موفقیت ارسال و در سوابق ذخیره شد.');
     if (onSendComplete) onSendComplete();
     onClose();
   });
@@ -184,3 +185,4 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
   backdrop.appendChild(dialog);
   return backdrop;
 }
+

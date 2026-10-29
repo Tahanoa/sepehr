@@ -48,8 +48,8 @@ export function createCounselorOverviewPage(membership: OrganizationMembership):
       <div class="text-2xl font-bold text-amber-800 font-mono mt-1">${inProgressCount.toLocaleString('fa-IR')}</div>
     </div>
     <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs">
-      <span class="text-xs font-bold text-gray-500">برنامه‌های تحصیلی فعال</span>
-      <div class="text-2xl font-bold text-emerald-800 font-mono mt-1">۲۸ مورد</div>
+      <span class="text-xs font-bold text-gray-500">کل ارجاعات ثبت‌شده</span>
+      <div class="text-2xl font-bold text-emerald-800 font-mono mt-1">${referrals.length.toLocaleString('fa-IR')} مورد</div>
     </div>
   `;
 
@@ -81,3 +81,4 @@ export function createCounselorOverviewPage(membership: OrganizationMembership):
 
   return rootWrapper;
 }
+

@@ -11,7 +11,7 @@ export interface ModalOptions {
   content: HTMLElement | string;
   confirmText?: string;
   cancelText?: string;
-  onConfirm?: () => void;
+  onConfirm?: () => void | boolean | Promise<void | boolean>;
   onCancel?: () => void;
   onClose?: () => void;
 }
@@ -87,9 +87,11 @@ export class Modal {
     const confirmBtn = createButton({
       label: confirmText,
       variant: 'primary',
-      onClick: () => {
-        if (this.options.onConfirm) this.options.onConfirm();
-        this.close();
+      onClick: async () => {
+        if (confirmBtn.disabled) return;
+        confirmBtn.disabled = true;
+        try { if (await this.options.onConfirm?.() !== false) this.close(); }
+        finally { confirmBtn.disabled = false; }
       },
     });
     footer.appendChild(confirmBtn);
@@ -152,3 +154,4 @@ export class Modal {
     }, 250);
   }
 }
+

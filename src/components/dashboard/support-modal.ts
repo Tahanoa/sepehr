@@ -1,3 +1,4 @@
+import { notify } from '../feedback';
 /**
  * POLARIS DEVELOPER TEAM SUPPORT MODAL
  * Direct access interface to submit demo support requests and review local support tickets.
@@ -133,7 +134,7 @@ export function createSupportModal(options: SupportModalOptions): HTMLElement {
           description: descInput.value,
         });
 
-        alert('درخواست شما با موفقیت ثبت شد و در سوابق قرار گرفت.');
+        notify('درخواست شما با موفقیت ثبت شد و در سوابق قرار گرفت.');
         activeTab = 'list';
         renderContent();
       });
@@ -213,3 +214,4 @@ export function createSupportModal(options: SupportModalOptions): HTMLElement {
   backdrop.appendChild(dialog);
   return backdrop;
 }
+

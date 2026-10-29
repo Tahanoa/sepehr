@@ -1,3 +1,4 @@
+import { confirmAction } from '../feedback';
 /**
  * POLARIS MULTI-STEP EXAM BUILDER - STEPS 3 & 4
  * Step 3: Question Editor (Supports single choice, multiple select, true/false, short answer, descriptive, numeric)
@@ -231,8 +232,8 @@ export function renderExamBuilderStep3(
         onChange(newQs);
       });
 
-      card.querySelector('.btn-del-q')!.addEventListener('click', () => {
-        if (confirm('آیا از حذف این سوال اطمینان دارید؟')) {
+      card.querySelector('.btn-del-q')!.addEventListener('click', async () => {
+        if (await confirmAction('آیا از حذف این سوال اطمینان دارید؟')) {
           const newQs = questions.filter((_, i) => i !== idx);
           onChange(newQs);
         }
@@ -403,3 +404,4 @@ export function renderExamBuilderStep4(
   renderContent();
   return container;
 }
+

@@ -12,12 +12,13 @@ export interface DataTableOptions<T> {
   data: T[];
   onRowClick?: (row: T) => void;
   emptyText?: string;
+  sort?: { key: string; direction: 'asc' | 'desc'; onChange: (key:string,direction:'asc'|'desc')=>void };
 }
 
 export function createDataTable<T extends Record<string, any>>(options: DataTableOptions<T>): HTMLElement {
   const { columns, data, onRowClick, emptyText = 'هیچ داده‌ای برای نمایش یافت نشد.' } = options;
 
-  const container = createElement('div', { className: 'polaris-table-container' });
+  const container = createElement('div', { className: 'polaris-table-container responsive-records' });
   const table = createElement('table', { className: 'polaris-table' });
 
   // Table Header
@@ -25,7 +26,12 @@ export function createDataTable<T extends Record<string, any>>(options: DataTabl
   const headerRow = createElement('tr');
 
   columns.forEach((col) => {
-    const th = createElement('th', { textContent: col.title });
+    const th = createElement('th', { textContent: col.title, attributes: {scope:'col'} });
+    if (options.sort && col.key !== 'id') {
+      const active=options.sort.key===col.key;th.setAttribute('aria-sort',active?(options.sort.direction==='asc'?'ascending':'descending'):'none');
+      const button=createElement('button',{textContent:col.title+(active?(options.sort.direction==='asc'?' ↑':' ↓'):' ↕'),attributes:{type:'button','aria-label':`مرتب‌سازی ${col.title}`}});
+      button.addEventListener('click',()=>options.sort!.onChange(String(col.key),active&&options.sort!.direction==='asc'?'desc':'asc'));th.replaceChildren(button);
+    }
     if (col.align) {
       th.style.textAlign = col.align;
     }
@@ -58,11 +64,13 @@ export function createDataTable<T extends Record<string, any>>(options: DataTabl
 
       if (onRowClick) {
         tr.style.cursor = 'pointer';
+        tr.tabIndex = 0;
+        tr.addEventListener('keydown', e => {if(e.target===tr&&(e.key==='Enter'||e.key===' ')){e.preventDefault();onRowClick(row);}});
         tr.addEventListener('click', () => onRowClick(row));
       }
 
       columns.forEach((col) => {
-        const td = createElement('td');
+        const td = createElement('td', { attributes: {'data-label':col.title} });
         if (col.align) {
           td.style.textAlign = col.align;
         }
@@ -120,3 +128,4 @@ export function createStatusBadge(status: StatusType): HTMLElement {
     textContent: formatStatusLabel(status),
   });
 }
+

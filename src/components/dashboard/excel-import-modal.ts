@@ -1,3 +1,4 @@
+import { notify } from '../feedback';
 /**
  * POLARIS REUSABLE EXCEL / CSV IMPORT MODAL
  * Supports parsing CSV/XLSX text, column mapping, row-by-row validation in Persian,
@@ -143,7 +144,7 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
 
       const lines = text.split(/\r\n|\n/).filter((l) => l.trim().length > 0);
       if (lines.length < 2) {
-        alert('فایل انتخاب‌شده خالی است یا ساختار استانداردی ندارد.');
+        notify('فایل انتخاب‌شده خالی است یا ساختار استانداردی ندارد.');
         return;
       }
 
@@ -264,7 +265,7 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
 
   confirmBtn.addEventListener('click', () => {
     if (parsedRows.length === 0) {
-      alert('لطفاً ابتدا یک فایل استاندارد بارگذاری نمایید.');
+      notify('لطفاً ابتدا یک فایل استاندارد بارگذاری نمایید.');
       return;
     }
 
@@ -321,3 +322,4 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
   backdrop.appendChild(dialog);
   return backdrop;
 }
+

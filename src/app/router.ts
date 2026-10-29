@@ -43,7 +43,7 @@ export class Router {
   }
 
   public navigate(pathWithQuery: string, pushState: boolean = true): void {
-    if (!window.dispatchEvent(new Event('sepehr-before-navigate', { cancelable: true }))) return;
+    if (!window.dispatchEvent(new CustomEvent('sepehr-before-navigate', { cancelable: true, detail: { retry: () => this.navigate(pathWithQuery, pushState) } }))) return;
     window.dispatchEvent(new Event('sepehr-route-leave'));
     // Normalize path query
     const url = new URL(pathWithQuery, window.location.origin);
@@ -105,3 +105,4 @@ export class Router {
     this.onRouteChanged = callback;
   }
 }
+

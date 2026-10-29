@@ -1,3 +1,5 @@
+import { confirmAction } from '../../../components/feedback';
+import { protectUnsaved } from '../../../components/feedback';
 import { OrganizationMembership } from '../../../types/auth';
 import { schoolStore } from '../../../services/school-store';
 import { classesFor, subjectsFor, linkedStudents, descriptive, isAdmin, marks, saveMarks, reports, buildReport, publishReport, entryOpen, setEntryOpen, Component, Report } from '../../../services/academic-store';
@@ -10,7 +12,7 @@ function printReport(view:HTMLElement):void{const copy=view.cloneNode(true) as H
 export function createReportCardsPage(m: OrganizationMembership): HTMLElement {
   const root=el('div',{className:'space-y-6'}), admin=isAdmin(m), classes=admin?classesFor(m):[], allStudents=admin?schoolStore.getStudents(m.organizationId):linkedStudents(m), notice=status();
   let classId=classes[0]?.id||allStudents[0]?.classId||'', studentId=allStudents.find(s=>s.classId===classId)?.id||'', year=m.organization.academicYear||'۱۴۰۵–۱۴۰۶', term:'first'|'second'='first', dirty=false;
-  const change=(action:()=>void)=>{if(dirty&&!confirm('تغییرات نمرات ذخیره نشده؛ کنار گذاشته شوند؟'))return;dirty=false;action();render();};
+  const change=async (action:()=>void)=>{if(dirty&&!await confirmAction('تغییرات نمرات ذخیره نشده؛ کنار گذاشته شوند؟'))return;dirty=false;action();render();};
   function render(){
     root.replaceChildren(heading('کارنامه‌های الکترونیک',admin?'۱. نمرات را ثبت کنید؛ ۲. کارنامه را بسازید؛ ۳. پس از بازبینی منتشر کنید. تغییر نمرات، نسخهٔ منتشرشده را خودکار تغییر نمی‌دهد.':'کارنامه‌های منتشرشدهٔ مرکز؛ نسخه‌های پیش‌نویس نمایش داده نمی‌شوند.'));
     const filters=panel(), row=el('div',{className:'workspace-filters'});
@@ -27,12 +29,11 @@ export function createReportCardsPage(m: OrganizationMembership): HTMLElement {
         for(const kind of ['continuous','final']){const component=`${kind}${suffix}` as Component, draft={studentId,subjectId:subject.id,year,component,value:old.find(v=>v.component===component)?.value||'',feedback:feedback.value};drafts.push(draft);const td=el('td'),value=desc?el('textarea',{attributes:{rows:'3'}}):input(draft.value,'number');value.value=draft.value;value.setAttribute('aria-label',`${kind==='continuous'?'مستمر':'پایانی'} ${subject.name}`);if(value instanceof HTMLInputElement){value.min='0';value.max='20';value.step='.25';}value.addEventListener('input',()=>{draft.value=value.value;dirty=true;notice.textContent='تغییرات ذخیره نشده دارید.';});feedback.addEventListener('input',()=>{draft.feedback=feedback.value;dirty=true;});td.append(value);tr.append(td);}
         const td=el('td');td.append(feedback);tr.append(td);t.body.append(tr);
       }
-      editor.append(t.wrap,button('ذخیرهٔ ارزشیابی',()=>guard(notice,()=>{if(!year)throw Error('سال تحصیلی الزامی است.');saveMarks(m,classId,drafts);dirty=false;notice.textContent='ارزشیابی ذخیره شد؛ برای اعمال در کارنامه، آن را دوباره بسازید.';}),true),button('ساخت / بازسازی پیش‌نویس کارنامه',()=>guard(notice,()=>{if(dirty)throw Error('ابتدا تغییرات ارزشیابی را ذخیره کنید.');const old=reports(m).find(r=>r.studentId===studentId&&r.year===year&&r.term===term);if(old?.published&&!confirm('بازسازی، نسخهٔ منتشرشده را به پیش‌نویس تبدیل می‌کند؛ ادامه می‌دهید؟'))return;buildReport(m,studentId,year,term);render();})));root.append(editor);
+      editor.append(t.wrap,button('ذخیرهٔ ارزشیابی',()=>guard(notice,()=>{if(!year)throw Error('سال تحصیلی الزامی است.');saveMarks(m,classId,drafts);dirty=false;notice.textContent='ارزشیابی ذخیره شد؛ برای اعمال در کارنامه، آن را دوباره بسازید.';}),true),button('ساخت / بازسازی پیش‌نویس کارنامه',()=>guard(notice,async ()=>{if(dirty)throw Error('ابتدا تغییرات ارزشیابی را ذخیره کنید.');const old=reports(m).find(r=>r.studentId===studentId&&r.year===year&&r.term===term);if(old?.published&&!await confirmAction('بازسازی، نسخهٔ منتشرشده را به پیش‌نویس تبدیل می‌کند؛ ادامه می‌دهید؟'))return;buildReport(m,studentId,year,term);render();})));root.append(editor);
     }
     const report=reports(m).find(r=>r.studentId===studentId&&r.year===year&&r.term===term);
     if(report){const view=reportView(report,student.fullName),actions=el('div',{className:'flex flex-wrap gap-3'});if(admin)actions.append(button(report.published?'لغو انتشار':'انتشار برای دانش‌آموز و والد',()=>guard(notice,()=>{publishReport(m,report.id,!report.published);render();}),true));actions.append(button('چاپ کارنامه',()=>printReport(view)));root.append(view,actions);}else root.append(el('p',{textContent:admin?'هنوز کارنامه‌ای برای این انتخاب ساخته نشده است.':'هنوز کارنامه‌ای برای این نوبت منتشر نشده است.',className:'sepehr-muted'}));
     root.append(notice);
   }render();
-  const leave=(e:Event)=>{if(dirty&&!confirm('تغییرات ذخیره نشده؛ خارج می‌شوید؟'))e.preventDefault();},unload=(e:BeforeUnloadEvent)=>{if(dirty){e.preventDefault();e.returnValue='';}};
-  window.addEventListener('sepehr-before-navigate',leave);window.addEventListener('beforeunload',unload);window.addEventListener('sepehr-route-leave',()=>{window.removeEventListener('sepehr-before-navigate',leave);window.removeEventListener('beforeunload',unload);},{once:true});return root;
+  protectUnsaved(()=>dirty,()=>{dirty=false;});return root;
 }

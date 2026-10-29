@@ -31,6 +31,8 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
   let selectedGrade = 'all';
   let selectedStatus = 'all';
   let currentPage = 1;
+  let sortKey: keyof Student = 'fullName';
+  let sortDirection: 'asc' | 'desc' = 'asc';
   const pageSize = 5;
 
   const render = () => {
@@ -62,6 +64,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
       return matchSearch && matchGrade && matchStatus;
     });
 
+    filtered.sort((a,b)=>String(a[sortKey]??'').localeCompare(String(b[sortKey]??''),'fa',{numeric:true})*(sortDirection==='asc'?1:-1));
     // Pagination
     const totalItems = filtered.length;
     const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
@@ -233,6 +236,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
             className: 'p-1.5 text-gray-600 hover:text-[rgb(var(--theme-primary))] hover:bg-gray-100 rounded-lg transition-colors title="مشاهده پرونده"',
             innerHTML: getDashboardIcon('info', 'w-4 h-4'),
           });
+          viewBtn.setAttribute('aria-label', 'مشاهده پرونده');
           viewBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             openStudentDetailModal(row);
@@ -257,7 +261,8 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
               className: 'p-1.5 text-amber-700 hover:bg-amber-50 rounded-lg transition-colors title="ویرایش مشخصات"',
               innerHTML: getDashboardIcon('exam', 'w-4 h-4'),
             });
-            editBtn.addEventListener('click', (e) => {
+            editBtn.setAttribute('aria-label', 'ویرایش مشخصات');
+          editBtn.addEventListener('click', (e) => {
               e.stopPropagation();
               openEditStudentModal(row);
             });
@@ -266,7 +271,8 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
               className: 'p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors title="حذف دانش‌آموز"',
               innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`,
             });
-            deleteBtn.addEventListener('click', (e) => {
+            deleteBtn.setAttribute('aria-label', 'حذف دانش‌آموز');
+          deleteBtn.addEventListener('click', (e) => {
               e.stopPropagation();
               confirmDeleteStudent(row);
             });
@@ -283,6 +289,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     const dataTable = createDataTable({
       columns,
       data: paginated,
+      sort: { key: sortKey, direction: sortDirection, onChange: (key, direction) => {sortKey=key as keyof Student;sortDirection=direction;currentPage=1;render();} },
       emptyText: searchQuery || selectedGrade !== 'all' || selectedStatus !== 'all'
         ? 'هیچ دانش‌آموزی با فیلترهای انتخابی یافت نشد.'
         : 'هنوز دانش‌آموزی در این مرکز ثبت نشده است.',
@@ -290,6 +297,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
     tableContainer.appendChild(dataTable);
 
+    filtered.sort((a,b)=>String(a[sortKey]??'').localeCompare(String(b[sortKey]??''),'fa',{numeric:true})*(sortDirection==='asc'?1:-1));
     // Pagination Controls
     const paginationBox = createElement('div', {
       className: 'flex items-center justify-between p-4 bg-gray-50/80 border-t border-gray-200/80 text-xs text-gray-600',
@@ -670,3 +678,4 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
   render();
   return rootWrapper;
 }
+

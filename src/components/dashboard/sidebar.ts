@@ -31,7 +31,7 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
   } = options;
 
   const sidebar = createElement('aside', {
-    className: `bg-[rgb(var(--theme-primary))] text-white flex flex-col justify-between transition-all duration-300 h-full relative z-30 ${
+    className: `product-sidebar bg-[rgb(var(--theme-primary))] text-white flex flex-col justify-between transition-all duration-300 h-full relative z-30 ${
       isCollapsed ? 'w-20' : 'w-72'
     }`,
     attributes: { 'aria-label': 'منوی اصلی سامانه' },
@@ -58,7 +58,7 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
   // Polaris Logo Mark
   const logoMark = createElement('div', {
     className:
-      'w-10 h-10 rounded-xl bg-gradient-to-br from-[rgb(var(--theme-accent))] to-[rgb(var(--theme-secondary))] text-white flex items-center justify-center font-semibold text-lg shadow-md shrink-0',
+      'brand-monogram w-10 h-10 rounded-xl bg-gradient-to-br from-[rgb(var(--theme-accent))] to-[rgb(var(--theme-secondary))] text-white flex items-center justify-center font-semibold text-lg shadow-md shrink-0',
     textContent: 'س',
   });
 
@@ -126,7 +126,16 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
 
   const navList = createElement('ul', { className: 'space-y-1' });
 
-  navItems.forEach((item) => {
+  const groups = [
+    ['فضای کار', ['overview']],
+    ['آموزش و یادگیری', ['classes','courses','students','children','teachers','instructors','schedule','attendance','assignments','exams','grades','materials']],
+    ['ارتباط و همراهی', ['messages','announcements','counseling','progress']],
+    ['مدیریت مرکز', ['reports','payments','settings','registration','status']]
+  ] as const;
+  const grouped = groups.flatMap(([label, keys]) => navItems.filter(item => (keys as readonly string[]).includes(item.sectionKey || '')).map((item, i) => ({ item, label: i === 0 ? label : '' })));
+  for (const item of navItems) if (!grouped.some(g => g.item === item)) grouped.push({ item, label: '' });
+  grouped.forEach(({item, label}) => {
+    if (label && !isCollapsed) navList.appendChild(createElement('li', { className: 'nav-group-label', textContent: label }));
     const isCurrent =
       currentPath === item.path ||
       (item.sectionKey !== undefined && currentPath.includes(item.sectionKey) && item.sectionKey !== 'overview');
@@ -288,3 +297,4 @@ export function createMobileNavigationDrawer(
   if (isOpen) requestAnimationFrame(() => closeBtn.focus());
   return backdrop;
 }
+

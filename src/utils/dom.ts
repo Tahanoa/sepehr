@@ -23,6 +23,7 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
   }
   if (options?.attributes) {
     Object.entries(options.attributes).forEach(([key, val]) => {
+      if (['disabled','required','checked','selected','multiple','readonly'].includes(key) && val === 'false') return;
       element.setAttribute(key, val);
     });
   }
@@ -38,3 +39,4 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
 export function clearElement(element: HTMLElement): void {
   element.innerHTML = '';
 }
+

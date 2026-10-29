@@ -1,3 +1,4 @@
+import { confirmAction } from '../../../components/feedback';
 /**
  * POLARIS TIMETABLE & SCHEDULING PAGE
  * Full Administrator Weekly Schedule Manager with 3 connected views:
@@ -417,8 +418,8 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       endInput.addEventListener('input', savePeriodsChange);
       breakInput.addEventListener('change', savePeriodsChange);
 
-      row.querySelector('.btn-del-period')!.addEventListener('click', () => {
-        if (confirm(`آیا از حذف «${p.name}» اطمینان دارید؟`)) {
+      row.querySelector('.btn-del-period')!.addEventListener('click', async () => {
+        if (await confirmAction(`آیا از حذف «${p.name}» اطمینان دارید؟`)) {
           const updatedPeriods = periods.filter((item) => item.id !== p.id);
           schoolStore.updateScheduleConfig(orgId, { periods: updatedPeriods });
           showToast({ title: 'حذف شد', message: 'زنگ انتخابی حذف گردید.', type: 'info' });
@@ -524,8 +525,8 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     if (existingSlot) {
       const delBtn = form.querySelector('#btn-delete-slot');
       if (delBtn) {
-        delBtn.addEventListener('click', () => {
-          if (confirm('آیا از حذف این زنگ از برنامه هفتگی اطمینان دارید؟')) {
+        delBtn.addEventListener('click', async () => {
+          if (await confirmAction('آیا از حذف این زنگ از برنامه هفتگی اطمینان دارید؟')) {
             schoolStore.deleteTimetableSlot(existingSlot.id);
             showToast({ title: 'حذف شد', message: 'زنگ درسی از برنامه هفتگی حذف گردید.', type: 'info' });
             modal.close();
@@ -609,3 +610,4 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
   render();
   return rootWrapper;
 }
+

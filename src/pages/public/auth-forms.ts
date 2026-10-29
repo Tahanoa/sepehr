@@ -66,7 +66,7 @@ export function createContactPage(): HTMLElement {
 
     setTimeout(() => {
       feedbackArea.className = 'p-4 rounded-xl text-xs font-bold bg-amber-50 border border-amber-200 text-amber-900 block';
-      feedbackArea.textContent = 'دمو: فرم تماس با موفقیت ثبت شد (توجه: در این نسخه آزمایشی پیامی ارسال نمی‌شود).';
+      feedbackArea.textContent = 'فرم بررسی شد؛ سرویس تماس متصل نیست و پیامی ارسال یا ذخیره نشد.';
       if (btnText) btnText.textContent = 'ارسال پیام';
       form.reset();
     }, 600);
@@ -286,10 +286,11 @@ export function createForgotPasswordPage(): HTMLElement {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     feedbackArea.className = 'p-3 rounded-xl text-xs font-bold bg-gray-100 border border-gray-300 text-gray-800 block text-center';
-    feedbackArea.textContent = 'در صورت وجود ایمیل وارد شده در سیستم، دستورالعمل بازیابی ارسال گردید (دمو).';
+    feedbackArea.textContent = 'سرویس بازیابی رمز متصل نیست؛ ایمیلی ارسال نشد. برای بررسی سامانه از ورود دمو استفاده کنید.';
   });
 
   card.appendChild(form);
   container.appendChild(card);
   return container;
 }
+

@@ -1,11 +1,13 @@
+import { confirmAction } from '../../../components/feedback';
+import { protectUnsaved } from '../../../components/feedback';
 import { OrganizationMembership } from '../../../types/auth';
 import { schoolStore } from '../../../services/school-store';
 import { classesFor, subjectsFor, descriptive, journal, saveJournal, marks, saveMarks, components, Component, entryOpen, Journal } from '../../../services/academic-store';
 import { el, heading, panel, field, select, input, button, status, guard, table, isoToday, faDate } from '../../../components/workspace';
 export function createGradebookPage(m: OrganizationMembership): HTMLElement {
   const root=el('div',{className:'workspace-page gradebook-page'}), classes=classesFor(m), notice=status();
-  let classId=classes.find(c=>subjectsFor(m,c.id).length>0)?.id||classes[0]?.id||'', subjectId=subjectsFor(m,classId)[0]?.id||'', week=isoToday(), tab='weekly', year=m.organization.academicYear||'۱۴۰۵–۱۴۰۶', component:Component='continuous1', dirty=false;
-  const change=(action:()=>void)=>{if(dirty && !confirm('تغییرات ذخیره نشده کنار گذاشته شوند؟'))return;dirty=false;action();render();};
+  let classId=classes.find(c=>c.id===new URLSearchParams(location.search).get('class'))?.id||classes.find(c=>subjectsFor(m,c.id).length>0)?.id||classes[0]?.id||'', subjectId=subjectsFor(m,classId)[0]?.id||'', week=isoToday(), tab='weekly', year=m.organization.academicYear||'۱۴۰۵–۱۴۰۶', component:Component='continuous1', dirty=false;
+  const change=async (action:()=>void)=>{if(dirty && !await confirmAction('تغییرات ذخیره نشده کنار گذاشته شوند؟'))return;dirty=false;action();render();};
   const render=()=>{
     root.replaceChildren(heading('دفتر نمرات','ثبت روزانه و ارزشیابی نوبت‌ها، در یک دفتر.'));
     const toolbar=panel(), filters=el('div',{className:'workspace-filters'});
@@ -39,8 +41,5 @@ export function createGradebookPage(m: OrganizationMembership): HTMLElement {
     }
     root.append(card,notice);
   };render();
-  const leave=(e:Event)=>{if(dirty && !confirm('تغییرات دفتر ذخیره نشده؛ از صفحه خارج می‌شوید؟'))e.preventDefault();};
-  const unload=(e:BeforeUnloadEvent)=>{if(dirty){e.preventDefault();e.returnValue='';}};
-  window.addEventListener('sepehr-before-navigate',leave);window.addEventListener('beforeunload',unload);
-  window.addEventListener('sepehr-route-leave',()=>{window.removeEventListener('sepehr-before-navigate',leave);window.removeEventListener('beforeunload',unload);},{once:true});return root;
+  protectUnsaved(()=>dirty,()=>{dirty=false;});return root;
 }

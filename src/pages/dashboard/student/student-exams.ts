@@ -1,3 +1,4 @@
+import { confirmAction } from '../../../components/feedback';
 import { linkedStudents } from '../../../services/academic-store';
 /**
  * POLARIS STUDENT EXAM DASHBOARD, RULES MODAL & EXAM RUNNER
@@ -569,11 +570,11 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
       render();
     };
 
-    runnerEl.querySelector('#btn-submit-exam')!.addEventListener('click', () => {
+    runnerEl.querySelector('#btn-submit-exam')!.addEventListener('click', async () => {
       const answeredCount = Object.keys(studentAnswers).filter((k) => studentAnswers[k] !== undefined && studentAnswers[k] !== '').length;
       const unansweredCount = questions.length - answeredCount;
 
-      if (confirm(`آیا از تحویل نهایی آزمون اطمینان دارید؟\nتعداد سوالات پاسخ داده شده: ${answeredCount}\nتعداد سوالات بدون پاسخ: ${unansweredCount}`)) {
+      if (await confirmAction(`آیا از تحویل نهایی آزمون اطمینان دارید؟\nتعداد سوالات پاسخ داده شده: ${answeredCount}\nتعداد سوالات بدون پاسخ: ${unansweredCount}`)) {
         finalizeSubmission('manual');
       }
     });
@@ -603,3 +604,4 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
   render();
   return rootWrapper;
 }
+

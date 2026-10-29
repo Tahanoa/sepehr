@@ -50,7 +50,7 @@ export class DashboardLayout {
     this.onNavigate = options.onNavigate;
 
     this.rootEl = createElement('div', {
-      className: 'min-h-screen bg-gray-50 text-gray-900 font-sans dir-rtl overflow-x-hidden relative',
+      className: 'product-shell min-h-screen bg-gray-50 text-gray-900 font-sans dir-rtl overflow-x-hidden relative',
     });
 
     this.sidebarContainerEl = createElement('div', {
@@ -80,6 +80,9 @@ export class DashboardLayout {
     this.mainWrapperEl.appendChild(this.headerContainerEl);
     this.mainWrapperEl.appendChild(this.contentViewportEl);
 
+    const skip = createElement('a', { textContent: 'رفتن به محتوای اصلی', className: 'skip-link', attributes: { href: '#dashboard-main-content' } });
+    this.contentViewportEl.tabIndex = -1;
+    this.rootEl.appendChild(skip);
     this.rootEl.appendChild(this.sidebarContainerEl);
     this.rootEl.appendChild(this.mainWrapperEl);
     this.rootEl.appendChild(this.modalContainerEl);
@@ -195,7 +198,7 @@ export class DashboardLayout {
 
   private createDemoBanner(): HTMLElement {
     const banner = createElement('div', { className: 'sepehr-demo-banner compact-demo-banner' });
-    banner.append(createElement('span', { textContent: 'نسخهٔ آزمایشی سپهر' }));
+    banner.append(createElement('span', { textContent: 'محیط آزمایشی · اطلاعات فقط در این مرورگر ذخیره می‌شوند' }));
     const switcher = createElement('button', { textContent: 'تغییر نقش دمو', attributes: { type: 'button' } });
     switcher.addEventListener('click', () => this.openDemoModal());
     banner.append(switcher);
@@ -210,3 +213,4 @@ export class DashboardLayout {
     this.modalContainerEl.appendChild(modal);
   }
 }
+

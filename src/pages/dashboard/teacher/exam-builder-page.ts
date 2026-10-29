@@ -1,3 +1,4 @@
+import { confirmAction } from '../../../components/feedback';
 /**
  * POLARIS DEDICATED FULL-PAGE EXAM BUILDER PAGE
  * Complete multi-step exam builder with dedicated full-page layout, step workflow,
@@ -863,8 +864,8 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           render();
         });
 
-        qCard.querySelector('.btn-del-q')!.addEventListener('click', () => {
-          if (confirm('آیا از حذف این سوال اطمینان دارید؟')) {
+        qCard.querySelector('.btn-del-q')!.addEventListener('click', async () => {
+          if (await confirmAction('آیا از حذف این سوال اطمینان دارید؟')) {
             questions.splice(idx, 1);
             render();
           }
@@ -1232,3 +1233,4 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
   render();
   return rootWrapper;
 }
+
