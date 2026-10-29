@@ -1,7 +1,7 @@
 /**
  * POLARIS EXAMINATIONS & ASSESSMENTS PAGE
  * Exam directory, create/edit exam form, schedule conflict detection for exams,
- * student score entry interface with validation against max score, and draft/published statuses.
+ * student score entry interface with validation against max score, and draft/published statuses with dark mode support.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
@@ -35,17 +35,17 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
     // Header Row
     const headerRow = createElement('div', {
-      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80',
+      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80 dark:border-gray-700/80',
     });
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('exam', 'w-6 h-6 text-[#012622]')} امتحانات، ارزشیابی‌ها و نمره‌دهی`;
+    title.innerHTML = `${getDashboardIcon('exam', 'w-6 h-6 text-[#012622] dark:text-teal-400')} امتحانات، ارزشیابی‌ها و نمره‌دهی`;
 
     const desc = createElement('p', {
-      className: 'text-xs sm:text-sm text-gray-600 font-normal',
+      className: 'text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-normal',
       textContent: `برنامه‌ریزی و مدیریت ${exams.length.toLocaleString('fa-IR')} امتحان، ثبت نمرات کلاسی و بررسی وضعیت انتشار.`,
     });
 
@@ -54,7 +54,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
     const addBtn = createElement('button', {
       className:
-        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'px-4 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ساخت آزمون جدید`,
     });
     addBtn.addEventListener('click', () => {
@@ -66,12 +66,12 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
     // Filter Toolbar
     const toolbar = createElement('div', {
-      className: 'bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs grid grid-cols-1 sm:grid-cols-2 gap-3',
+      className: 'bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs grid grid-cols-1 sm:grid-cols-2 gap-3',
     });
 
     const termSelect = createElement('select', {
       className:
-        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
     });
     termSelect.innerHTML = `
       <option value="all" ${selectedTerm === 'all' ? 'selected' : ''}>همه نوبت‌های امتحانی</option>
@@ -87,7 +87,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
     const statusSelect = createElement('select', {
       className:
-        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
     });
     statusSelect.innerHTML = `
       <option value="all" ${selectedStatus === 'all' ? 'selected' : ''}>همه وضعیت‌های برگزاری</option>
@@ -109,7 +109,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
     if (filtered.length === 0) {
       const emptyState = createElement('div', {
-        className: 'col-span-full bg-white rounded-2xl p-8 text-center border border-gray-200 text-gray-500 text-xs',
+        className: 'col-span-full bg-white dark:bg-gray-800 rounded-2xl p-8 text-center border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs',
         textContent: 'امتحانی با فیلترهای انتخابی یافت نشد.',
       });
       grid.appendChild(emptyState);
@@ -117,20 +117,20 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
       filtered.forEach((ex) => {
         const card = createElement('div', {
           className:
-            'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between',
+            'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-2xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between',
         });
 
-        let statusBg = 'bg-blue-100 text-blue-900';
+        let statusBg = 'bg-blue-100 dark:bg-blue-950/60 text-blue-900 dark:text-blue-300';
         let statusText = 'برنامه‌ریزی شده';
 
         if (ex.status === 'grading') {
-          statusBg = 'bg-amber-100 text-amber-900';
+          statusBg = 'bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300';
           statusText = 'درحال ورود نمرات';
         } else if (ex.status === 'completed') {
-          statusBg = 'bg-emerald-100 text-emerald-900';
+          statusBg = 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-300';
           statusText = 'نمرات نهایی شد';
         } else if (ex.status === 'published') {
-          statusBg = 'bg-[#012622] text-white';
+          statusBg = 'bg-[#012622] dark:bg-teal-700 text-white';
           statusText = 'منتشر شده در کارنامه';
         }
 
@@ -141,15 +141,15 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
         card.innerHTML = `
           <div class="space-y-3">
-            <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
+            <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-2.5">
               <div>
-                <h3 class="font-black text-sm text-gray-900">${ex.title}</h3>
-                <div class="text-[11px] text-gray-500 font-semibold">${ex.subjectName} (${ex.gradeLevel})</div>
+                <h3 class="font-black text-sm text-gray-900 dark:text-gray-100">${ex.title}</h3>
+                <div class="text-[11px] text-gray-500 dark:text-gray-400 font-semibold">${ex.subjectName} (${ex.gradeLevel})</div>
               </div>
               <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold ${statusBg}">${statusText}</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-2 text-xs text-gray-700">
+            <div class="grid grid-cols-2 gap-2 text-xs text-gray-700 dark:text-gray-300">
               <div><strong>تاریخ آزمون:</strong> <span class="font-mono">${ex.examDate}</span></div>
               <div><strong>ساعت شروع:</strong> <span class="font-mono">${ex.startTime} (${ex.durationMinutes} دقیقه)</span></div>
               <div><strong>کلاس‌های شرکت‌کننده:</strong> ${classNamesStr || 'کلیه کلاس‌ها'}</div>
@@ -159,11 +159,11 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
         `;
 
         const actionsRow = createElement('div', {
-          className: 'pt-3 border-t border-gray-100 flex items-center justify-between text-xs gap-2 flex-wrap',
+          className: 'pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between text-xs gap-2 flex-wrap',
         });
 
         const editBtn = createElement('button', {
-          className: 'px-3 py-2 bg-[#ECE5F0] hover:bg-[#ECE5F0]/80 text-[#012622] font-bold rounded-xl transition-all cursor-pointer',
+          className: 'px-3 py-2 bg-[#ECE5F0] dark:bg-gray-700 hover:bg-[#ECE5F0]/80 text-[#012622] dark:text-teal-300 font-bold rounded-xl transition-all cursor-pointer',
           textContent: '✏️ ویرایش',
         });
         editBtn.addEventListener('click', () => {
@@ -172,13 +172,13 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
         const scoreEntryBtn = createElement('button', {
           className:
-            'px-3.5 py-2 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer',
+            'px-3.5 py-2 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer',
           innerHTML: `${getDashboardIcon('award', 'w-4 h-4')} ورود نمرات`,
         });
         scoreEntryBtn.addEventListener('click', () => openScoreEntryModal(ex, students));
 
         const togglePublishBtn = createElement('button', {
-          className: 'px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl transition-all cursor-pointer',
+          className: 'px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold rounded-xl transition-all cursor-pointer',
           textContent: ex.status === 'published' ? 'خروج از انتشار' : 'انتشار',
         });
         togglePublishBtn.addEventListener('click', () => {
@@ -207,10 +207,10 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
     const examStudents = allStudents.filter((s) => ex.classIds.includes(s.classId));
     const existingGrades = schoolStore.getGradesForExam(orgId, ex.id);
 
-    const container = createElement('div', { className: 'space-y-4 dir-rtl text-xs text-gray-800 max-h-[60vh] overflow-y-auto p-1' });
+    const container = createElement('div', { className: 'space-y-4 dir-rtl text-xs text-gray-800 dark:text-gray-200 max-h-[60vh] overflow-y-auto p-1' });
 
     if (examStudents.length === 0) {
-      container.innerHTML = `<div class="p-4 bg-gray-50 text-center text-gray-500 rounded-xl">دانش‌آموزی در کلاس‌های این امتحان یافت نشد.</div>`;
+      container.innerHTML = `<div class="p-4 bg-gray-50 dark:bg-gray-900/60 text-center text-gray-500 dark:text-gray-400 rounded-xl">دانش‌آموزی در کلاس‌های این امتحان یافت نشد.</div>`;
     } else {
       const table = createElement('table', { className: 'polaris-table w-full' });
       table.innerHTML = `
@@ -233,19 +233,19 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
         const stdTd = createElement('td', {
           innerHTML: `
             <div>
-              <div class="font-bold text-gray-900">${std.fullName}</div>
-              <div class="text-[10px] text-gray-500">${std.className}</div>
+              <div class="font-bold text-gray-900 dark:text-gray-100">${std.fullName}</div>
+              <div class="text-[10px] text-gray-500 dark:text-gray-400">${std.className}</div>
             </div>
           `,
         });
 
-        const codeTd = createElement('td', { className: 'text-center font-mono', textContent: std.studentCode });
+        const codeTd = createElement('td', { className: 'text-center font-mono text-gray-600 dark:text-gray-400', textContent: std.studentCode });
 
         const scoreTd = createElement('td', { className: 'text-center' });
 
         if (ex.evalType === 'descriptive') {
           const select = createElement('select', {
-            className: 'bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs score-input',
+            className: 'bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg p-1.5 text-xs text-gray-900 dark:text-gray-100 score-input',
             attributes: { 'data-std-id': std.id },
           });
           select.innerHTML = `
@@ -257,7 +257,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
           scoreTd.appendChild(select);
         } else {
           const input = createElement('input', {
-            className: 'w-20 text-center font-mono font-bold bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs score-input',
+            className: 'w-20 text-center font-mono font-bold bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg p-1.5 text-xs text-gray-900 dark:text-gray-100 score-input',
             attributes: { type: 'number', step: '0.25', min: '0', max: String(ex.maxScore), value: grd?.score !== undefined ? String(grd.score) : '20', 'data-std-id': std.id },
           });
           scoreTd.appendChild(input);
@@ -265,7 +265,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
 
         const feedbackTd = createElement('td');
         const feedbackInput = createElement('input', {
-          className: 'w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs feedback-input',
+          className: 'w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg p-1.5 text-xs text-gray-900 dark:text-gray-100 feedback-input',
           attributes: { type: 'text', placeholder: 'توضیحات کوتاه...', value: grd?.feedback || '', 'data-std-id': std.id },
         });
         feedbackTd.appendChild(feedbackInput);

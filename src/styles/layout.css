@@ -8,13 +8,14 @@
   display: flex;
   min-height: 100vh;
   background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 /* Sidebar */
 .polaris-sidebar {
   width: var(--sidebar-width-px);
-  background-color: var(--color-evergreen);
-  color: var(--color-neutral-0);
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -22,8 +23,8 @@
   bottom: 0;
   right: 0;
   z-index: 100;
-  transition: width var(--transition-normal), transform var(--transition-normal);
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  transition: width var(--transition-normal), transform var(--transition-normal), background-color var(--transition-normal);
+  border-left: 1px solid var(--color-border-subtle);
   box-shadow: var(--shadow-lg);
 }
 
@@ -45,7 +46,7 @@
   align-items: center;
   gap: var(--spacing-3);
   text-decoration: none;
-  color: var(--color-neutral-0);
+  color: var(--sidebar-text);
 }
 
 .polaris-brand-icon {
@@ -66,7 +67,7 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.5px;
-  color: var(--color-lavender-mist);
+  color: var(--sidebar-text);
   white-space: nowrap;
 }
 
@@ -88,7 +89,7 @@
   align-items: center;
   gap: var(--spacing-3);
   padding: var(--spacing-3) var(--spacing-4);
-  color: var(--color-lavender-mist);
+  color: var(--sidebar-text-muted);
   border-radius: var(--radius-md);
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-sm);
@@ -98,19 +99,19 @@
 }
 
 .polaris-nav-item:hover {
-  background-color: var(--color-dark-green);
+  background-color: var(--sidebar-hover);
   color: #FFFFFF;
 }
 
 .polaris-nav-item--active {
-  background-color: var(--color-amber-earth);
-  color: var(--color-evergreen);
+  background-color: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
   font-weight: var(--font-weight-bold);
 }
 
 .polaris-nav-item--active:hover {
-  background-color: var(--color-amber-earth);
-  color: var(--color-evergreen);
+  background-color: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
 }
 
 .polaris-nav-icon {
@@ -158,6 +159,7 @@
   top: 0;
   z-index: 90;
   box-shadow: var(--shadow-sm);
+  transition: background-color var(--transition-normal), border-color var(--transition-normal);
 }
 
 .polaris-header-left {
@@ -207,7 +209,7 @@
   inset: 0;
   background-color: var(--color-overlay);
   z-index: 95;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(4px);
 }
 
 /* Responsive Mobile Layout */

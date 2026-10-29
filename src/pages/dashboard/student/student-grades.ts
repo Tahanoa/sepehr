@@ -8,6 +8,7 @@ import { authService } from '../../../services/auth-service';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
+import { formatGrade } from '../../../utils/formatters';
 
 export function createStudentGradesPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
@@ -23,23 +24,23 @@ export function createStudentGradesPage(membership: OrganizationMembership): HTM
     rootWrapper.innerHTML = '';
 
     // Header
-    const headerRow = createElement('div', { className: 'pb-2 border-b border-gray-200 space-y-1' });
+    const headerRow = createElement('div', { className: 'pb-2 border-b border-border space-y-1' });
     headerRow.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('award', 'w-6 h-6 text-[#012622]')} کارنامه و نمرات تحصیلی
+      <h2 class="text-xl sm:text-2xl font-black text-foreground flex items-center gap-2.5">
+        ${getDashboardIcon('award', 'w-6 h-6 text-primary')} کارنامه و نمرات تحصیلی
       </h2>
-      <p class="text-xs sm:text-sm text-gray-600">ارزیابی عملکرد تحصیلی، کارنامه ترمی و بازخورد اساتید دروس.</p>
+      <p class="text-xs sm:text-sm text-muted-foreground">ارزیابی عملکرد تحصیلی، کارنامه ترمی و بازخورد اساتید دروس.</p>
     `;
 
     // Report Card Banner
-    const cardBanner = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs space-y-4' });
+    const cardBanner = createElement('div', { className: 'bg-card text-card-foreground rounded-2xl border border-border p-5 shadow-2xs space-y-4' });
     cardBanner.innerHTML = `
-      <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+      <div class="flex items-center justify-between pb-3 border-b border-border">
         <div>
-          <h3 class="font-extrabold text-sm text-gray-900">${currentStudent ? currentStudent.fullName : 'دانش‌آموز'}</h3>
-          <p class="text-xs text-gray-500">${currentStudent ? currentStudent.className + ' (' + currentStudent.gradeLevel + ')' : ''}</p>
+          <h3 class="font-extrabold text-sm text-foreground">${currentStudent ? currentStudent.fullName : 'دانش‌آموز'}</h3>
+          <p class="text-xs text-muted-foreground">${currentStudent ? currentStudent.className + ' (' + currentStudent.gradeLevel + ')' : ''}</p>
         </div>
-        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 font-bold rounded-xl text-xs">وضعیت: ممتاز</span>
+        <span class="px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold rounded-xl text-xs">وضعیت: ممتاز</span>
       </div>
     `;
 
@@ -64,14 +65,14 @@ export function createStudentGradesPage(membership: OrganizationMembership): HTM
       const tr = createElement('tr');
       tr.innerHTML = `
         <td>
-          <div class="font-bold text-xs text-gray-900">${ex.title}</div>
-          <div class="text-[11px] text-gray-500">${ex.subjectName}</div>
+          <div class="font-bold text-xs text-foreground">${ex.title}</div>
+          <div class="text-[11px] text-muted-foreground">${ex.subjectName}</div>
         </td>
-        <td class="text-center text-xs text-gray-600">${ex.evalType === 'descriptive' ? 'توصیفی' : 'عددی'}</td>
-        <td class="text-center font-bold text-xs font-mono text-[#012622]">
-          ${myGrade ? (myGrade.score !== undefined ? `${myGrade.score} از ۲۰` : myGrade.descriptiveScore || 'ثبت‌شده') : '۱۹ از ۲۰'}
+        <td class="text-center text-xs text-muted-foreground">${ex.evalType === 'descriptive' ? 'توصیفی' : 'عددی'}</td>
+        <td class="text-center font-bold text-xs font-mono text-primary">
+          ${myGrade ? (myGrade.score !== undefined ? `${formatGrade(myGrade.score)} از ۲۰` : myGrade.descriptiveScore || 'ثبت‌شده') : '۱۹ از ۲۰'}
         </td>
-        <td class="text-xs text-gray-700">${myGrade?.feedback || 'عملکرد عالی در پاسخ‌دهی به سوالات.'}</td>
+        <td class="text-xs text-muted-foreground">${myGrade?.feedback || 'عملکرد عالی در پاسخ‌دهی به سوالات.'}</td>
       `;
       tbody.appendChild(tr);
     });

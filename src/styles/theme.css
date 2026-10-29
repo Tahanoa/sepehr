@@ -1,6 +1,6 @@
 /**
  * POLARIS EDUCATIONAL PLATFORM - CENTRAL THEME SYSTEM
- * Single source of truth for design tokens, brand palette, and semantic tokens.
+ * Single source of truth for design tokens, brand palette, semantic tokens, and light/dark mode support.
  */
 
 :root {
@@ -16,18 +16,18 @@
   /* Neutrals & Shades derived from Evergreen/Lavender Mist */
   --color-neutral-0: #FFFFFF;
   --color-neutral-50: #F8F7FA;
-  --color-neutral-100: #ECE5F0;     /* Same as lavender mist */
+  --color-neutral-100: #ECE5F0;
   --color-neutral-200: #DDD6E3;
   --color-neutral-300: #C5BDCC;
   --color-neutral-400: #93899C;
   --color-neutral-500: #685E71;
   --color-neutral-600: #4B4154;
   --color-neutral-700: #302838;
-  --color-neutral-800: #003B36;     /* Dark green */
-  --color-neutral-900: #012622;     /* Evergreen */
+  --color-neutral-800: #003B36;
+  --color-neutral-900: #012622;
 
   /* ==========================================================================
-     2. Semantic Token Mapping
+     2. Semantic Token Mapping (Light Theme Default)
      ========================================================================== */
   --color-primary: var(--color-evergreen);
   --color-primary-hover: var(--color-dark-green);
@@ -77,8 +77,16 @@
   --color-focus-ring: var(--color-amber-earth);
   --color-overlay: rgba(1, 38, 34, 0.5);
 
+  /* Navigation Specific */
+  --sidebar-bg: var(--color-evergreen);
+  --sidebar-text: #FFFFFF;
+  --sidebar-text-muted: var(--color-lavender-mist);
+  --sidebar-hover: var(--color-dark-green);
+  --sidebar-active-bg: var(--color-amber-earth);
+  --sidebar-active-text: var(--color-evergreen);
+
   /* ==========================================================================
-     3. Typography Tokens (Persian Vazirmatn / System Fallbacks)
+     3. Typography Tokens
      ========================================================================== */
   --font-family-base: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-family-monospace: 'Fira Code', 'Courier New', Courier, monospace;
@@ -136,4 +144,70 @@
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   6. Dark Mode Semantic Tokens
+   ========================================================================== */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-primary: #14B8A6;
+  --color-primary-hover: #2DD4BF;
+  --color-primary-active: #0D9488;
+  --color-primary-light: rgba(45, 212, 191, 0.15);
+
+  --color-secondary: #C084FC;
+  --color-secondary-hover: #D8B4FE;
+  --color-secondary-light: rgba(192, 132, 252, 0.15);
+
+  --color-accent: #F59E0B;
+  --color-accent-hover: #FBBF24;
+  --color-accent-light: rgba(245, 158, 11, 0.18);
+
+  --color-background: #0B1312;
+  --color-surface: #121E1C;
+  --color-surface-elevated: #182825;
+  --color-surface-subtle: #1D312D;
+
+  --color-text: #F3F4F6;
+  --color-text-secondary: #9CA3AF;
+  --color-muted: #6B7280;
+  --color-inverse-text: #0B1312;
+
+  --color-border: #253935;
+  --color-border-subtle: #1C2D2A;
+  --color-border-hover: #37534D;
+
+  /* Status Colors in Dark Mode */
+  --color-success: #34D399;
+  --color-success-bg: rgba(52, 211, 153, 0.15);
+  --color-success-border: rgba(52, 211, 153, 0.3);
+
+  --color-warning: #FBBF24;
+  --color-warning-bg: rgba(251, 191, 36, 0.15);
+  --color-warning-border: rgba(251, 191, 36, 0.3);
+
+  --color-danger: #F87171;
+  --color-danger-bg: rgba(248, 113, 113, 0.15);
+  --color-danger-border: rgba(248, 113, 113, 0.3);
+
+  --color-info: #38BDF8;
+  --color-info-bg: rgba(56, 189, 248, 0.15);
+  --color-info-border: rgba(56, 189, 248, 0.3);
+
+  --color-focus-ring: #F59E0B;
+  --color-overlay: rgba(0, 0, 0, 0.75);
+
+  --sidebar-bg: #071513;
+  --sidebar-text: #F3F4F6;
+  --sidebar-text-muted: #9CA3AF;
+  --sidebar-hover: #122824;
+  --sidebar-active-bg: #F59E0B;
+  --sidebar-active-text: #0B1312;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
 }

@@ -23,7 +23,7 @@ export function createOrganizationSwitcher(
 
   const trigger = createElement('button', {
     className:
-      'w-full bg-[#003B36] hover:bg-[#002824] border border-[#012622]/50 text-white rounded-xl p-2.5 flex items-center justify-between gap-2 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      'w-full bg-[#003B36] dark:bg-[#122824] hover:bg-[#002824] dark:hover:bg-[#1A3833] border border-[#012622]/50 text-white rounded-xl p-2.5 flex items-center justify-between gap-2 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
     attributes: { 'aria-expanded': 'false', 'aria-haspopup': 'true', label: 'انتخاب مرکز آموزشی' },
   });
 
@@ -67,7 +67,7 @@ export function createOrganizationSwitcher(
   // Dropdown menu
   const menu = createElement('div', {
     className:
-      'hidden absolute top-full start-0 mt-2 w-full bg-white rounded-xl shadow-xl border border-gray-200 z-50 py-1.5 divide-y divide-gray-100 dir-rtl animate-pop-in',
+      'hidden absolute top-full start-0 mt-2 w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 py-1.5 divide-y divide-gray-100 dark:divide-gray-700 dir-rtl animate-pop-in',
   });
 
   const closeMenu = () => {
@@ -86,14 +86,14 @@ export function createOrganizationSwitcher(
     const isCurrent = m.id === activeMembershipId;
     const option = createElement('button', {
       className: `w-full text-right px-3.5 py-2.5 flex items-center justify-between gap-2 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15] ${
-        isCurrent ? 'bg-[#ECE5F0]/50 font-bold text-[#012622]' : 'hover:bg-gray-50 text-gray-700'
+        isCurrent ? 'bg-[#ECE5F0]/50 dark:bg-teal-900/40 font-bold text-[#012622] dark:text-teal-200' : 'hover:bg-gray-50 dark:hover:bg-gray-700/60 text-gray-700 dark:text-gray-200'
       }`,
     });
 
     const optionText = createElement('div', { className: 'min-w-0' });
-    const name = createElement('div', { className: 'font-semibold text-gray-900 truncate', textContent: m.organization.name });
+    const name = createElement('div', { className: 'font-semibold text-gray-900 dark:text-gray-100 truncate', textContent: m.organization.name });
     const roleMeta = createElement('div', {
-      className: 'text-[11px] text-gray-500',
+      className: 'text-[11px] text-gray-500 dark:text-gray-400',
       textContent: `${getOrgTypeLabel(m.organization.type)} | ${getRoleLabel(m.role)}`,
     });
 
@@ -104,7 +104,7 @@ export function createOrganizationSwitcher(
 
     if (isCurrent) {
       const check = createElement('span', {
-        className: 'text-[#012622] shrink-0 font-bold',
+        className: 'text-[#012622] dark:text-teal-300 shrink-0 font-bold',
         innerHTML: getDashboardIcon('attendance', 'w-4 h-4'),
       });
       option.appendChild(check);

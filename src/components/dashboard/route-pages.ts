@@ -1,6 +1,6 @@
 /**
  * POLARIS ROUTE EXCEPTION PAGES
- * Access Denied, Feature Placeholder, and Dashboard Not Found pages.
+ * Access Denied, Feature Placeholder, and Dashboard Not Found pages with dark mode support.
  */
 
 import { createElement } from '../../utils/dom';
@@ -18,27 +18,27 @@ export function createFeaturePlaceholderPage(options: FeaturePlaceholderOptions)
 
   const container = createElement('div', {
     className:
-      'max-w-3xl mx-auto my-4 sm:my-8 bg-white border border-gray-200/80 rounded-2xl p-6 sm:p-12 shadow-2xs text-center flex flex-col items-center justify-center min-h-[380px] dir-rtl animate-pop-in',
+      'max-w-3xl mx-auto my-4 sm:my-8 bg-white dark:bg-gray-800 border border-gray-200/80 dark:border-gray-700/80 rounded-2xl p-6 sm:p-12 shadow-2xs text-center flex flex-col items-center justify-center min-h-[380px] dir-rtl animate-pop-in',
   });
 
   const iconWrapper = createElement('div', {
-    className: 'p-4 rounded-2xl bg-[#ECE5F0] text-[#012622] mb-5 shadow-2xs',
+    className: 'p-4 rounded-2xl bg-[#ECE5F0] dark:bg-gray-700 text-[#012622] dark:text-teal-300 mb-5 shadow-2xs',
     innerHTML: getDashboardIcon('info', 'w-10 h-10 sm:w-12 sm:h-12'),
   });
 
   const badge = createElement('span', {
     className:
-      'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200/90 mb-3',
+      'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/50 text-amber-900 dark:text-amber-200 border border-amber-200/90 dark:border-amber-800/80 mb-3',
     textContent: '🚧 ماژول در حال توسعه و آماده‌سازی',
   });
 
   const title = createElement('h2', {
-    className: 'text-xl sm:text-2xl font-black text-[#012622] mb-2.5 tracking-tight',
+    className: 'text-xl sm:text-2xl font-black text-[#012622] dark:text-teal-400 mb-2.5 tracking-tight',
     textContent: sectionTitle,
   });
 
   const desc = createElement('p', {
-    className: 'text-xs sm:text-sm text-gray-600 max-w-lg leading-relaxed mb-6 font-normal',
+    className: 'text-xs sm:text-sm text-gray-600 dark:text-gray-300 max-w-lg leading-relaxed mb-6 font-normal',
     textContent: `زیرساخت اختصاصی بخش «${sectionTitle}» برای نقش ${
       roleTitle ? `«${roleTitle}»` : ''
     } تعریف شده و زیرسامانه‌های عملیاتی آن در فاز بعدی سامانه پولاریس فعال خواهند شد.`,
@@ -46,17 +46,17 @@ export function createFeaturePlaceholderPage(options: FeaturePlaceholderOptions)
 
   const infoBox = createElement('div', {
     className:
-      'bg-gray-50/80 border border-gray-200/70 rounded-xl p-4 max-w-md w-full mb-6 text-right text-xs text-gray-600 space-y-2 shadow-2xs',
+      'bg-gray-50/80 dark:bg-gray-900/60 border border-gray-200/70 dark:border-gray-700 rounded-xl p-4 max-w-md w-full mb-6 text-right text-xs text-gray-600 dark:text-gray-400 space-y-2 shadow-2xs',
   });
 
   infoBox.innerHTML = `
-    <div class="flex items-center justify-between border-b border-gray-200/60 pb-2">
-      <span class="font-bold text-gray-700">شناسه بخش:</span>
-      <span class="font-mono text-gray-900 bg-gray-200/80 px-2 py-0.5 rounded text-[11px] font-semibold">${options.sectionKey}</span>
+    <div class="flex items-center justify-between border-b border-gray-200/60 dark:border-gray-700 pb-2">
+      <span class="font-bold text-gray-700 dark:text-gray-300">شناسه بخش:</span>
+      <span class="font-mono text-gray-900 dark:text-gray-100 bg-gray-200/80 dark:bg-gray-700 px-2 py-0.5 rounded text-[11px] font-semibold">${options.sectionKey}</span>
     </div>
     <div class="flex items-center justify-between">
-      <span class="font-bold text-gray-700">وضعیت دسترسی:</span>
-      <span class="text-emerald-800 font-bold flex items-center gap-1">✓ احراز هویت شده</span>
+      <span class="font-bold text-gray-700 dark:text-gray-300">وضعیت دسترسی:</span>
+      <span class="text-emerald-800 dark:text-emerald-400 font-bold flex items-center gap-1">✓ احراز هویت شده</span>
     </div>
   `;
 
@@ -64,7 +64,7 @@ export function createFeaturePlaceholderPage(options: FeaturePlaceholderOptions)
 
   const overviewBtn = createElement('a', {
     className:
-      'inline-flex items-center gap-2 px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#E98A15] min-h-[44px]',
+      'inline-flex items-center gap-2 px-5 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#E98A15] min-h-[44px]',
     attributes: { href: `/app/${organizationId}/overview` },
   });
   overviewBtn.innerHTML = `${getDashboardIcon('dashboard', 'w-4 h-4')} بازگشت به پیش‌خوان اصلی`;
@@ -88,21 +88,21 @@ export function createFeaturePlaceholderPage(options: FeaturePlaceholderOptions)
 export function createAccessDeniedPage(organizationId: string, userRole?: string): HTMLElement {
   const container = createElement('div', {
     className:
-      'max-w-3xl mx-auto my-8 bg-white border border-rose-200 rounded-2xl p-8 sm:p-12 shadow-sm text-center flex flex-col items-center justify-center min-h-[400px] dir-rtl',
+      'max-w-3xl mx-auto my-8 bg-white dark:bg-gray-800 border border-rose-200 dark:border-rose-900/60 rounded-2xl p-8 sm:p-12 shadow-sm text-center flex flex-col items-center justify-center min-h-[400px] dir-rtl',
   });
 
   const iconWrapper = createElement('div', {
-    className: 'p-4 rounded-2xl bg-rose-100 text-rose-700 mb-6',
+    className: 'p-4 rounded-2xl bg-rose-100 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 mb-6',
     innerHTML: getDashboardIcon('lock', 'w-12 h-12'),
   });
 
   const title = createElement('h2', {
-    className: 'text-2xl font-extrabold text-gray-900 mb-2',
+    className: 'text-2xl font-extrabold text-gray-900 dark:text-gray-100 mb-2',
     textContent: 'عدم سطح دسترسی کافی (۴۰۳)',
   });
 
   const desc = createElement('p', {
-    className: 'text-sm text-gray-600 max-w-md leading-relaxed mb-6',
+    className: 'text-sm text-gray-600 dark:text-gray-300 max-w-md leading-relaxed mb-6',
     textContent: `نقش فعلی شما (${
       userRole ? getRoleLabel(userRole) : 'کاربر جاری'
     }) مجوز مشاهده یا ویرایش اطلاعات این بخش را ندارد.`,
@@ -110,7 +110,7 @@ export function createAccessDeniedPage(organizationId: string, userRole?: string
 
   const overviewBtn = createElement('a', {
     className:
-      'inline-flex items-center gap-2 px-5 py-2.5 bg-[#012622] text-white text-xs font-bold rounded-xl hover:bg-[#003B36] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      'inline-flex items-center gap-2 px-5 py-2.5 bg-[#012622] dark:bg-teal-700 text-white text-xs font-bold rounded-xl hover:bg-[#003B36] dark:hover:bg-teal-600 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
     attributes: { href: `/app/${organizationId}/overview` },
   });
   overviewBtn.innerHTML = `${getDashboardIcon('dashboard', 'w-4 h-4')} بازگشت به پیش‌خوان مجاز`;
@@ -130,27 +130,27 @@ export function createAccessDeniedPage(organizationId: string, userRole?: string
 export function createDashboardNotFoundPage(organizationId: string): HTMLElement {
   const container = createElement('div', {
     className:
-      'max-w-3xl mx-auto my-8 bg-white border border-gray-200 rounded-2xl p-8 sm:p-12 shadow-sm text-center flex flex-col items-center justify-center min-h-[400px] dir-rtl',
+      'max-w-3xl mx-auto my-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 sm:p-12 shadow-sm text-center flex flex-col items-center justify-center min-h-[400px] dir-rtl',
   });
 
   const iconWrapper = createElement('div', {
-    className: 'p-4 rounded-2xl bg-gray-100 text-gray-600 mb-6',
+    className: 'p-4 rounded-2xl bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 mb-6',
     innerHTML: getDashboardIcon('info', 'w-12 h-12'),
   });
 
   const title = createElement('h2', {
-    className: 'text-2xl font-extrabold text-gray-900 mb-2',
+    className: 'text-2xl font-extrabold text-gray-900 dark:text-gray-100 mb-2',
     textContent: 'صفحه مورد نظر در پنل کاربری یافت نشد (۴۰۴)',
   });
 
   const desc = createElement('p', {
-    className: 'text-sm text-gray-600 max-w-md leading-relaxed mb-6',
+    className: 'text-sm text-gray-600 dark:text-gray-300 max-w-md leading-relaxed mb-6',
     textContent: 'آدرس وارد شده معتبر نیست یا به بخش دیگری انتقال یافته است.',
   });
 
   const overviewBtn = createElement('a', {
     className:
-      'inline-flex items-center gap-2 px-5 py-2.5 bg-[#012622] text-white text-xs font-bold rounded-xl hover:bg-[#003B36] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      'inline-flex items-center gap-2 px-5 py-2.5 bg-[#012622] dark:bg-teal-700 text-white text-xs font-bold rounded-xl hover:bg-[#003B36] dark:hover:bg-teal-600 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
     attributes: { href: `/app/${organizationId}/overview` },
   });
   overviewBtn.innerHTML = `${getDashboardIcon('dashboard', 'w-4 h-4')} بازگشت به پیش‌خوان`;

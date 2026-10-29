@@ -2,7 +2,7 @@
  * POLARIS STUDENT MANAGEMENT PAGE
  * Student directory with search, filtering, sorting, pagination,
  * student detail view modal, add/edit student forms with validation,
- * guardian contact info, and local persistence.
+ * guardian contact info, and local persistence with dark mode support.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
@@ -72,17 +72,17 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
     // Page Header & Add Button
     const headerRow = createElement('div', {
-      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80',
+      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80 dark:border-gray-700/80',
     });
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('users', 'w-6 h-6 text-[#012622]')} مدیریت و پرونده دانش‌آموزان`;
+    title.innerHTML = `${getDashboardIcon('users', 'w-6 h-6 text-[#012622] dark:text-teal-400')} مدیریت و پرونده دانش‌آموزان`;
 
     const desc = createElement('p', {
-      className: 'text-xs sm:text-sm text-gray-600 font-normal',
+      className: 'text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-normal',
       textContent: `مشاهده لیست کل دانش‌آموزان (${allStudents.length.toLocaleString('fa-IR')} نفر)، جستجو، ثبت‌نام جدید و مدیریت وضعیت.`,
     });
 
@@ -94,7 +94,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     if (isManagement) {
       const importBtn = createElement('button', {
         className:
-          'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+          'px-3.5 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-bold rounded-xl border border-gray-300 dark:border-gray-600 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
         innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود گروهی Excel`,
       });
       importBtn.addEventListener('click', () => {
@@ -114,7 +114,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
       const addBtn = createElement('button', {
         className:
-          'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+          'px-4 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
         innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ثبت دانش‌آموز جدید`,
       });
       addBtn.addEventListener('click', () => openAddStudentModal());
@@ -128,14 +128,14 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
     // Filter Toolbar
     const toolbar = createElement('div', {
-      className: 'bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs grid grid-cols-1 sm:grid-cols-3 gap-3',
+      className: 'bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs grid grid-cols-1 sm:grid-cols-3 gap-3',
     });
 
     // Search input
     const searchWrapper = createElement('div', { className: 'relative' });
     const searchInput = createElement('input', {
       className:
-        'w-full bg-gray-50 border border-gray-300 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
       attributes: { type: 'text', placeholder: 'جستجو با نام، کدملی یا کد دانش‌آموزی...', value: searchQuery },
     });
     searchInput.addEventListener('input', (e) => {
@@ -145,7 +145,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     });
 
     const searchIcon = createElement('div', {
-      className: 'absolute start-3 top-2.5 text-gray-400 pointer-events-none',
+      className: 'absolute start-3 top-2.5 text-gray-400 dark:text-gray-500 pointer-events-none',
       innerHTML: getDashboardIcon('search', 'w-4 h-4'),
     });
     searchWrapper.appendChild(searchIcon);
@@ -154,7 +154,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     // Grade Select
     const gradeSelect = createElement('select', {
       className:
-        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
     });
     gradeSelect.innerHTML = `<option value="all">همه پایه‌های تحصیلی</option>`;
     availableGrades.forEach((g) => {
@@ -171,7 +171,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     // Status Select
     const statusSelect = createElement('select', {
       className:
-        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
     });
     statusSelect.innerHTML = `
       <option value="all" ${selectedStatus === 'all' ? 'selected' : ''}>همه وضعیت‌ها</option>
@@ -190,7 +190,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     toolbar.appendChild(statusSelect);
 
     // Data Table Section
-    const tableContainer = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 shadow-2xs overflow-hidden' });
+    const tableContainer = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs overflow-hidden' });
 
     const columns: TableColumn<Student>[] = [
       {
@@ -198,12 +198,12 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
         key: 'fullName',
         render: (row) => `
           <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-full bg-[#012622] text-white flex items-center justify-center font-bold text-xs shrink-0">
+            <div class="w-8 h-8 rounded-full bg-[#012622] dark:bg-teal-700 text-white flex items-center justify-center font-bold text-xs shrink-0">
               ${row.fullName.slice(0, 1)}
             </div>
             <div>
-              <div class="font-bold text-gray-900 text-xs">${row.fullName}</div>
-              <div class="text-[10px] text-gray-500 font-mono">کد: ${row.studentCode}</div>
+              <div class="font-bold text-gray-900 dark:text-gray-100 text-xs">${row.fullName}</div>
+              <div class="text-[10px] text-gray-500 dark:text-gray-400 font-mono">کد: ${row.studentCode}</div>
             </div>
           </div>
         `,
@@ -216,8 +216,8 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
         key: 'guardianName',
         render: (row) => `
           <div class="text-xs">
-            <span class="font-semibold text-gray-800">${row.guardianName} (${row.guardianRelation})</span>
-            <div class="text-[10px] font-mono text-gray-500">${row.guardianPhone}</div>
+            <span class="font-semibold text-gray-800 dark:text-gray-200">${row.guardianName} (${row.guardianRelation})</span>
+            <div class="text-[10px] font-mono text-gray-500 dark:text-gray-400">${row.guardianPhone}</div>
           </div>
         `,
       },
@@ -230,7 +230,8 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
           const actionBox = createElement('div', { className: 'flex items-center justify-center gap-1.5' });
 
           const viewBtn = createElement('button', {
-            className: 'p-1.5 text-gray-600 hover:text-[#012622] hover:bg-gray-100 rounded-lg transition-colors title="مشاهده پرونده"',
+            className: 'p-1.5 text-gray-600 dark:text-gray-300 hover:text-[#012622] dark:hover:text-teal-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors',
+            attributes: { title: 'مشاهده پرونده' },
             innerHTML: getDashboardIcon('info', 'w-4 h-4'),
           });
           viewBtn.addEventListener('click', (e) => {
@@ -242,7 +243,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
           if (isTeacher) {
             const referBtn = createElement('button', {
-              className: 'px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-[11px] font-bold rounded-lg transition-colors cursor-pointer',
+              className: 'px-2 py-1 bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 dark:hover:bg-purple-900/60 text-purple-900 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-[11px] font-bold rounded-lg transition-colors cursor-pointer',
               textContent: '+ ارجاع مشاور',
             });
             referBtn.addEventListener('click', (e) => {
@@ -254,7 +255,8 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
           if (isManagement) {
             const editBtn = createElement('button', {
-              className: 'p-1.5 text-amber-700 hover:bg-amber-50 rounded-lg transition-colors title="ویرایش مشخصات"',
+              className: 'p-1.5 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded-lg transition-colors',
+              attributes: { title: 'ویرایش مشخصات' },
               innerHTML: getDashboardIcon('exam', 'w-4 h-4'),
             });
             editBtn.addEventListener('click', (e) => {
@@ -263,7 +265,8 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
             });
 
             const deleteBtn = createElement('button', {
-              className: 'p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors title="حذف دانش‌آموز"',
+              className: 'p-1.5 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors',
+              attributes: { title: 'حذف دانش‌آموز' },
               innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`,
             });
             deleteBtn.addEventListener('click', (e) => {
@@ -292,7 +295,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
     // Pagination Controls
     const paginationBox = createElement('div', {
-      className: 'flex items-center justify-between p-4 bg-gray-50/80 border-t border-gray-200/80 text-xs text-gray-600',
+      className: 'flex items-center justify-between p-4 bg-gray-50/80 dark:bg-gray-900/60 border-t border-gray-200/80 dark:border-gray-700/80 text-xs text-gray-600 dark:text-gray-400',
     });
 
     const infoText = createElement('span', {
@@ -305,8 +308,8 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     const pageNav = createElement('div', { className: 'flex items-center gap-1.5' });
 
     const prevBtn = createElement('button', {
-      className: `px-3 py-1.5 rounded-lg border border-gray-300 font-bold transition-all ${
-        currentPage === 1 ? 'opacity-40 cursor-not-allowed bg-gray-100' : 'bg-white hover:bg-gray-100 text-gray-800'
+      className: `px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 font-bold transition-all ${
+        currentPage === 1 ? 'opacity-40 cursor-not-allowed bg-gray-100 dark:bg-gray-800' : 'bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200'
       }`,
       textContent: 'قبلی',
       attributes: { disabled: currentPage === 1 ? 'true' : 'false' },
@@ -318,13 +321,13 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
       }
     });
 
-    const pageCounter = createElement('span', { className: 'px-2 font-mono font-bold text-gray-900', textContent: `${currentPage} / ${totalPages}` });
+    const pageCounter = createElement('span', { className: 'px-2 font-mono font-bold text-gray-900 dark:text-gray-100', textContent: `${currentPage} / ${totalPages}` });
 
     const nextBtn = createElement('button', {
-      className: `px-3 py-1.5 rounded-lg border border-gray-300 font-bold transition-all ${
+      className: `px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 font-bold transition-all ${
         currentPage === totalPages || totalPages === 0
-          ? 'opacity-40 cursor-not-allowed bg-gray-100'
-          : 'bg-white hover:bg-gray-100 text-gray-800'
+          ? 'opacity-40 cursor-not-allowed bg-gray-100 dark:bg-gray-800'
+          : 'bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200'
       }`,
       textContent: 'بعدی',
       attributes: { disabled: currentPage === totalPages || totalPages === 0 ? 'true' : 'false' },
@@ -352,17 +355,17 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
   // Modals
   const openCounselorReferralModal = (std: Student) => {
-    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
+    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800 dark:text-gray-200' });
     form.innerHTML = `
-      <div class="bg-purple-50 p-3 rounded-xl border border-purple-200 space-y-1">
-        <div class="font-bold text-purple-950">دانش‌آموز ارجاعی: ${std.fullName} (${std.className})</div>
-        <div class="text-[11px] text-purple-800">این ارجاع مستقیماً در کارتابل مشاور تحصیلی مدرسه قرار خواهد گرفت.</div>
+      <div class="bg-purple-50 dark:bg-purple-950/40 p-3 rounded-xl border border-purple-200 dark:border-purple-800/80 space-y-1">
+        <div class="font-bold text-purple-950 dark:text-purple-200">دانش‌آموز ارجاعی: ${std.fullName} (${std.className})</div>
+        <div class="text-[11px] text-purple-800 dark:text-purple-300">این ارجاع مستقیماً در کارتابل مشاور تحصیلی مدرسه قرار خواهد گرفت.</div>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">سطح اولویت *</label>
-          <select id="ref-priority" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
+          <select id="ref-priority" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-bold text-gray-900 dark:text-gray-100">
             <option value="high">بالا / فوری</option>
             <option value="medium" selected>متوسط</option>
             <option value="low">عادی</option>
@@ -370,13 +373,13 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
         </div>
         <div>
           <label class="block font-bold mb-1">تاریخ ارجاع *</label>
-          <input type="text" id="ref-date" value="۱۴۰۲/۱۲/۰۵" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
+          <input type="text" id="ref-date" value="۱۴۰۲/۱۲/۰۵" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-mono text-gray-900 dark:text-gray-100" />
         </div>
       </div>
 
       <div>
         <label class="block font-bold mb-1">علت ارجاع به مشاور *</label>
-        <textarea id="ref-reason" rows="3" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs leading-relaxed" placeholder="شرح علت ارجاع (افت تحصیلی، استرس، غیبت مکرر یا...)..."></textarea>
+        <textarea id="ref-reason" rows="3" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs text-gray-900 dark:text-gray-100 leading-relaxed" placeholder="شرح علت ارجاع (افت تحصیلی، استرس، غیبت مکرر یا...)..."></textarea>
       </div>
     `;
 
@@ -417,14 +420,14 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
   };
 
   const openStudentDetailModal = (std: Student) => {
-    const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800' });
+    const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800 dark:text-gray-200' });
     content.innerHTML = `
-      <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-2">
-        <div class="flex items-center justify-between pb-2 border-b border-gray-200">
-          <span class="font-bold text-sm text-[#012622]">${std.fullName}</span>
-          <span class="px-2 py-0.5 rounded font-mono font-bold text-[11px] bg-emerald-100 text-emerald-800">کد: ${std.studentCode}</span>
+      <div class="bg-gray-50 dark:bg-gray-900/60 p-4 rounded-xl border border-gray-200 dark:border-gray-700 space-y-2">
+        <div class="flex items-center justify-between pb-2 border-b border-gray-200 dark:border-gray-700">
+          <span class="font-bold text-sm text-[#012622] dark:text-teal-300">${std.fullName}</span>
+          <span class="px-2 py-0.5 rounded font-mono font-bold text-[11px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300">کد: ${std.studentCode}</span>
         </div>
-        <div class="grid grid-cols-2 gap-2 text-gray-600">
+        <div class="grid grid-cols-2 gap-2 text-gray-600 dark:text-gray-400">
           <div><strong>کد ملی:</strong> ${std.nationalId}</div>
           <div><strong>جنسیت:</strong> ${std.gender === 'female' ? 'دختر' : 'پسر'}</div>
           <div><strong>پایه تحصیلی:</strong> ${std.gradeLevel}</div>
@@ -434,11 +437,11 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
         </div>
       </div>
 
-      <div class="bg-amber-50/80 p-4 rounded-xl border border-amber-200 space-y-1.5">
-        <div class="font-bold text-amber-950 flex items-center gap-1.5">
-          ${getDashboardIcon('child', 'w-4 h-4 text-amber-700')} مشخصات ولی و سرپرست قانونی:
+      <div class="bg-amber-50/80 dark:bg-amber-950/30 p-4 rounded-xl border border-amber-200 dark:border-amber-900/60 space-y-1.5">
+        <div class="font-bold text-amber-950 dark:text-amber-200 flex items-center gap-1.5">
+          ${getDashboardIcon('child', 'w-4 h-4 text-amber-700 dark:text-amber-400')} مشخصات ولی و سرپرست قانونی:
         </div>
-        <div class="grid grid-cols-2 gap-2 text-amber-900">
+        <div class="grid grid-cols-2 gap-2 text-amber-900 dark:text-amber-300">
           <div><strong>نام سرپرست:</strong> ${std.guardianName}</div>
           <div><strong>نسبت:</strong> ${std.guardianRelation}</div>
           <div><strong>تلفن همراه:</strong> <span class="font-mono">${std.guardianPhone}</span></div>
@@ -447,7 +450,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
       ${
         std.notes
-          ? `<div class="p-3 bg-gray-100 rounded-xl"><strong>توضیحات پرونده:</strong> ${std.notes}</div>`
+          ? `<div class="p-3 bg-gray-100 dark:bg-gray-700/50 rounded-xl"><strong>توضیحات پرونده:</strong> ${std.notes}</div>`
           : ''
       }
     `;
@@ -467,7 +470,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
       return;
     }
 
-    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
+    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800 dark:text-gray-200' });
 
     const defaultClass = classes[0]!;
 
@@ -475,38 +478,38 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">نام و نام خانوادگی دانش‌آموز *</label>
-          <input type="text" id="std-fullName" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-[#E98A15]" placeholder="مثال: علی رضایی" />
+          <input type="text" id="std-fullName" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#E98A15]" placeholder="مثال: علی رضایی" />
         </div>
         <div>
           <label class="block font-bold mb-1">کد ملی دانش‌آموز *</label>
-          <input type="text" id="std-nationalId" required maxlength="10" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono focus:ring-2 focus:ring-[#E98A15]" placeholder="۱۰ رقم کد ملی" />
+          <input type="text" id="std-nationalId" required maxlength="10" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#E98A15]" placeholder="۱۰ رقم کد ملی" />
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">کلاس انتسابی *</label>
-          <select id="std-classId" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-[#E98A15]">
+          <select id="std-classId" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#E98A15]">
             ${classes.map((c) => `<option value="${c.id}">${c.name} (${c.gradeLevel})</option>`).join('')}
           </select>
         </div>
         <div>
           <label class="block font-bold mb-1">جنسیت *</label>
-          <select id="std-gender" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-[#E98A15]">
+          <select id="std-gender" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#E98A15]">
             <option value="male">پسر</option>
             <option value="female">دختر</option>
           </select>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 border-t border-gray-200 pt-3">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 border-t border-gray-200 dark:border-gray-700 pt-3">
         <div>
           <label class="block font-bold mb-1">نام و نام خانوادگی ولی *</label>
-          <input type="text" id="std-guardianName" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" placeholder="نام ولی" />
+          <input type="text" id="std-guardianName" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" placeholder="نام ولی" />
         </div>
         <div>
           <label class="block font-bold mb-1">نسبت سرپرست *</label>
-          <select id="std-guardianRelation" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
+          <select id="std-guardianRelation" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100">
             <option value="پدر">پدر</option>
             <option value="مادر">مادر</option>
             <option value="سرپرست قانونی">سرپرست قانونی</option>
@@ -514,13 +517,13 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
         </div>
         <div>
           <label class="block font-bold mb-1">شماره تماس ولی *</label>
-          <input type="text" id="std-guardianPhone" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" placeholder="۰۹۱۲..." />
+          <input type="text" id="std-guardianPhone" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" placeholder="۰۹۱۲..." />
         </div>
       </div>
 
       <div>
-        <label class="block font-bold mb-1">توضیحات و ملاحظات پزشكی/آموزشی</label>
-        <textarea id="std-notes" rows="2" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" placeholder="اختیاری..."></textarea>
+        <label class="block font-bold mb-1">توضیحات و ملاحظات پزشکی/آموزشی</label>
+        <textarea id="std-notes" rows="2" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" placeholder="اختیاری..."></textarea>
       </div>
     `;
 
@@ -577,30 +580,30 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
 
   const openEditStudentModal = (std: Student) => {
     const classes = schoolStore.getClasses(orgId);
-    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
+    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800 dark:text-gray-200' });
 
     form.innerHTML = `
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">نام و نام خانوادگی *</label>
-          <input type="text" id="edit-fullName" value="${std.fullName}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" />
+          <input type="text" id="edit-fullName" value="${std.fullName}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" />
         </div>
         <div>
           <label class="block font-bold mb-1">کد ملی *</label>
-          <input type="text" id="edit-nationalId" value="${std.nationalId}" required maxlength="10" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
+          <input type="text" id="edit-nationalId" value="${std.nationalId}" required maxlength="10" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" />
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">کلاس انتسابی</label>
-          <select id="edit-classId" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
+          <select id="edit-classId" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100">
             ${classes.map((c) => `<option value="${c.id}" ${c.id === std.classId ? 'selected' : ''}>${c.name} (${c.gradeLevel})</option>`).join('')}
           </select>
         </div>
         <div>
           <label class="block font-bold mb-1">وضعیت تحصیلی</label>
-          <select id="edit-status" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
+          <select id="edit-status" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100">
             <option value="active" ${std.status === 'active' ? 'selected' : ''}>فعال</option>
             <option value="pending" ${std.status === 'pending' ? 'selected' : ''}>در انتظار بررسی</option>
             <option value="suspended" ${std.status === 'suspended' ? 'selected' : ''}>معلق / انصراف</option>
@@ -608,14 +611,14 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 border-t border-gray-200 pt-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 border-t border-gray-200 dark:border-gray-700 pt-3">
         <div>
           <label class="block font-bold mb-1">نام ولی *</label>
-          <input type="text" id="edit-guardianName" value="${std.guardianName}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" />
+          <input type="text" id="edit-guardianName" value="${std.guardianName}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" />
         </div>
         <div>
           <label class="block font-bold mb-1">تلفن همراه ولی *</label>
-          <input type="text" id="edit-guardianPhone" value="${std.guardianPhone}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
+          <input type="text" id="edit-guardianPhone" value="${std.guardianPhone}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" />
         </div>
       </div>
     `;
