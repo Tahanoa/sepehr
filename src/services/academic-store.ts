@@ -46,7 +46,7 @@ export function descriptive(m: OrganizationMembership, classId: string): boolean
   return m.organization.type === 'elementary_school' || (m.organization.type === 'general_school' && !!cls && /اول|دوم|سوم|چهارم|پنجم|ششم|ابتدایی/.test(cls.gradeLevel));
 }
 const lockKey = (classId: string, year: string, term: string) => `${classId}|${year}|${term}`;
-export function entryOpen(m: OrganizationMembership, classId: string, year: string, term: string): boolean { return read(m.organizationId).locks[lockKey(classId,year,term)] !== false; }
+export function entryOpen(m: OrganizationMembership, classId: string, year: string, term: string): boolean { const locks=read(m.organizationId).locks; return locks[lockKey('*',year,term)] !== false && locks[lockKey(classId,year,term)] !== false; }
 export function setEntryOpen(m: OrganizationMembership, classId: string, year: string, term: string, open: boolean): void {
   context(m); if (!isAdmin(m)) throw Error('فقط مدیر می‌تواند دسترسی ثبت نمرات را تغییر دهد.'); requireClass(m,classId);
   const state = read(m.organizationId); state.locks[lockKey(classId,year,term)] = open; write(m.organizationId,state);
@@ -123,3 +123,10 @@ export function sendMessage(m: OrganizationMembership, recipientId: string, text
 }
 export function markRead(m: OrganizationMembership, id: string): void { const self=selfContact(m), state=read(m.organizationId), chat=state.chats.find(c=>c.id===id && c.participants.some(p=>p.id===self.id)); if(chat) {chat.read[self.id]=new Date().toISOString();write(m.organizationId,state);} }
 
+
+export function setAllEntryOpen(m:OrganizationMembership,year:string,term:string,open:boolean):void {
+ context(m);if(!isAdmin(m))throw Error('فقط مدیر می‌تواند دسترسی ثبت نمرات را تنظیم کند.');
+ const state=read(m.organizationId);state.locks[lockKey('*',year,term)]=open;
+ for(const cls of schoolStore.getClasses(m.organizationId))state.locks[lockKey(cls.id,year,term)]=open;
+ write(m.organizationId,state);
+}

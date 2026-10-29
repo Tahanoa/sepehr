@@ -2,6 +2,7 @@ import {chromium} from 'playwright';import {createServer} from 'vite';import ass
 const server=await createServer({server:{host:'127.0.0.1',port:4176,strictPort:true}});await server.listen();const browser=await chromium.launch();const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('dialog',async d=>{errors.push('Native '+d.type());await d.dismiss();});
 try{
 await page.goto('http://127.0.0.1:4176/app/org-101/overview');
+await page.evaluate(async()=>{const {authService}=await import('/src/services/auth-service.ts');const {setAllEntryOpen,entryOpen}=await import('/src/services/academic-store.ts');const m=authService.getActiveMembership();setAllEntryOpen(m,'test-year','first',false);if(entryOpen(m,'future-class','test-year','first'))throw Error('global lock did not cover future class');setAllEntryOpen(m,'test-year','first',true);if(!entryOpen(m,'future-class','test-year','first'))throw Error('global unlock failed');});
 await page.keyboard.press('Control+k');await page.getByLabel('جستجوی بخش‌های سپهر').fill('دانش‌آموز');await page.keyboard.press('Enter');await page.waitForURL('**/students');
 await page.getByRole('button',{name:'مرتب‌سازی دانش‌آموز',exact:true}).click();assert.equal(await page.locator('th').first().getAttribute('aria-sort'),'descending');
 await page.goto('http://127.0.0.1:4176/app/org-101/attendance');

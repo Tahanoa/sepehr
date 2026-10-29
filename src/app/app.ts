@@ -1,3 +1,4 @@
+import { enhanceRoleHome } from '../components/dashboard/role-home';
 /**
  * POLARIS MAIN APPLICATION INITIALIZER
  * Manages public website views and authenticated dashboard shell views with route guards and access policy.
@@ -143,7 +144,7 @@ export function initializeApp(): { getRootElement: () => HTMLElement } {
       });
     }
 
-    renderDashboardView(organizationId, sectionTitle, viewContent);
+    renderDashboardView(organizationId, sectionTitle, sectionKey === 'overview' ? enhanceRoleHome(viewContent, membership) : viewContent);
   };
 
   const renderDashboardView = (organizationId: string, pageTitle: string, content: HTMLElement) => {
@@ -264,3 +265,4 @@ export function initializeApp(): { getRootElement: () => HTMLElement } {
     getRootElement: () => root,
   };
 }
+

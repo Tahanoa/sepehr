@@ -11,14 +11,15 @@ export function createGradebookPage(m: OrganizationMembership): HTMLElement {
   const render=()=>{
     root.replaceChildren(heading('دفتر نمرات','ثبت روزانه و ارزشیابی نوبت‌ها، در یک دفتر.'));
     const toolbar=panel(), filters=el('div',{className:'workspace-filters'});
-    filters.append(field('کلاس',select(classes,classId,v=>change(()=>{classId=v;subjectId=subjectsFor(m,v)[0]?.id||'';}))),field('درس',select(subjectsFor(m,classId),subjectId,v=>change(()=>{subjectId=v;}))));
+    const choices=classes.flatMap(c=>subjectsFor(m,c.id).map(s=>({id:c.id+'|'+s.id,name:c.name+' · '+s.name})));
+    filters.append(field('کلاس و درس',select(choices,classId+'|'+subjectId,v=>change(()=>{const pair=v.split('|');classId=pair[0]||'';subjectId=pair[1]||'';}))));
     const tabs=el('div',{className:'workspace-segments'});for(const [id,label]of[['weekly','دفتر هفتگی'],['term','ثبت نمرات کارنامه']]){const b=button(label!,()=>change(()=>{tab=id!;}));b.setAttribute('aria-pressed',String(tab===id));tabs.append(b);};toolbar.append(filters,tabs);root.append(toolbar);
     if(!classId||!subjectId){root.append(el('p',{textContent:'کلاس یا درس قابل دسترسی یافت نشد.',className:'sepehr-muted'}));return;}
     const search=input('','search');search.placeholder='نام دانش‌آموز…';toolbar.append(field('جستجوی دانش‌آموز',search));search.addEventListener('input',()=>{root.querySelectorAll<HTMLTableRowElement>('tbody tr').forEach(row=>{row.hidden=!row.querySelector('th')?.textContent?.includes(search.value);});});
     const students=schoolStore.getStudents(m.organizationId).filter(s=>s.classId===classId), isDesc=descriptive(m,classId), card=panel();
     notice.textContent=dirty?'تغییرات ذخیره نشده دارید.':'';
     if(tab==='weekly'){
-      const date=input(week,'date');date.addEventListener('change',()=>{if(date.value)change(()=>{week=date.value;});});const weekTools=el('div',{className:'gradebook-week-tools'});weekTools.append(field('هفتهٔ مورد نظر',date));card.append(weekTools);
+      const weekTools=el('div',{className:'gradebook-week-tools'});const move=(days:number)=>change(()=>{const d=new Date(week+'T12:00:00');d.setDate(d.getDate()+days);week=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');});weekTools.append(button('هفتهٔ قبل',()=>{void move(-7);}),el('strong',{textContent:faDate(week)}),button('این هفته',()=>change(()=>{week=isoToday();})),button('هفتهٔ بعد',()=>{void move(7);}));card.append(weekTools);
       const start=new Date(week+'T12:00:00'); start.setDate(start.getDate()-((start.getDay()+1)%7));
       const dates=Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;});
       const names=['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'], t=table(['دانش‌آموز',...dates.map((d,i)=>`${names[i]} · ${faDate(d)}`)]), existing=journal(m), drafts:Journal[]=[];
@@ -31,7 +32,7 @@ export function createGradebookPage(m: OrganizationMembership): HTMLElement {
       card.append(el('p',{textContent:'نمره را در خانهٔ روز وارد کنید؛ یادداشت هر خانه با یک کلیک باز می‌شود.',className:'sepehr-muted'}),t.wrap,button('ذخیرهٔ دفتر هفتگی',()=>guard(notice,()=>{saveJournal(m,classId,drafts);dirty=false;notice.textContent='دفتر هفتگی ذخیره شد.';}),true));
     }else{
       const yearInput=input(year);yearInput.addEventListener('change',()=>change(()=>{year=yearInput.value.trim();}));
-      card.append(field('سال تحصیلی',yearInput),field('بخش کارنامه',select(Object.entries(components).map(([id,name])=>({id,name})),component,v=>change(()=>{component=v as Component;}))));
+      const advanced=el('details'),advancedTitle=el('summary',{textContent:'تغییر سال تحصیلی'});advanced.append(advancedTitle,field('سال تحصیلی',yearInput));card.append(advanced,field('بخش کارنامه',select(Object.entries(components).map(([id,name])=>({id,name})),component,v=>change(()=>{component=v as Component;}))));
       const open=entryOpen(m,classId,year,component.endsWith('1')?'first':'second');card.append(el('p',{textContent:open?'ثبت نمرات این نوبت باز است.':'ثبت نمرات این نوبت توسط مدیر بسته شده است.',className:'workspace-notice'}));
       const existing=marks(m), drafts:{studentId:string;subjectId:string;year:string;component:Component;value:string;feedback:string}[]=[], t=table(['دانش‌آموز',isDesc?'شرح پیشرفت و نیاز آموزشی':'نمره از ۲۰','بازخورد']);
       for(const student of students){const old=existing.find(v=>v.studentId===student.id&&v.subjectId===subjectId&&v.year===year&&v.component===component), draft={studentId:student.id,subjectId,year,component,value:old?.value||'',feedback:old?.feedback||''};drafts.push(draft);const row=el('tr'),cell=el('td');row.append(el('th',{textContent:student.fullName,attributes:{scope:'row'}}));

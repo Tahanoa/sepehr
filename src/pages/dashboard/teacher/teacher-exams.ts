@@ -293,18 +293,19 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
           </div>
         `;
         if(att.status !== 'in_progress') {
+          const fields=new Map<string,HTMLInputElement>();
           const questions=schoolStore.getExamQuestions(ex.id), scores:Record<string,number>={...(att.questionScores||{})}, notice=status();
           for(const q of questions){
             const answer=att.answers?.[q.id] ?? att.descriptiveAnswers?.[q.id] ?? att.mcqAnswers?.[q.id] ?? '';
-            const section=el('section',{className:'grading-question'}), score=input(String(scores[q.id]??''),'number');score.min='0';score.max=String(q.points);score.step='.25';
+            const section=el('section',{className:'grading-question'}), score=input(String(scores[q.id]??''),'number');fields.set(q.id,score);score.min='0';score.max=String(q.points);score.step='.25';
             section.append(el('h4',{textContent:q.prompt}),el('p',{textContent:'پاسخ دانش‌آموز: '+String(answer),className:'workspace-notice'}),field('نمره از '+q.points,score));
             score.addEventListener('input',()=>{scores[q.id]=Number(score.value);});
-            section.append(button('پیشنهاد AI · دمو',()=>{
-              const words=(q.referenceAnswer||'').split(/\s+/).filter(Boolean);const text=String(answer);const ratio=words.length?words.filter(w=>text.includes(w)).length/words.length:0;
-              score.value=String(Math.round(q.points*ratio*4)/4);scores[q.id]=Number(score.value);
-              notice.textContent='صرفاً شبیه‌سازی محلی بر اساس تطابق واژه‌ها؛ مدل هوش مصنوعی فراخوانی نشده است. نمره را بازبینی و سپس ذخیره کنید.';
-            }));item.append(section);
+            const details=el('details');details.append(el('summary',{textContent:'پاسخ و نمرهٔ سؤال '+(questions.indexOf(q)+1)}),section);item.append(details);
           }
+          item.prepend(button('تصحیح آزمایشی کل پاسخ‌برگ',()=>{
+            for(const q of questions){const answer=att.answers?.[q.id] ?? att.descriptiveAnswers?.[q.id] ?? att.mcqAnswers?.[q.id] ?? '';const words=(q.referenceAnswer||'').split(/\s+/).filter(Boolean);const score=words.length?Math.round(q.points*words.filter(w=>String(answer).includes(w)).length/words.length*4)/4:undefined;if(score===undefined)continue;scores[q.id]=score;fields.get(q.id)!.value=String(score);}
+            notice.textContent='پیشنهادهای کل پاسخ‌برگ آماده شد؛ صرفاً شبیه‌سازی تطابق واژه‌ها، نه مدل AI واقعی. سؤال فاقد پاسخ مرجع نیازمند نمرهٔ دستی است. پس از بازبینی ثبت کنید.';
+          },true));
           item.append(notice,button('ثبت نمرات بازبینی‌شده',()=>{
             if(questions.some(q=>!Number.isFinite(scores[q.id])||scores[q.id]!<0||scores[q.id]!>q.points)){notice.textContent='برای همهٔ سؤال‌ها نمرهٔ معتبر وارد کنید.';return;}
             schoolStore.saveExamAttempt({...att,questionScores:scores,totalScore:Object.values(scores).reduce((a,b)=>a+b,0),status:'graded'});notice.textContent='نمرات با تأیید دبیر ثبت شد.';
