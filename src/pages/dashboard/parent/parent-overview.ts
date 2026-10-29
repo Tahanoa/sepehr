@@ -135,28 +135,6 @@ export function createParentOverviewPage(membership: OrganizationMembership): HT
 
   childrenContainer.appendChild(cardsGrid);
 
-  // Parent Reminders & Action Bar
-  const remindersBox = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-3' });
-  remindersBox.innerHTML = `
-    <h3 class="text-xs sm:text-sm font-semibold text-gray-900 flex items-center gap-2">
-      ${getDashboardIcon('attendance', 'w-4 h-4 text-[rgb(var(--theme-primary))]')} دسترسی سریع اولیا
-    </h3>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-      <button onclick="window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: '/app/${orgId}/attendance' }))" class="p-3 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 font-bold text-gray-800 text-center transition-colors cursor-pointer">
-        📋 گزارش حضور/غیبت
-      </button>
-      <button onclick="window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: '/app/${orgId}/grades' }))" class="p-3 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 font-bold text-gray-800 text-center transition-colors cursor-pointer">
-        📊 کارنامه و نمرات
-      </button>
-      <button onclick="window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: '/app/${orgId}/messages' }))" class="p-3 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 font-bold text-gray-800 text-center transition-colors cursor-pointer">
-        💬 پیام به مدیریت
-      </button>
-      <button onclick="window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: '/app/${orgId}/payments' }))" class="p-3 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 font-bold text-gray-800 text-center transition-colors cursor-pointer">
-        💳 وضعیت شهریه
-      </button>
-    </div>
-  `;
-
   // Announcements
   const ancBox = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 space-y-3' });
   ancBox.innerHTML = `<h3 class="text-xs sm:text-sm font-bold text-gray-900 flex items-center gap-2">${getDashboardIcon('announcement', 'w-4 h-4 text-[rgb(var(--theme-accent))]')} اطلاعیه‌های ویژه اولیا</h3>`;
@@ -177,7 +155,6 @@ export function createParentOverviewPage(membership: OrganizationMembership): HT
 
   rootWrapper.appendChild(welcomeCard);
   rootWrapper.appendChild(childrenContainer);
-  rootWrapper.appendChild(remindersBox);
   rootWrapper.appendChild(ancBox);
 
   return rootWrapper;

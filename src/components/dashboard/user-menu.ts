@@ -15,7 +15,7 @@ export interface UserMenuOptions {
 }
 
 export function createUserMenu(options: UserMenuOptions): HTMLElement {
-  const { user, membership, onOpenDemoModal } = options;
+  const { user, membership } = options;
 
   const container = createElement('div', { className: 'relative' });
 
@@ -93,19 +93,6 @@ export function createUserMenu(options: UserMenuOptions): HTMLElement {
   menuHeader.appendChild(roleBadge);
 
   const menuActions = createElement('div', { className: 'py-1' });
-
-  // Dev Demo Switcher Link if in Dev Mode
-  if (import.meta.env.DEV && onOpenDemoModal) {
-    const demoBtn = createElement('button', {
-      className: 'w-full text-right px-4 py-2 hover:bg-amber-50 text-amber-900 font-semibold flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-[rgb(var(--theme-accent))]',
-    });
-    demoBtn.innerHTML = `${getDashboardIcon('swap', 'w-4 h-4 text-amber-700')} تغییر نقش دمو (توسعه)`;
-    demoBtn.addEventListener('click', () => {
-      closeMenu();
-      onOpenDemoModal();
-    });
-    menuActions.appendChild(demoBtn);
-  }
 
   // Sign out action
   const signOutBtn = createElement('button', {

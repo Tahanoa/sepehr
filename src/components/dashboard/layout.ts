@@ -10,8 +10,6 @@ import { NavigationItem } from '../../types/navigation';
 import { createSidebar, createMobileNavigationDrawer } from './sidebar';
 import { createDashboardHeader } from './header';
 import { createDemoSwitcherModal } from './demo-switcher-modal';
-import { schoolStore } from '../../services/school-store';
-import { getRoleLabel } from './icons';
 
 export interface DashboardLayoutOptions {
   user: User;
@@ -196,47 +194,11 @@ export class DashboardLayout {
   }
 
   private createDemoBanner(): HTMLElement {
-    const banner = createElement('div', {
-      className: 'sepehr-demo-banner text-white px-4 py-2 border-b border-[rgb(var(--theme-accent))]/40 text-xs flex flex-wrap items-center justify-between gap-2 shrink-0 z-20',
-    });
-
-    const infoBox = createElement('div', { className: 'flex items-center gap-2 font-medium' });
-    const badge = createElement('span', {
-      className: 'px-2 py-0.5 bg-[rgb(var(--theme-accent))] text-[rgb(var(--theme-primary))] rounded font-bold text-[10px]',
-      textContent: 'محیط آزمایشی DEMO',
-    });
-    const infoText = createElement('span', {
-      textContent: `هویت فعال: ${this.user.name} (${getRoleLabel(this.membership.role)}) — ${this.membership.organization.name}`,
-    });
-    infoBox.appendChild(badge);
-    infoBox.appendChild(infoText);
-
-    const actionsBox = createElement('div', { className: 'flex items-center gap-2' });
-
-    const switchBtn = createElement('button', {
-      className: 'px-2.5 py-1 bg-white/10 hover:bg-white/20 text-amber-200 rounded font-semibold text-[11px] transition-colors flex items-center gap-1 focus:outline-none focus:ring-1 focus:ring-[rgb(var(--theme-accent))]',
-      innerHTML: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg> تغییر نقش (۱۴ دمو)`,
-    });
-    switchBtn.addEventListener('click', () => this.openDemoModal());
-
-    const resetBtn = createElement('button', {
-      className: 'px-2.5 py-1 bg-red-900/60 hover:bg-red-800 text-red-200 rounded font-semibold text-[11px] transition-colors flex items-center gap-1 focus:outline-none focus:ring-1 focus:ring-red-400',
-      innerHTML: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> بازنشانی داده‌ها`,
-    });
-    resetBtn.addEventListener('click', () => {
-      if (confirm('آیا از بازنشانی کلیه داده‌های آزمایشی دمو به حالت اولیه اطمینان دارید؟')) {
-        schoolStore.resetDemoData();
-        alert('داده‌های دمو با موفقیت بازنشانی شدند.');
-        window.location.reload();
-      }
-    });
-
-    actionsBox.appendChild(switchBtn);
-    actionsBox.appendChild(resetBtn);
-
-    banner.appendChild(infoBox);
-    banner.appendChild(actionsBox);
-
+    const banner = createElement('div', { className: 'sepehr-demo-banner compact-demo-banner' });
+    banner.append(createElement('span', { textContent: 'نسخهٔ آزمایشی سپهر' }));
+    const switcher = createElement('button', { textContent: 'تغییر نقش دمو', attributes: { type: 'button' } });
+    switcher.addEventListener('click', () => this.openDemoModal());
+    banner.append(switcher);
     return banner;
   }
 

@@ -88,7 +88,7 @@ const MASTER_NAVIGATION: NavigationConfigEntry[] = [
   },
   {
     id: 'school_admin-announcements',
-    title: 'اطلاعیه‌ها و ارتباطات',
+    title: 'اطلاعیه‌ها',
     sectionKey: 'announcements',
     icon: 'announcement',
     roles: ['school_admin'],
@@ -153,7 +153,7 @@ const MASTER_NAVIGATION: NavigationConfigEntry[] = [
   },
   {
     id: 'teacher-grades',
-    title: 'ثبت نمرات',
+    title: 'دفتر نمرات',
     sectionKey: 'grades',
     icon: 'award',
     roles: ['teacher'],
@@ -186,7 +186,6 @@ const MASTER_NAVIGATION: NavigationConfigEntry[] = [
     title: 'تکالیف من',
     sectionKey: 'assignments',
     icon: 'assignment',
-    badge: '۳',
     roles: ['student'],
   },
   {
@@ -424,7 +423,7 @@ const MASTER_NAVIGATION: NavigationConfigEntry[] = [
   },
   {
     id: 'instructor-grades',
-    title: 'ثبت نمرات و بازخورد',
+    title: 'دفتر نمرات',
     sectionKey: 'grades',
     icon: 'award',
     roles: ['instructor'],
@@ -481,6 +480,8 @@ export function getNavigationForRoleAndOrg(
   organizationId: string
 ): NavigationItem[] {
   return MASTER_NAVIGATION.filter((item) => {
+    // Progress is an existing alias of the student directory, not a second feature.
+    if (role === 'counselor' && item.sectionKey === 'progress') return false;
     const roleMatches = item.roles.includes(role);
     if (!roleMatches) return false;
 
@@ -489,7 +490,7 @@ export function getNavigationForRoleAndOrg(
     }
 
     return true;
-  }).map((item) => ({
+  }).filter((item, index, items) => items.findIndex(other => other.sectionKey === item.sectionKey) === index).map((item) => ({
     ...item,
     path: `/app/${organizationId}/${item.sectionKey}`,
   }));
@@ -509,7 +510,7 @@ export function getDashboardSectionTitles(): Record<string, string> {
     'exam-builder': 'طراح هوشمند و سازنده آزمون',
     grades: 'کارنامه‌ها و نمرات',
     materials: 'محتوا و منابع آموزشی',
-    announcements: 'اطلاعیه‌ها و پیام‌ها',
+    announcements: 'اطلاعیه‌ها',
     messages: 'ارتباطات و پیام‌رسانی',
     children: 'فرزندان تحت سرپرستی',
     counseling: 'هماهنگی و خدمات مشاوره',
@@ -528,7 +529,7 @@ export function getDashboardRouteMetadata(
   role?: Role
 ): DashboardRouteMetadata {
   const titles = getDashboardSectionTitles();
-  const title = titles[sectionKey] || 'بخش سیستم';
+  const title = sectionKey === 'grades' && (role === 'teacher' || role === 'instructor') ? 'دفتر نمرات' : titles[sectionKey] || 'بخش سیستم';
 
   const metadata: DashboardRouteMetadata = {
     sectionKey,

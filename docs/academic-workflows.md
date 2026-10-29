@@ -18,3 +18,11 @@ Request: questionPrompt, studentAnswer, referenceAnswer, maxPoints, rubricCriter
 Production server must authenticate staff, authorize the specific exam/student, rate-limit calls, validate rubric totals and provider output, store audit history and protect submitted answers. Replace local academic storage with authenticated database operations before real multi-user use. Published reports are snapshots; changing marks requires rebuilding and republishing.
 
 Validation: TypeScript production build plus browser smoke checks for appearance, mobile layout, report-entry lock, attendance save and escaped message content. No live AI provider or cross-device messaging was tested.
+
+## Focused UI update
+
+Navigation is unique by section key. The counselor's progress alias remains routable but is not a duplicate sidebar item. Generic dashboard shortcut grids were removed from administrator, teacher, student and parent homes. Appearance has one shared entry point in the header; demo identity switching has one compact banner; demo reset remains in administrator settings. Legacy grade/message exports delegate to the shared workspaces.
+
+The weekly gradebook shows compact score cells with expandable notes, student search, a sticky student column and a mobile day selector. Term grading shares the class/subject context. Messenger uses a searchable contact list, last-message previews, unread counts, per-contact in-memory drafts and a single conversation view on mobile. Drafts last only while the workspace is mounted; saved messages remain browser-local. Motion respects reduced-motion preferences.
+
+Browser regression coverage includes grade persistence, contact draft switching, safe message text, unique navigation and page overflow checks at 320, 390, 768 and 1440 pixels. This does not replace usability testing with real teachers or parents.

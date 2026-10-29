@@ -8,7 +8,6 @@ import { OrganizationMembership } from '../../../types/auth';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
 import { createSummaryCard } from '../../../components/dashboard/summary-card';
-import { createQuickAction } from '../../../components/dashboard/quick-action';
 import { createActivityList } from '../../../components/dashboard/activity-list';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
 import { DEMO_RECENT_ACTIVITIES } from '../../../data/demo-data';
@@ -225,81 +224,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   breakdownCard.appendChild(chartHeader);
   breakdownCard.appendChild(chartBody);
 
-  // Quick Actions Section
-  const actionsCard = createElement('div', { className: 'space-y-3.5' });
-  const actionsHeader = createElement('h3', {
-    className: 'text-xs sm:text-sm font-bold text-gray-900 tracking-tight flex items-center gap-2',
-  });
-  actionsHeader.innerHTML = `${getDashboardIcon('classes', 'w-4 h-4 text-[rgb(var(--theme-primary))]')} میان‌برهای عملیاتی و دسترسی سریع`;
-
-  const actionsGrid = createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 gap-3.5' });
-
-  const act1 = createQuickAction({
-    id: 'act-students',
-    title: 'مدیریت دانش‌آموزان',
-    description: 'پرونده‌های تحصیلی، ثبت‌نام جدید و ویرایش مشخصات',
-    iconName: 'users',
-    path: `/app/${orgId}/students`,
-  });
-
-  const act2 = createQuickAction({
-    id: 'act-attendance',
-    title: 'حضور و غیاب',
-    description: 'ثبت آنلاین وضعیت حضور، غیبت و تأخیر ورودی',
-    iconName: 'attendance',
-    path: `/app/${orgId}/attendance`,
-  });
-
-  let act3Title = 'برنامه‌ریزی کلاس‌ها';
-  let act3Desc = 'زمان‌بندی دروس و تخصیص ظرفیت اتاق‌ها';
-  let act3Path = `/app/${orgId}/classes`;
-  let act3Icon = 'classes';
-
-  if (orgType === 'secondary_school') {
-    act3Title = 'امتحانات و آزمون‌ها';
-    act3Desc = 'برنامه‌ریزی آزمون‌های مستمر و تداخل‌سنجی';
-    act3Path = `/app/${orgId}/exams`;
-    act3Icon = 'exam';
-  }
-
-  const act3 = createQuickAction({
-    id: 'act-3',
-    title: act3Title,
-    description: act3Desc,
-    iconName: act3Icon,
-    path: act3Path,
-  });
-
-  let act4Title = 'کارنامه‌ها و نمرات';
-  let act4Desc = 'بررسی کارنامه‌های توصیفی و عددی دانش‌آموزان';
-  let act4Path = `/app/${orgId}/grades`;
-  let act4Icon = 'award';
-
-  if (orgType === 'secondary_school') {
-    act4Title = 'خدمات مشاوره';
-    act4Desc = 'مدیریت ارجاعات مشاوره‌ای و نوبت‌های تحصیلی';
-    act4Path = `/app/${orgId}/counseling`;
-    act4Icon = 'chat';
-  }
-
-  const act4 = createQuickAction({
-    id: 'act-4',
-    title: act4Title,
-    description: act4Desc,
-    iconName: act4Icon,
-    path: act4Path,
-  });
-
-  actionsGrid.appendChild(act1);
-  actionsGrid.appendChild(act2);
-  actionsGrid.appendChild(act3);
-  actionsGrid.appendChild(act4);
-
-  actionsCard.appendChild(actionsHeader);
-  actionsCard.appendChild(actionsGrid);
-
   leftColumn.appendChild(breakdownCard);
-  leftColumn.appendChild(actionsCard);
 
   // Right Column: Announcements + Recent Activities
   const rightColumn = createElement('div', { className: 'space-y-6' });

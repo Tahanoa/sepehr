@@ -63,8 +63,8 @@ try {
   await page.getByRole('button',{name:'باز کردن ورود نمرات دبیران',exact:true}).waitFor();
   await page.getByRole('button',{name:'باز کردن ورود نمرات دبیران',exact:true}).click();
   await page.goto('http://127.0.0.1:4174/app/org-101/messages');
-  await page.getByRole('heading',{name:'پیام‌رسان مرکز',exact:true}).waitFor();
-  await page.getByLabel('مخاطب').selectOption({index:1});
+  await page.getByRole('heading',{name:'پیام‌رسان',exact:true}).waitFor();
+  await page.locator('.inbox-contact').first().click();
   await page.getByLabel('متن پیام').fill('<script>unsafe</script> پیگیری حضور');
   await page.getByRole('button',{name:'ارسال پیام',exact:true}).click();
   await page.getByRole('log').getByText('<script>unsafe</script> پیگیری حضور',{exact:true}).waitFor();
@@ -72,6 +72,45 @@ try {
   await page.getByRole('button',{name:'همه حاضر',exact:true}).click();
   await page.getByRole('button',{name:'ثبت نهایی جلسه',exact:true}).click();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'attendance overflow');
+  await page.goto('http://127.0.0.1:4174/app/org-101/messages');
+  await page.locator('.inbox-contact').first().click();
+  await page.getByLabel('متن پیام').fill('پیش‌نویس نگهداری شود');
+  await page.getByRole('button',{name:'بازگشت به گفتگوها',exact:true}).click();
+  await page.locator('.inbox-contact').first().click();
+  assert.equal(await page.getByLabel('متن پیام').inputValue(),'پیش‌نویس نگهداری شود');
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'messenger overflow');
+  await page.screenshot({path:'/tmp/sepehr-inbox-mobile.png',fullPage:true,animations:'disabled'});
+  await page.evaluate(()=>{localStorage.setItem('polaris_demo_user_id','usr-sec-teacher');localStorage.setItem('polaris_active_membership_id','mem-teacher-101');});
+  await page.goto('http://127.0.0.1:4174/app/org-101/grades');
+  await page.getByRole('heading',{name:'دفتر نمرات',exact:true}).waitFor();
+  await page.getByLabel('روز نمایش در موبایل').selectOption('0');
+  assert.equal(await page.locator('.gradebook-grid tbody tr').first().locator('td:visible').count(),1);
+  const mark=page.locator('.gradebook-grid tbody tr').first().locator('td:visible input');
+  await mark.fill('18');
+  const notes=page.locator('.gradebook-grid tbody tr').first().locator('td:visible details');
+  await notes.locator('summary').click();
+  await notes.locator('textarea').fill('پیشرفت در حل مسئله');
+  await page.getByRole('button',{name:'ذخیرهٔ دفتر هفتگی',exact:true}).click();
+  await page.reload();
+  await page.getByLabel('روز نمایش در موبایل').selectOption('0');
+  assert.equal(await page.locator('.gradebook-grid tbody tr').first().locator('td:visible input').inputValue(),'18');
+  await page.screenshot({path:'/tmp/sepehr-gradebook-mobile.png',fullPage:true,animations:'disabled'});
+  await page.setViewportSize({width:1440,height:1000});
+  assert.equal(await page.locator('.gradebook-grid tbody tr').first().locator('td:visible').count(),7);
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'desktop gradebook overflow');
+  await page.screenshot({path:'/tmp/sepehr-gradebook-desktop.png',fullPage:true,animations:'disabled'});
+  const name=await page.locator('.gradebook-grid tbody tr th').first().textContent();
+  await page.getByLabel('جستجوی دانش‌آموز').fill('نام ناموجود');
+  assert.equal(await page.locator('.gradebook-grid tbody tr:visible').count(),0);
+  await page.getByLabel('جستجوی دانش‌آموز').fill(name);
+  assert.ok(await page.locator('.gradebook-grid tbody tr:visible').count()>0);
+  await page.evaluate(async()=>{const {getNavigationForRoleAndOrg}=await import('/src/config/navigation-config.ts');for(const role of ['school_admin','teacher','student','parent','counselor','institute_admin','instructor']){const items=getNavigationForRoleAndOrg(role,'secondary_school','org-101');if(new Set(items.map(i=>i.sectionKey)).size!==items.length)throw Error('duplicate navigation '+role);}});
+  for(const width of [320,390,768,1440]) {await page.setViewportSize({width,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'gradebook overflow '+width);}
+  await page.evaluate(()=>{localStorage.setItem('polaris_demo_user_id','usr-sec-admin');localStorage.removeItem('polaris_active_membership_id');});
+  await page.goto('http://127.0.0.1:4174/app/org-101/messages');
+  await page.locator('.inbox-contact').first().click();
+  for(const width of [320,390,768,1440]) {await page.setViewportSize({width,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'inbox overflow '+width);}
+  await page.screenshot({path:'/tmp/sepehr-inbox-desktop.png',fullPage:true,animations:'disabled'});
   assert.deepEqual(errors, []);
-  console.log('PASS: theme palettes, validation, persistence, preview rollback, learner identity, dates, desktop/mobile layout and drawer/modal interaction');
+  console.log('PASS: themes, navigation uniqueness, gradebook persistence/search/day layout, messaging drafts/text safety, attendance and 320–1440px layout');
 } finally { await browser.close(); await server.close(); }

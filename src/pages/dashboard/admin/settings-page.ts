@@ -1,4 +1,3 @@
-import { createThemePanel } from '../../../theme/theme-panel';
 /**
  * POLARIS SCHOOL SETTINGS PAGE
  * Editable school profile, academic year configuration, parent messaging settings,
@@ -165,7 +164,6 @@ export function createSettingsPage(membership: OrganizationMembership): HTMLElem
     resetCard.appendChild(resetBtn);
 
     rootWrapper.appendChild(headerRow);
-    rootWrapper.appendChild(createThemePanel());
     rootWrapper.appendChild(formCard);
     rootWrapper.appendChild(resetCard);
   };

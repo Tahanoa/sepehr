@@ -62,7 +62,5 @@ export function createStudentOverviewPage(membership: OrganizationMembership): H
     const item = createElement('article', { className: 'py-4 border-b border-gray-100 last:border-0' });
     item.append(createElement('h4', { className: 'sepehr-task-title', textContent: announcement.title }), createElement('p', { className: 'sepehr-muted mt-1', textContent: announcement.content }), createElement('p', { className: 'sepehr-muted mt-1', textContent: announcement.createdAt })); updates.append(item);
   }
-  const resources = createElement('section', { className: 'sepehr-panel space-y-3' }); resources.append(createElement('h3', { className: 'sepehr-section-title', textContent: 'مسیرهای پرکاربرد' }), navigateLink('منابع آموزشی', 'materials'), navigateLink('کارنامه و بازخورد', 'grades'));
-  if (membership.organization.type === 'independent_institute') resources.append(navigateLink('شهریه و پرداخت‌ها', 'payments'));
-  side.append(updates, resources); columns.append(work,side); root.append(columns); return root;
+  side.append(updates); columns.append(work,side); root.append(columns); return root;
 }
