@@ -1,6 +1,6 @@
 /**
  * POLARIS SCHOOL ADMINISTRATOR OVERVIEW PAGE
- * Executive overview dashboard tailored for Elementary, Secondary, and General School Administrators with dark mode support.
+ * Executive overview dashboard tailored for Elementary, Secondary, and General School Administrators.
  * Displays live stats from schoolStore, attendance breakdowns, quick actions, and recent activities.
  */
 
@@ -46,7 +46,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   // 1. Welcome Header Banner
   const welcomeCard = createElement('div', {
     className:
-      'bg-gradient-to-br from-[#012622] via-[#003B36] to-[#59114D] dark:from-[#071513] dark:via-[#002824] dark:to-[#380A30] rounded-2xl p-5 sm:p-7 text-white shadow-md relative overflow-hidden',
+      'bg-gradient-to-br from-[#012622] via-[#003B36] to-[#59114D] rounded-2xl p-5 sm:p-7 text-white shadow-md relative overflow-hidden',
   });
 
   const welcomeContent = createElement('div', { className: 'relative z-10 space-y-2.5 max-w-2xl' });
@@ -156,13 +156,13 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
 
   // Organization-Specific Breakdown Card
   const breakdownCard = createElement('div', {
-    className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 sm:p-6 shadow-2xs space-y-4',
+    className: 'bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-2xs space-y-4',
   });
 
-  const chartHeader = createElement('div', { className: 'flex items-center justify-between pb-3.5 border-b border-gray-100 dark:border-gray-700 flex-wrap gap-2' });
+  const chartHeader = createElement('div', { className: 'flex items-center justify-between pb-3.5 border-b border-gray-100 flex-wrap gap-2' });
   const chartTitleGroup = createElement('div', { className: 'flex items-center gap-2.5' });
   const chartIcon = createElement('div', {
-    className: 'p-2.5 bg-[#ECE5F0] dark:bg-gray-700 text-[#012622] dark:text-teal-300 rounded-xl shrink-0 shadow-2xs',
+    className: 'p-2.5 bg-[#ECE5F0] text-[#012622] rounded-xl shrink-0 shadow-2xs',
     innerHTML: getDashboardIcon('chart', 'w-5 h-5'),
   });
 
@@ -172,7 +172,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   else if (orgType === 'general_school') chartTitleText = 'مقایسه آماری مقاطع سه‌گانه مجتمع آموزشی';
 
   const chartTitle = createElement('h3', {
-    className: 'text-xs sm:text-sm font-black text-gray-900 dark:text-gray-100 tracking-tight',
+    className: 'text-xs sm:text-sm font-black text-gray-900 tracking-tight',
     textContent: chartTitleText,
   });
 
@@ -180,7 +180,7 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   chartTitleGroup.appendChild(chartTitle);
 
   const chartBadge = createElement('span', {
-    className: 'px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-bold shrink-0',
+    className: 'px-2.5 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold shrink-0',
     textContent: 'به‌روزرسانی آنلاین',
   });
 
@@ -193,46 +193,37 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
 
   if (orgType === 'elementary_school') {
     itemsData = [
-      { label: 'پایه‌های اول و دوم (دوره اول ابتدایی)', percent: 96, sub: 'حضور آنلاین کامل - ۴۶ دانش‌آموز', color: 'bg-[#012622] dark:bg-teal-600' },
-      { label: 'پایه‌های سوم و چهارم', percent: 94, sub: '۴۷ دانش‌آموز در ۲ کلاس', color: 'bg-[#003B36] dark:bg-teal-700' },
+      { label: 'پایه‌های اول و دوم (دوره اول ابتدایی)', percent: 96, sub: 'حضور آنلاین کامل - ۴۶ دانش‌آموز', color: 'bg-[#012622]' },
+      { label: 'پایه‌های سوم و چهارم', percent: 94, sub: '۴۷ دانش‌آموز در ۲ کلاس', color: 'bg-[#003B36]' },
       { label: 'پایه‌های پنجم و ششم', percent: 98, sub: '۵۰ دانش‌آموز - برنامه‌های آمادگی آزمون', color: 'bg-[#E98A15]' },
     ];
   } else if (orgType === 'secondary_school') {
     itemsData = [
-      { label: 'پایه دهم (ریاضی و تجربی)', percent: 92, sub: '۲۸ دانش‌آموز - میانگین نمرات ۱۷.۸', color: 'bg-[#012622] dark:bg-teal-600' },
-      { label: 'پایه یازدهم (تجربی و انسانی)', percent: 95, sub: '۵۱ دانش‌آموز - درصد تکمیل امتحانات ۹۰٪', color: 'bg-[#003B36] dark:bg-teal-700' },
+      { label: 'پایه دهم (ریاضی و تجربی)', percent: 92, sub: '۲۸ دانش‌آموز - میانگین نمرات ۱۷.۸', color: 'bg-[#012622]' },
+      { label: 'پایه یازدهم (تجربی و انسانی)', percent: 95, sub: '۵۱ دانش‌آموز - درصد تکمیل امتحانات ۹۰٪', color: 'bg-[#003B36]' },
       { label: 'پایه دوازدهم (متقاضیان کنکور سراسری)', percent: 98, sub: '۲۹ دانش‌آموز - پایش مستمر و مشاوره', color: 'bg-[#E98A15]' },
     ];
   } else {
     itemsData = [
-      { label: 'مقطع دبستان و نوآموزان', percent: 97, sub: '۷۱ دانش‌آموز در ۳ کلاس فعال', color: 'bg-[#012622] dark:bg-teal-600' },
-      { label: 'مقطع متوسطه اول', percent: 94, sub: '۲۶ دانش‌آموز در دوره عمومی', color: 'bg-[#003B36] dark:bg-teal-700' },
+      { label: 'مقطع دبستان و نوآموزان', percent: 97, sub: '۷۱ دانش‌آموز در ۳ کلاس فعال', color: 'bg-[#012622]' },
+      { label: 'مقطع متوسطه اول', percent: 94, sub: '۲۶ دانش‌آموز در دوره عمومی', color: 'bg-[#003B36]' },
       { label: 'مقطع متوسطه دوم و کنکور', percent: 96, sub: '۲۴ دانش‌آموز رشته‌های نظری', color: 'bg-[#E98A15]' },
     ];
   }
 
   itemsData.forEach((item) => {
     const row = createElement('div', { className: 'space-y-1.5' });
-    const rowHeader = createElement('div', { className: 'flex justify-between text-xs font-bold text-gray-700 dark:text-gray-300' });
+    const rowHeader = createElement('div', { className: 'flex justify-between text-xs font-bold text-gray-700' });
     const labelSpan = createElement('span', { textContent: item.label });
     const valSpan = createElement('span', {
-      className: 'text-xs font-medium flex items-center gap-1.5',
+      className: 'font-mono text-[#012622] font-black',
+      textContent: `٪${item.percent} (${item.sub})`,
     });
-    const percSpan = createElement('span', {
-      className: 'text-[#012622] dark:text-teal-400 font-black',
-      textContent: `٪${item.percent.toLocaleString('fa-IR')}`,
-    });
-    const subSpan = createElement('span', {
-      className: 'text-gray-500 dark:text-gray-400 text-[11px]',
-      textContent: `(${item.sub})`,
-    });
-    valSpan.appendChild(percSpan);
-    valSpan.appendChild(subSpan);
 
     rowHeader.appendChild(labelSpan);
     rowHeader.appendChild(valSpan);
 
-    const track = createElement('div', { className: 'w-full bg-gray-100 dark:bg-gray-700 h-3.5 rounded-full overflow-hidden flex p-0.5 shadow-inner' });
+    const track = createElement('div', { className: 'w-full bg-gray-100 h-3.5 rounded-full overflow-hidden flex p-0.5 shadow-inner' });
     const fill = createElement('div', {
       className: `h-full rounded-full transition-all duration-700 ease-out ${item.color}`,
       attributes: { style: `width: ${item.percent}%` },
@@ -251,9 +242,9 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   // Quick Actions Section
   const actionsCard = createElement('div', { className: 'space-y-3.5' });
   const actionsHeader = createElement('h3', {
-    className: 'text-xs sm:text-sm font-black text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2',
+    className: 'text-xs sm:text-sm font-black text-gray-900 tracking-tight flex items-center gap-2',
   });
-  actionsHeader.innerHTML = `${getDashboardIcon('classes', 'w-4 h-4 text-[#012622] dark:text-teal-400')} میان‌برهای عملیاتی و دسترسی سریع`;
+  actionsHeader.innerHTML = `${getDashboardIcon('classes', 'w-4 h-4 text-[#012622]')} میان‌برهای عملیاتی و دسترسی سریع`;
 
   const actionsGrid = createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 gap-3.5' });
 
@@ -329,18 +320,18 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
 
   // Announcements List Box
   const ancBox = createElement('div', {
-    className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-2xs space-y-3.5',
+    className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-3.5',
   });
 
   const ancHeader = createElement('div', {
-    className: 'flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700',
+    className: 'flex items-center justify-between pb-3 border-b border-gray-100',
   });
 
   const ancTitleGroup = createElement('div', { className: 'flex items-center gap-2' });
-  ancTitleGroup.innerHTML = `${getDashboardIcon('announcement', 'w-4 h-4 text-[#E98A15]')} <span class="text-xs sm:text-sm font-black text-gray-900 dark:text-gray-100">آخرین اطلاعیه‌های مرکز</span>`;
+  ancTitleGroup.innerHTML = `${getDashboardIcon('announcement', 'w-4 h-4 text-[#E98A15]')} <span class="text-xs sm:text-sm font-black text-gray-900">آخرین اطلاعیه‌های مرکز</span>`;
 
   const ancBtn = createElement('a', {
-    className: 'text-[11px] font-bold text-[#012622] dark:text-teal-400 hover:underline cursor-pointer',
+    className: 'text-[11px] font-bold text-[#012622] hover:underline cursor-pointer',
     attributes: { href: `/app/${orgId}/announcements` },
     textContent: 'مشاهده همه',
   });
@@ -355,21 +346,21 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
   const ancBody = createElement('div', { className: 'space-y-2.5' });
 
   if (announcements.length === 0) {
-    ancBody.appendChild(createElement('div', { className: 'text-xs text-gray-500 dark:text-gray-400 py-2 text-center', textContent: 'اطلاعیه‌ای ثبت نشده است.' }));
+    ancBody.appendChild(createElement('div', { className: 'text-xs text-gray-500 py-2 text-center', textContent: 'اطلاعیه‌ای ثبت نشده است.' }));
   } else {
     announcements.slice(0, 3).forEach((anc) => {
-      const item = createElement('div', { className: 'p-3 rounded-xl bg-gray-50 dark:bg-gray-900/60 border border-gray-200/60 dark:border-gray-700 text-xs space-y-1' });
-      const itemHeader = createElement('div', { className: 'flex items-center justify-between font-bold text-gray-900 dark:text-gray-100' });
+      const item = createElement('div', { className: 'p-3 rounded-xl bg-gray-50 border border-gray-200/60 text-xs space-y-1' });
+      const itemHeader = createElement('div', { className: 'flex items-center justify-between font-bold text-gray-900' });
       const itemTitle = createElement('span', { textContent: anc.title });
       const badge = createElement('span', {
-        className: 'px-2 py-0.5 rounded text-[10px] bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200 font-extrabold',
+        className: 'px-2 py-0.5 rounded text-[10px] bg-amber-100 text-amber-900 font-extrabold',
         textContent: anc.priority === 'urgent' ? 'فوری' : 'مهم',
       });
       itemHeader.appendChild(itemTitle);
       itemHeader.appendChild(badge);
 
-      const itemContent = createElement('p', { className: 'text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed', textContent: anc.content });
-      const itemMeta = createElement('div', { className: 'text-[10px] text-gray-400 dark:text-gray-500 text-left', textContent: anc.createdAt });
+      const itemContent = createElement('p', { className: 'text-gray-600 line-clamp-2 leading-relaxed', textContent: anc.content });
+      const itemMeta = createElement('div', { className: 'text-[10px] text-gray-400 text-left', textContent: anc.createdAt });
 
       item.appendChild(itemHeader);
       item.appendChild(itemContent);
@@ -383,19 +374,19 @@ export function createAdminOverviewPage(membership: OrganizationMembership): HTM
 
   // Activity Feed Card
   const activityCard = createElement('div', {
-    className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-2xs space-y-4',
+    className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-4',
   });
 
   const activityHeader = createElement('div', {
-    className: 'flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700',
+    className: 'flex items-center justify-between pb-3 border-b border-gray-100',
   });
 
   const actTitleGroup = createElement('div', { className: 'flex items-center gap-2.5' });
   const actIcon = createElement('div', {
-    className: 'p-2 bg-[#ECE5F0] dark:bg-gray-700 text-[#012622] dark:text-teal-300 rounded-xl shrink-0',
+    className: 'p-2 bg-[#ECE5F0] text-[#012622] rounded-xl shrink-0',
     innerHTML: getDashboardIcon('bell', 'w-4 h-4'),
   });
-  const actTitle = createElement('h3', { className: 'text-xs sm:text-sm font-black text-gray-900 dark:text-gray-100 tracking-tight', textContent: 'فعالیت‌های اخیر سیستم' });
+  const actTitle = createElement('h3', { className: 'text-xs sm:text-sm font-black text-gray-900 tracking-tight', textContent: 'فعالیت‌های اخیر سیستم' });
 
   actTitleGroup.appendChild(actIcon);
   actTitleGroup.appendChild(actTitle);

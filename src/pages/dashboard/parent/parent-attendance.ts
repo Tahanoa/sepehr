@@ -19,15 +19,15 @@ export function createParentAttendancePage(membership: OrganizationMembership): 
   const render = () => {
     rootWrapper.innerHTML = '';
 
-    const headerRow = createElement('div', { className: 'pb-2 border-b border-border space-y-1' });
+    const headerRow = createElement('div', { className: 'pb-2 border-b border-gray-200 space-y-1' });
     headerRow.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-foreground flex items-center gap-2.5">
-        ${getDashboardIcon('attendance', 'w-6 h-6 text-primary')} گزارش حضور و غیاب فرزند
+      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('attendance', 'w-6 h-6 text-[#012622]')} گزارش حضور و غیاب فرزند
       </h2>
-      <p class="text-xs sm:text-sm text-muted-foreground">مشاهده ریز سوابق حضور، غیبت‌ها و تأخیرهای ورودی ثبت‌شده توسط معلم.</p>
+      <p class="text-xs sm:text-sm text-gray-600">مشاهده ریز سوابق حضور، غیبت‌ها و تأخیرهای ورودی ثبت‌شده توسط معلم.</p>
     `;
 
-    const tableCard = createElement('div', { className: 'bg-card text-card-foreground rounded-2xl border border-border p-5 shadow-2xs overflow-hidden' });
+    const tableCard = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs overflow-hidden' });
     const table = createElement('table', { className: 'polaris-table' });
     table.innerHTML = `
       <thead>
@@ -42,21 +42,21 @@ export function createParentAttendancePage(membership: OrganizationMembership): 
 
     const tbody = createElement('tbody');
     if (attendance.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted-foreground py-6">سابقه‌ای برای نمایش موجود نیست.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 py-6">سابقه‌ای برای نمایش موجود نیست.</td></tr>`;
     } else {
       attendance.forEach((att) => {
         const tr = createElement('tr');
         tr.innerHTML = `
-          <td class="font-mono text-xs font-bold text-foreground">${att.date}</td>
-          <td class="text-center text-xs text-muted-foreground">${child ? child.className : '-'}</td>
+          <td class="font-mono text-xs font-bold text-gray-900">${att.date}</td>
+          <td class="text-center text-xs text-gray-600">${child ? child.className : '-'}</td>
           <td class="text-center">
             <span class="px-2.5 py-1 rounded text-[10px] font-bold ${
-              att.status === 'present' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-rose-500/10 text-rose-600 dark:text-rose-400'
+              att.status === 'present' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
             }">
               ${att.status === 'present' ? 'حاضر' : att.status === 'absent' ? 'غایب' : 'تأخیر'}
             </span>
           </td>
-          <td class="text-xs text-muted-foreground">${att.notes || 'بدون توضیح'}</td>
+          <td class="text-xs text-gray-700">${att.notes || 'بدون توضیح'}</td>
         `;
         tbody.appendChild(tr);
       });

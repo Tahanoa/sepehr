@@ -11,9 +11,9 @@ export function createPlansOverviewPage(): HTMLElement {
 
   const header = createElement('div', { className: 'text-center space-y-4 max-w-3xl mx-auto' });
   header.innerHTML = `
-    <span class="px-3 py-1 rounded-full bg-brand-amber/10 text-brand-amber dark:text-amber-400 text-xs font-bold">بسته‌های سازمانی پولاریس</span>
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-brand-evergreen dark:text-teal-400">طرح‌های تخصصی پولاریس</h1>
-    <p class="text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed">
+    <span class="px-3 py-1 rounded-full bg-brand-amber/10 text-brand-amber text-xs font-bold">بسته‌های سازمانی پولاریس</span>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-brand-evergreen">طرح‌های تخصصی پولاریس</h1>
+    <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
       با توجه به تفاوت‌های بنیادین در فرایندهای آموزشی مدارس ابتدایی، متوسطه و آموزشگاه‌های تخصصی، پولاریس سه طرح کاملا اختصاصی ارائه می‌دهد.
     </p>
   `;
@@ -35,19 +35,19 @@ export function createPlanDetailPage(planId: string): HTMLElement {
 
   // Hero section for detail page
   const detailHero = createElement('div', {
-    className: 'bg-white dark:bg-gray-800 rounded-3xl p-8 sm:p-12 border border-gray-200 dark:border-gray-700 shadow-sm space-y-6',
+    className: 'bg-white rounded-3xl p-8 sm:p-12 border border-gray-200 shadow-sm space-y-6',
   });
   detailHero.innerHTML = `
     <div class="flex items-center gap-3">
-      <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-lavender dark:bg-gray-700 text-brand-evergreen dark:text-teal-300">
+      <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-lavender text-brand-evergreen">
         ${plan.badge}
       </span>
-      <a href="/plans" class="polaris-plan-back text-xs text-gray-500 dark:text-gray-400 hover:text-brand-evergreen dark:hover:text-teal-400 flex items-center gap-1">
+      <a href="/plans" class="polaris-plan-back text-xs text-gray-500 hover:text-brand-evergreen flex items-center gap-1">
         ← بازگشت به لیست همه طرح‌ها
       </a>
     </div>
-    <h1 class="text-2xl sm:text-4xl font-extrabold text-brand-evergreen dark:text-teal-400">${plan.title}</h1>
-    <p class="text-gray-600 dark:text-gray-300 text-base sm:text-lg leading-relaxed max-w-4xl">${plan.fullDescription}</p>
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-brand-evergreen">${plan.title}</h1>
+    <p class="text-gray-600 text-base sm:text-lg leading-relaxed max-w-4xl">${plan.fullDescription}</p>
   `;
 
   const ctaBtn = createElement('a', {
@@ -73,14 +73,14 @@ export function createPlanDetailPage(planId: string): HTMLElement {
 
   // Feature groups
   const featuresSec = createElement('div', { className: 'space-y-8' });
-  featuresSec.innerHTML = `<h2 class="text-2xl font-bold text-brand-evergreen dark:text-teal-400 border-r-4 border-brand-amber pr-3">قابلیت‌ها و زیرسیستم‌های تخصصی</h2>`;
+  featuresSec.innerHTML = `<h2 class="text-2xl font-bold text-brand-evergreen border-r-4 border-brand-amber pr-3">قابلیت‌ها و زیرسیستم‌های تخصصی</h2>`;
 
   const featGrid = createElement('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-6' });
   plan.featureGroups.forEach((fg) => {
-    const card = createElement('div', { className: 'bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4 shadow-sm' });
+    const card = createElement('div', { className: 'bg-white p-6 rounded-2xl border border-gray-200 space-y-4 shadow-sm' });
     card.innerHTML = `
-      <h3 class="text-base font-bold text-brand-evergreen dark:text-teal-300 pb-2 border-b border-gray-100 dark:border-gray-700">${fg.category}</h3>
-      <ul class="space-y-2.5 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+      <h3 class="text-base font-bold text-brand-evergreen pb-2 border-b border-gray-100">${fg.category}</h3>
+      <ul class="space-y-2.5 text-xs sm:text-sm text-gray-700">
         ${fg.items.map(item => `
           <li class="flex items-start gap-2">
             <span class="text-brand-amber font-bold">•</span>
@@ -97,7 +97,7 @@ export function createPlanDetailPage(planId: string): HTMLElement {
   // Detail FAQs
   if (plan.faqs && plan.faqs.length > 0) {
     const faqSec = createElement('div', { className: 'space-y-6' });
-    faqSec.innerHTML = `<h2 class="text-2xl font-bold text-brand-evergreen dark:text-teal-400 border-r-4 border-brand-amber pr-3">سوالات متداول این طرح</h2>`;
+    faqSec.innerHTML = `<h2 class="text-2xl font-bold text-brand-evergreen border-r-4 border-brand-amber pr-3">سوالات متداول این طرح</h2>`;
     faqSec.appendChild(createFaqAccordion(plan.faqs));
     container.appendChild(faqSec);
   }

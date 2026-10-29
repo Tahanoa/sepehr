@@ -6,7 +6,6 @@ import { OrganizationMembership } from '../../../types/auth';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
-import { formatGrade } from '../../../utils/formatters';
 
 export function createParentGradesPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
@@ -20,15 +19,15 @@ export function createParentGradesPage(membership: OrganizationMembership): HTML
   const render = () => {
     rootWrapper.innerHTML = '';
 
-    const headerRow = createElement('div', { className: 'pb-2 border-b border-border space-y-1' });
+    const headerRow = createElement('div', { className: 'pb-2 border-b border-gray-200 space-y-1' });
     headerRow.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-foreground flex items-center gap-2.5">
-        ${getDashboardIcon('award', 'w-6 h-6 text-primary')} کارنامه و ارزیابی تحصیلی فرزند
+      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
+        ${getDashboardIcon('award', 'w-6 h-6 text-[#012622]')} کارنامه و ارزیابی تحصیلی فرزند
       </h2>
-      <p class="text-xs sm:text-sm text-muted-foreground">مشاهده نمرات عددی و توصیفی آزمون‌های کلاسی و بازخورد معلم.</p>
+      <p class="text-xs sm:text-sm text-gray-600">مشاهده نمرات عددی و توصیفی آزمون‌های کلاسی و بازخورد معلم.</p>
     `;
 
-    const tableCard = createElement('div', { className: 'bg-card text-card-foreground rounded-2xl border border-border p-5 shadow-2xs overflow-hidden' });
+    const tableCard = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs overflow-hidden' });
     const table = createElement('table', { className: 'polaris-table' });
     table.innerHTML = `
       <thead>
@@ -49,14 +48,14 @@ export function createParentGradesPage(membership: OrganizationMembership): HTML
       const tr = createElement('tr');
       tr.innerHTML = `
         <td>
-          <div class="font-bold text-xs text-foreground">${ex.title}</div>
-          <div class="text-[11px] text-muted-foreground">${ex.subjectName}</div>
+          <div class="font-bold text-xs text-gray-900">${ex.title}</div>
+          <div class="text-[11px] text-gray-500">${ex.subjectName}</div>
         </td>
-        <td class="text-center text-xs text-muted-foreground">${ex.evalType === 'descriptive' ? 'توصیفی' : 'عددی'}</td>
-        <td class="text-center font-bold text-xs font-mono text-primary">
-          ${myGrade ? (myGrade.score !== undefined ? `${formatGrade(myGrade.score)} از ۲۰` : myGrade.descriptiveScore || 'خیلی خوب') : '۱۹ از ۲۰'}
+        <td class="text-center text-xs text-gray-600">${ex.evalType === 'descriptive' ? 'توصیفی' : 'عددی'}</td>
+        <td class="text-center font-bold text-xs font-mono text-[#012622]">
+          ${myGrade ? (myGrade.score !== undefined ? `${myGrade.score} از ۲۰` : myGrade.descriptiveScore || 'خیلی خوب') : '۱۹ از ۲۰'}
         </td>
-        <td class="text-xs text-muted-foreground">${myGrade?.feedback || 'عملکرد عالی در کارهای گروهی و آزمون.'}</td>
+        <td class="text-xs text-gray-700">${myGrade?.feedback || 'عملکرد عالی در کارهای گروهی و آزمون.'}</td>
       `;
       tbody.appendChild(tr);
     });

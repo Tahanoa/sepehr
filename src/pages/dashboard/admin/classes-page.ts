@@ -1,7 +1,7 @@
 /**
  * POLARIS CLASS & GRADE MANAGEMENT PAGE
  * Grade and class listings, student counts per class, homeroom teacher assignments,
- * capacity checks, add/edit class forms, assign student modal, and duplicate ID validation with dark mode support.
+ * capacity checks, add/edit class forms, assign student modal, and duplicate ID validation.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
@@ -24,17 +24,17 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
     // Header Row
     const headerRow = createElement('div', {
-      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80 dark:border-gray-700/80',
+      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80',
     });
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('classes', 'w-6 h-6 text-[#012622] dark:text-teal-400')} کلاس‌ها و ساختار آموزشی`;
+    title.innerHTML = `${getDashboardIcon('classes', 'w-6 h-6 text-[#012622]')} کلاس‌ها و ساختار آموزشی`;
 
     const desc = createElement('p', {
-      className: 'text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-normal',
+      className: 'text-xs sm:text-sm text-gray-600 font-normal',
       textContent: `مدیریت ${classes.length.toLocaleString('fa-IR')} کلاس فعال، تخصیص معلمان راهنما، ظرفیت اتاق‌ها و تخصیص گروهی دانش‌آموزان.`,
     });
 
@@ -43,7 +43,7 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
     const addBtn = createElement('button', {
       className:
-        'px-4 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ایجاد کلاس جدید`,
     });
     addBtn.addEventListener('click', () => openAddClassModal());
@@ -58,7 +58,7 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
     if (classes.length === 0) {
       const emptyState = createElement('div', {
-        className: 'col-span-full bg-white dark:bg-gray-800 rounded-2xl p-8 text-center border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs space-y-2',
+        className: 'col-span-full bg-white rounded-2xl p-8 text-center border border-gray-200 text-gray-500 text-xs space-y-2',
       });
       emptyState.innerHTML = `<div>هنوز هیچ کلاسی برای این مرکز ایجاد نشده است.</div>`;
       grid.appendChild(emptyState);
@@ -66,7 +66,7 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
       classes.forEach((cls) => {
         const classCard = createElement('div', {
           className:
-            'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-2xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between',
+            'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between',
         });
 
         const classStudents = students.filter((s) => s.classId === cls.id && s.status === 'active');
@@ -74,35 +74,35 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
         classCard.innerHTML = `
           <div class="space-y-3">
-            <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-2.5">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
               <div class="flex items-center gap-2">
-                <span class="p-2 rounded-xl bg-[#ECE5F0] dark:bg-gray-700 text-[#012622] dark:text-teal-300 font-black text-xs">${cls.code}</span>
+                <span class="p-2 rounded-xl bg-[#ECE5F0] text-[#012622] font-black text-xs">${cls.code}</span>
                 <div>
-                  <h3 class="font-extrabold text-sm text-gray-900 dark:text-gray-100">${cls.name}</h3>
-                  <div class="text-[11px] text-gray-500 dark:text-gray-400">${cls.gradeLevel}</div>
+                  <h3 class="font-extrabold text-sm text-gray-900">${cls.name}</h3>
+                  <div class="text-[11px] text-gray-500">${cls.gradeLevel}</div>
                 </div>
               </div>
-              <span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-[11px] font-bold">اتاق ${cls.roomNumber}</span>
+              <span class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg text-[11px] font-bold">اتاق ${cls.roomNumber}</span>
             </div>
 
-            <div class="space-y-1.5 text-xs text-gray-700 dark:text-gray-300">
+            <div class="space-y-1.5 text-xs text-gray-700">
               <div class="flex items-center justify-between">
-                <span class="text-gray-500 dark:text-gray-400">معلم راهنما:</span>
-                <span class="font-bold text-gray-900 dark:text-gray-100">${cls.homeroomTeacherName || 'تعیین نشده'}</span>
+                <span class="text-gray-500">معلم راهنما:</span>
+                <span class="font-bold text-gray-900">${cls.homeroomTeacherName || 'تعیین نشده'}</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-gray-500 dark:text-gray-400">تعداد دانش‌آموزان:</span>
-                <span class="font-bold text-[#012622] dark:text-teal-300 font-mono">${classStudents.length} از ${cls.capacity} نفر</span>
+                <span class="text-gray-500">تعداد دانش‌آموزان:</span>
+                <span class="font-bold text-[#012622] font-mono">${classStudents.length} از ${cls.capacity} نفر</span>
               </div>
             </div>
 
             <div class="space-y-1">
-              <div class="flex justify-between text-[10px] text-gray-500 dark:text-gray-400 font-semibold">
+              <div class="flex justify-between text-[10px] text-gray-500 font-semibold">
                 <span>تکمیل ظرفیت</span>
                 <span class="font-mono">٪${fillPercent}</span>
               </div>
-              <div class="w-full bg-gray-100 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
-                <div class="h-full ${fillPercent >= 100 ? 'bg-rose-500' : 'bg-[#012622] dark:bg-teal-500'} transition-all duration-500" style="width: ${fillPercent}%"></div>
+              <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                <div class="h-full ${fillPercent >= 100 ? 'bg-rose-500' : 'bg-[#012622]'} transition-all duration-500" style="width: ${fillPercent}%"></div>
               </div>
             </div>
           </div>
@@ -110,18 +110,18 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
         // Card Actions
         const actionsRow = createElement('div', {
-          className: 'pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between gap-2 text-xs',
+          className: 'pt-3 border-t border-gray-100 flex items-center justify-between gap-2 text-xs',
         });
 
         const assignBtn = createElement('button', {
           className:
-            'px-3 py-1.5 bg-[#ECE5F0] dark:bg-gray-700 hover:bg-[#DDD6E3] dark:hover:bg-gray-600 text-[#012622] dark:text-teal-300 font-bold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer',
+            'px-3 py-1.5 bg-[#ECE5F0] hover:bg-[#DDD6E3] text-[#012622] font-bold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer',
           innerHTML: `${getDashboardIcon('users', 'w-3.5 h-3.5')} تخصیص دانش‌آموز`,
         });
         assignBtn.addEventListener('click', () => openAssignStudentsModal(cls));
 
         const editBtn = createElement('button', {
-          className: 'px-2.5 py-1.5 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-bold transition-colors cursor-pointer',
+          className: 'px-2.5 py-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg font-bold transition-colors cursor-pointer',
           textContent: 'ویرایش',
         });
         editBtn.addEventListener('click', () => openEditClassModal(cls));
@@ -140,28 +140,28 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
   const openAddClassModal = () => {
     const staff = schoolStore.getStaff(orgId);
-    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800 dark:text-gray-200' });
+    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
 
     form.innerHTML = `
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">کد شناسه کلاس *</label>
-          <input type="text" id="cls-code" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" placeholder="مثال: CLS-102" />
+          <input type="text" id="cls-code" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" placeholder="مثال: CLS-102" />
         </div>
         <div>
           <label class="block font-bold mb-1">نام/عنوان کلاس *</label>
-          <input type="text" id="cls-name" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" placeholder="مثال: ۱۰/۲ تجربی" />
+          <input type="text" id="cls-name" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" placeholder="مثال: ۱۰/۲ تجربی" />
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">پایه تحصیلی *</label>
-          <input type="text" id="cls-grade" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" placeholder="مثال: پایه دهم" />
+          <input type="text" id="cls-grade" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" placeholder="مثال: پایه دهم" />
         </div>
         <div>
           <label class="block font-bold mb-1">معلم/دبیر راهنما</label>
-          <select id="cls-[#teacher]" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100">
+          <select id="cls-[#teacher]" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
             <option value="">انتخاب نشده</option>
             ${staff.map((st) => `<option value="${st.id}">${st.fullName} (${st.roleTitle})</option>`).join('')}
           </select>
@@ -171,11 +171,11 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">حداکثر ظرفیت کلاس *</label>
-          <input type="number" id="cls-capacity" value="30" min="5" max="50" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" />
+          <input type="number" id="cls-capacity" value="30" min="5" max="50" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
         </div>
         <div>
           <label class="block font-bold mb-1">شماره اتاق/کلاس *</label>
-          <input type="text" id="cls-room" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" placeholder="مثال: ۲۰۴" />
+          <input type="text" id="cls-room" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" placeholder="مثال: ۲۰۴" />
         </div>
       </div>
     `;
@@ -229,24 +229,24 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
   const openEditClassModal = (cls: SchoolClass) => {
     const staff = schoolStore.getStaff(orgId);
-    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800 dark:text-gray-200' });
+    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
 
     form.innerHTML = `
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">نام/عنوان کلاس *</label>
-          <input type="text" id="edit-cls-name" value="${cls.name}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" />
+          <input type="text" id="edit-cls-name" value="${cls.name}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" />
         </div>
         <div>
           <label class="block font-bold mb-1">پایه تحصیلی *</label>
-          <input type="text" id="edit-cls-grade" value="${cls.gradeLevel}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" />
+          <input type="text" id="edit-cls-grade" value="${cls.gradeLevel}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" />
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">معلم/دبیر راهنما</label>
-          <select id="edit-cls-teacher" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100">
+          <select id="edit-cls-teacher" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
             <option value="">تعیین نشده</option>
             ${staff
               .map(
@@ -258,7 +258,7 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
         </div>
         <div>
           <label class="block font-bold mb-1">شماره اتاق</label>
-          <input type="text" id="edit-cls-room" value="${cls.roomNumber}" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" />
+          <input type="text" id="edit-cls-room" value="${cls.roomNumber}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
         </div>
       </div>
     `;
@@ -294,18 +294,18 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
   const openAssignStudentsModal = (cls: SchoolClass) => {
     const students = schoolStore.getStudents(orgId);
-    const container = createElement('div', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800 dark:text-gray-200' });
+    const container = createElement('div', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
 
     const currentRoster = students.filter((s) => s.classId === cls.id);
     const unassignedOrOther = students.filter((s) => s.classId !== cls.id);
 
     container.innerHTML = `
-      <div class="bg-gray-50 dark:bg-gray-900/60 p-3 rounded-xl border border-gray-200 dark:border-gray-700">
+      <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
         <strong>لیست دانش‌آموزان فعلی کلاس (${cls.name}):</strong> ${currentRoster.length} نفر
       </div>
       <div class="space-y-2">
         <label class="block font-bold">انتخاب دانش‌آموز جهت انتقال به این کلاس:</label>
-        <select id="assign-student-select" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100">
+        <select id="assign-student-select" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
           ${unassignedOrOther
             .map((s) => `<option value="${s.id}">${s.fullName} - فعلی: ${s.className} (${s.studentCode})</option>`)
             .join('')}

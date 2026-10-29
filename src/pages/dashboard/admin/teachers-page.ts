@@ -1,7 +1,7 @@
 /**
  * POLARIS TEACHER & STAFF MANAGEMENT PAGE
  * Directory of teachers and staff, search, role filters, teaching assignments,
- * workload summary, active status toggle, add and edit staff forms with dark mode support.
+ * workload summary, active status toggle, add and edit staff forms.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
@@ -39,17 +39,17 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
     // Header Row
     const headerRow = createElement('div', {
-      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80 dark:border-gray-700/80',
+      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80',
     });
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('teacher', 'w-6 h-6 text-[#012622] dark:text-teal-400')} مدیریت معلمان و همکاران آموزشی`;
+    title.innerHTML = `${getDashboardIcon('teacher', 'w-6 h-6 text-[#012622]')} مدیریت معلمان و همکاران آموزشی`;
 
     const desc = createElement('p', {
-      className: 'text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-normal',
+      className: 'text-xs sm:text-sm text-gray-600 font-normal',
       textContent: `مشاهده و مدیریت ${staffList.length.toLocaleString('fa-IR')} همکار کادر آموزشی و اجرایی، ساعات تدریس و کلاس‌های انتسابی.`,
     });
 
@@ -60,7 +60,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
     const importBtn = createElement('button', {
       className:
-        'px-3.5 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-bold rounded-xl border border-gray-300 dark:border-gray-600 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
       innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود گروهی Excel`,
     });
     importBtn.addEventListener('click', () => {
@@ -80,7 +80,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
     const addBtn = createElement('button', {
       className:
-        'px-4 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> افزودن همکار جدید`,
     });
     addBtn.addEventListener('click', () => openAddStaffModal());
@@ -93,13 +93,13 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
     // Filter Toolbar
     const toolbar = createElement('div', {
-      className: 'bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs grid grid-cols-1 sm:grid-cols-2 gap-3',
+      className: 'bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs grid grid-cols-1 sm:grid-cols-2 gap-3',
     });
 
     const searchWrapper = createElement('div', { className: 'relative' });
     const searchInput = createElement('input', {
       className:
-        'w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'w-full bg-gray-50 border border-gray-300 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
       attributes: { type: 'text', placeholder: 'جستجو با نام، عنوان سمت یا شماره تماس...', value: searchQuery },
     });
     searchInput.addEventListener('input', (e) => {
@@ -108,7 +108,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
     });
 
     const searchIcon = createElement('div', {
-      className: 'absolute start-3 top-2.5 text-gray-400 dark:text-gray-500 pointer-events-none',
+      className: 'absolute start-3 top-2.5 text-gray-400 pointer-events-none',
       innerHTML: getDashboardIcon('search', 'w-4 h-4'),
     });
     searchWrapper.appendChild(searchIcon);
@@ -116,7 +116,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
     const roleSelect = createElement('select', {
       className:
-        'bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
     });
     roleSelect.innerHTML = `
       <option value="all" ${selectedRole === 'all' ? 'selected' : ''}>همه نقش‌های شغلی</option>
@@ -138,7 +138,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
     if (filtered.length === 0) {
       const emptyState = createElement('div', {
-        className: 'col-span-full bg-white dark:bg-gray-800 rounded-2xl p-8 text-center border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs',
+        className: 'col-span-full bg-white rounded-2xl p-8 text-center border border-gray-200 text-gray-500 text-xs',
         textContent: 'هیچ همکاری با فیلترهای انتخابی یافت نشد.',
       });
       grid.appendChild(emptyState);
@@ -146,34 +146,34 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
       filtered.forEach((st) => {
         const card = createElement('div', {
           className:
-            'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-2xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between',
+            'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between',
         });
 
         card.innerHTML = `
           <div class="space-y-3">
-            <div class="flex items-center gap-3 border-b border-gray-100 dark:border-gray-700 pb-3">
-              <div class="w-10 h-10 rounded-full bg-[#012622] dark:bg-teal-700 text-white font-bold flex items-center justify-center text-sm shrink-0">
+            <div class="flex items-center gap-3 border-b border-gray-100 pb-3">
+              <div class="w-10 h-10 rounded-full bg-[#012622] text-white font-bold flex items-center justify-center text-sm shrink-0">
                 ${st.fullName.slice(0, 1)}
               </div>
               <div class="min-w-0">
-                <h3 class="font-extrabold text-sm text-gray-900 dark:text-gray-100 truncate">${st.fullName}</h3>
-                <div class="text-[11px] text-gray-500 dark:text-gray-400 font-medium">${st.roleTitle}</div>
+                <h3 class="font-extrabold text-sm text-gray-900 truncate">${st.fullName}</h3>
+                <div class="text-[11px] text-gray-500 font-medium">${st.roleTitle}</div>
               </div>
             </div>
 
-            <div class="space-y-1.5 text-xs text-gray-700 dark:text-gray-300">
+            <div class="space-y-1.5 text-xs text-gray-700">
               <div class="flex items-center justify-between">
-                <span class="text-gray-500 dark:text-gray-400">ساعات موظفی هفتگی:</span>
-                <span class="font-bold text-[#012622] dark:text-teal-300 font-mono">${st.weeklyHours} ساعت</span>
+                <span class="text-gray-500">ساعات موظفی هفتگی:</span>
+                <span class="font-bold text-[#012622] font-mono">${st.weeklyHours} ساعت</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-gray-500 dark:text-gray-400">شماره تماس:</span>
-                <span class="font-mono text-gray-800 dark:text-gray-200">${st.phone}</span>
+                <span class="text-gray-500">شماره تماس:</span>
+                <span class="font-mono text-gray-800">${st.phone}</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-gray-500 dark:text-gray-400">وضعیت فعلی:</span>
+                <span class="text-gray-500">وضعیت فعلی:</span>
                 <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
-                  st.status === 'active' ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  st.status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-200 text-gray-700'
                 }">
                   ${st.status === 'active' ? 'مشغول به کار' : 'مرخصی/غیرفعال'}
                 </span>
@@ -182,7 +182,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
             ${
               st.assignedClasses.length > 0
-                ? `<div class="bg-gray-50 dark:bg-gray-900/60 p-2.5 rounded-xl text-[11px] text-gray-600 dark:text-gray-400">
+                ? `<div class="bg-gray-50 p-2.5 rounded-xl text-[11px] text-gray-600">
                     <strong>کلاس‌های انتسابی:</strong> ${st.assignedClasses.join('، ')}
                    </div>`
                 : ''
@@ -191,11 +191,11 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
         `;
 
         const actionsRow = createElement('div', {
-          className: 'pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between text-xs',
+          className: 'pt-3 border-t border-gray-100 flex items-center justify-between text-xs',
         });
 
         const toggleBtn = createElement('button', {
-          className: 'px-2.5 py-1 text-xs font-bold rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 cursor-pointer',
+          className: 'px-2.5 py-1 text-xs font-bold rounded-lg border border-gray-300 hover:bg-gray-100 cursor-pointer',
           textContent: st.status === 'active' ? 'تغییر به غیرفعال' : 'فعال‌سازی',
         });
         toggleBtn.addEventListener('click', () => {
@@ -206,7 +206,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
         });
 
         const editBtn = createElement('button', {
-          className: 'px-3 py-1.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white font-bold rounded-lg cursor-pointer',
+          className: 'px-3 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-lg cursor-pointer',
           textContent: 'ویرایش همکار',
         });
         editBtn.addEventListener('click', () => openEditStaffModal(st, classes.map((c) => c.name)));
@@ -226,17 +226,17 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
 
   const openAddStaffModal = () => {
     const classes = schoolStore.getClasses(orgId);
-    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800 dark:text-gray-200' });
+    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
 
     form.innerHTML = `
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">نام و نام خانوادگی *</label>
-          <input type="text" id="stf-fullName" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" placeholder="مثال: مریم حسینی" />
+          <input type="text" id="stf-fullName" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" placeholder="مثال: مریم حسینی" />
         </div>
         <div>
           <label class="block font-bold mb-1">نقش شغلی *</label>
-          <select id="stf-role" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100">
+          <select id="stf-role" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
             <option value="teacher">دبیر / معلم</option>
             <option value="counselor">مشاور تحصیلی</option>
             <option value="vice_principal">معاون آموزشی/انضباطی</option>
@@ -248,22 +248,22 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">عنوان تخصصی/سمت *</label>
-          <input type="text" id="stf-roleTitle" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" placeholder="مثال: دبیر حسابان و هندسه" />
+          <input type="text" id="stf-roleTitle" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" placeholder="مثال: دبیر حسابان و هندسه" />
         </div>
         <div>
           <label class="block font-bold mb-1">شماره تماس *</label>
-          <input type="text" id="stf-phone" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" placeholder="۰۹۱۲..." />
+          <input type="text" id="stf-phone" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" placeholder="۰۹۱۲..." />
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">پست الکترونیکی</label>
-          <input type="email" id="stf-email" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" placeholder="email@polaris-edu.ir" />
+          <input type="email" id="stf-email" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" placeholder="email@polaris-edu.ir" />
         </div>
         <div>
           <label class="block font-bold mb-1">ساعات تدریس هفتگی</label>
-          <input type="number" id="stf-weeklyHours" value="20" min="2" max="44" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" />
+          <input type="number" id="stf-weeklyHours" value="20" min="2" max="44" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
         </div>
       </div>
     `;
@@ -311,28 +311,28 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
   };
 
   const openEditStaffModal = (st: StaffMember, _classNames: string[]) => {
-    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800 dark:text-gray-200' });
+    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
 
     form.innerHTML = `
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">نام و نام خانوادگی *</label>
-          <input type="text" id="edit-stf-fullName" value="${st.fullName}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" />
+          <input type="text" id="edit-stf-fullName" value="${st.fullName}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" />
         </div>
         <div>
           <label class="block font-bold mb-1">عنوان سمت *</label>
-          <input type="text" id="edit-stf-roleTitle" value="${st.roleTitle}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" />
+          <input type="text" id="edit-stf-roleTitle" value="${st.roleTitle}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" />
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">شماره تماس *</label>
-          <input type="text" id="edit-stf-phone" value="${st.phone}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" />
+          <input type="text" id="edit-stf-phone" value="${st.phone}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
         </div>
         <div>
           <label class="block font-bold mb-1">ساعات موظفی هفتگی</label>
-          <input type="number" id="edit-stf-weeklyHours" value="${st.weeklyHours}" min="2" max="44" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs font-mono text-gray-900 dark:text-gray-100" />
+          <input type="number" id="edit-stf-weeklyHours" value="${st.weeklyHours}" min="2" max="44" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-mono" />
         </div>
       </div>
     `;

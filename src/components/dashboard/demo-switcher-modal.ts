@@ -1,6 +1,6 @@
 /**
  * POLARIS DEV-ONLY DEMO SWITCHER MODAL
- * Grouped selector for all 14 role-and-plan combinations across Elementary, Secondary, and Institute plans with dark mode support.
+ * Grouped selector for all 14 role-and-plan combinations across Elementary, Secondary, and Institute plans.
  */
 
 import { createElement } from '../../utils/dom';
@@ -20,21 +20,21 @@ const DEMO_GROUPS: DemoGroup[] = [
   {
     planTitle: 'طرح A — دبستان و پیش‌دبستانی',
     planSubtitle: 'پوشش پایه‌های اول تا ششم با رویکرد توصیفی و تعاملی',
-    badgeBg: 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300',
+    badgeBg: 'bg-emerald-100 text-emerald-800',
     badgeText: 'پایه‌های ۱ تا ۶',
     userIds: ['usr-elem-admin', 'usr-elem-teacher', 'usr-elem-student', 'usr-elem-parent'],
   },
   {
     planTitle: 'طرح B — دبیرستان دوره اول و دوم',
     planSubtitle: 'پوشش پایه‌های هفتم تا دوازدهم، ارزیابی عددی و خدمات مشاوره',
-    badgeBg: 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300',
+    badgeBg: 'bg-blue-100 text-blue-800',
     badgeText: 'پایه‌های ۷ تا ۱۲',
     userIds: ['usr-sec-admin', 'usr-sec-teacher', 'usr-sec-student', 'usr-sec-parent', 'usr-sec-counselor'],
   },
   {
     planTitle: 'طرح C — آموزشگاه‌های آزاد و مهارتی',
     planSubtitle: 'مؤسسات زبان، آکادمی‌های تخصصی، امور شهریه و ثبت‌نام متقاضیان',
-    badgeBg: 'bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200',
+    badgeBg: 'bg-amber-100 text-amber-900',
     badgeText: 'آموزشگاه‌های آزاد',
     userIds: ['usr-inst-admin', 'usr-inst-instructor', 'usr-inst-student', 'usr-inst-parent', 'usr-inst-applicant'],
   },
@@ -65,13 +65,13 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
 
   const dialog = createElement('div', {
     className:
-      'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]',
+      'bg-white rounded-2xl border border-gray-200 shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]',
     attributes: { role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'demo-switcher-title' },
   });
 
   // Modal Header
   const header = createElement('div', {
-    className: 'bg-[#012622] dark:bg-[#071513] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
+    className: 'bg-[#012622] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
   });
 
   const headerTitleGroup = createElement('div', { className: 'flex items-center gap-3' });
@@ -109,9 +109,9 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
 
   // Notice Banner
   const banner = createElement('div', {
-    className: 'bg-amber-50 dark:bg-amber-950/40 border-b border-amber-200 dark:border-amber-900/60 px-5 py-2.5 text-xs text-amber-900 dark:text-amber-200 flex items-center gap-2 shrink-0',
+    className: 'bg-amber-50 border-b border-amber-200 px-5 py-2.5 text-xs text-amber-900 flex items-center gap-2 shrink-0',
   });
-  banner.innerHTML = `${getDashboardIcon('info', 'w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0')}
+  banner.innerHTML = `${getDashboardIcon('info', 'w-4 h-4 text-amber-700 shrink-0')}
     <span><strong>محیط آزمایشی دمو:</strong> کلیه داده‌ها محلی و تمام ۱۴ ترکیب نقش و طرح قابل بررسی مستقیم می‌باشند.</span>`;
 
   // Body: Grouped List
@@ -125,16 +125,16 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
 
     // Group Title Bar
     const groupHeader = createElement('div', {
-      className: 'flex items-center justify-between pb-2 border-b border-gray-200 dark:border-gray-700',
+      className: 'flex items-center justify-between pb-2 border-b border-gray-200',
     });
 
     const titleBox = createElement('div');
     const groupH4 = createElement('h4', {
-      className: 'text-sm font-bold text-[#012622] dark:text-teal-400',
+      className: 'text-sm font-bold text-[#012622]',
       textContent: group.planTitle,
     });
     const groupDesc = createElement('p', {
-      className: 'text-[11px] text-gray-500 dark:text-gray-400',
+      className: 'text-[11px] text-gray-500',
       textContent: group.planSubtitle,
     });
     titleBox.appendChild(groupH4);
@@ -161,8 +161,8 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
       const card = createElement('button', {
         className: `w-full border rounded-xl p-3 flex items-center justify-between gap-3 text-right transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#E98A15] ${
           isCurrent
-            ? 'bg-[#ECE5F0] dark:bg-teal-950/60 border-[#012622] dark:border-teal-500 ring-2 ring-[#012622]/20 dark:ring-teal-500/20 shadow-sm'
-            : 'bg-white dark:bg-gray-800/80 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-750'
+            ? 'bg-[#ECE5F0] border-[#012622] ring-2 ring-[#012622]/20 shadow-sm'
+            : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
         }`,
       });
 
@@ -170,7 +170,7 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
 
       // Avatar
       const avatar = createElement('div', {
-        className: 'w-9 h-9 rounded-full bg-[#012622] dark:bg-teal-700 text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden',
+        className: 'w-9 h-9 rounded-full bg-[#012622] text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden',
       });
 
       if (u.avatarUrl) {
@@ -183,12 +183,12 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
       // Details
       const details = createElement('div', { className: 'min-w-0' });
       const nameRow = createElement('div', { className: 'flex items-center gap-1.5' });
-      const userName = createElement('span', { className: 'font-bold text-gray-900 dark:text-gray-100 text-xs truncate', textContent: u.name });
+      const userName = createElement('span', { className: 'font-bold text-gray-900 text-xs truncate', textContent: u.name });
 
       nameRow.appendChild(userName);
 
       const roleTitle = createElement('div', {
-        className: 'text-[11px] text-[#003B36] dark:text-teal-300 font-semibold truncate',
+        className: 'text-[11px] text-[#003B36] font-semibold truncate',
         textContent: primaryMem.title || primaryMem.role,
       });
 
@@ -202,14 +202,14 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
 
       if (isCurrent) {
         const activeTag = createElement('span', {
-          className: 'px-2 py-0.5 bg-[#012622] dark:bg-teal-600 text-white rounded text-[10px] font-bold inline-flex items-center gap-1',
+          className: 'px-2 py-0.5 bg-[#012622] text-white rounded text-[10px] font-bold inline-flex items-center gap-1',
           textContent: 'نقش فعال',
         });
         actionBox.appendChild(activeTag);
       } else {
         const selectBtn = createElement('span', {
           className:
-            'px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs font-bold rounded transition-colors',
+            'px-2.5 py-1 bg-gray-100 group-hover:bg-[#012622] text-gray-700 text-xs font-bold rounded transition-colors',
           textContent: 'ورود',
         });
         actionBox.appendChild(selectBtn);
@@ -241,11 +241,11 @@ export function createDemoSwitcherModal(onClose: () => void): HTMLElement {
 
   // Footer
   const footer = createElement('div', {
-    className: 'bg-gray-50 dark:bg-gray-900/60 border-t border-gray-200 dark:border-gray-700 p-4 flex justify-end shrink-0',
+    className: 'bg-gray-50 border-t border-gray-200 p-4 flex justify-end shrink-0',
   });
 
   const cancelBtn = createElement('button', {
-    className: 'px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs font-semibold rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+    className: 'px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
     textContent: 'انصراف',
   });
   cancelBtn.addEventListener('click', handleClose);

@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ['class', '[data-theme="dark"]'],
   content: [
     './index.html',
     './src/**/*.{ts,js,html}',
@@ -17,25 +16,25 @@ export default {
         },
         polaris: {
           primary: {
-            DEFAULT: 'var(--color-primary)',
-            hover: 'var(--color-primary-hover)',
-            light: 'var(--color-primary-light)',
+            DEFAULT: '#012622',
+            hover: '#003B36',
+            light: 'rgba(1, 38, 34, 0.08)',
           },
           secondary: {
-            DEFAULT: 'var(--color-secondary)',
-            hover: 'var(--color-secondary-hover)',
-            light: 'var(--color-secondary-light)',
+            DEFAULT: '#59114D',
+            hover: '#480d3e',
+            light: 'rgba(89, 17, 77, 0.08)',
           },
           accent: {
-            DEFAULT: 'var(--color-accent)',
-            hover: 'var(--color-accent-hover)',
-            light: 'var(--color-accent-light)',
+            DEFAULT: '#E98A15',
+            hover: '#d2790d',
+            light: 'rgba(233, 138, 21, 0.12)',
           },
-          bg: 'var(--color-background)',
-          surface: 'var(--color-surface)',
-          subtle: 'var(--color-surface-subtle)',
-          muted: 'var(--color-muted)',
-          border: 'var(--color-border)',
+          bg: '#F8F7FA',
+          surface: '#FFFFFF',
+          subtle: '#F3EEF6',
+          muted: '#728280',
+          border: '#D8E0DF',
         },
       },
       fontFamily: {

@@ -65,7 +65,7 @@ export function createSkeletonAvatar(size: 'sm' | 'md' | 'lg' = 'md'): HTMLEleme
 /** Single KPI Summary Card Skeleton */
 export function createSkeletonCard(): HTMLElement {
   const card = createElement('div', {
-    className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-xs space-y-4 dir-rtl h-full',
+    className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs space-y-4 dir-rtl h-full',
   });
 
   // Top row: Title + Icon
@@ -79,7 +79,7 @@ export function createSkeletonCard(): HTMLElement {
   const metricSk = createSkeleton({ width: '45%', height: '2.25rem', borderRadius: '0.5rem' });
 
   // Bottom row: Trend badge + Period
-  const bottomRow = createElement('div', { className: 'flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700' });
+  const bottomRow = createElement('div', { className: 'flex items-center justify-between pt-3 border-t border-gray-100' });
   const badgeSk = createSkeleton({ width: '30%', height: '1.25rem', borderRadius: '9999px' });
   const periodSk = createSkeleton({ width: '35%', height: '0.875rem', borderRadius: '0.375rem' });
   bottomRow.appendChild(badgeSk);
@@ -95,10 +95,10 @@ export function createSkeletonCard(): HTMLElement {
 /** Attendance / Performance Chart Skeleton */
 export function createSkeletonChart(): HTMLElement {
   const card = createElement('div', {
-    className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-xs space-y-5 dir-rtl',
+    className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs space-y-5 dir-rtl',
   });
 
-  const header = createElement('div', { className: 'flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700' });
+  const header = createElement('div', { className: 'flex items-center justify-between pb-3 border-b border-gray-100' });
   const titleGroup = createElement('div', { className: 'flex items-center gap-3 w-2/3' });
   const iconSk = createSkeleton({ width: '2.25rem', height: '2.25rem', borderRadius: '0.5rem' });
   const titleSk = createSkeletonText(1, { height: '1rem' });
@@ -173,7 +173,7 @@ export function createDashboardSkeleton(): HTMLElement {
 
   // Welcome Header Banner Skeleton
   const headerBanner = createElement('div', {
-    className: 'bg-white dark:bg-gray-800 border border-gray-200/80 dark:border-gray-700/80 rounded-2xl p-6 shadow-xs space-y-3',
+    className: 'bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs space-y-3',
   });
   headerBanner.appendChild(createSkeleton({ width: '120px', height: '1.25rem', borderRadius: '9999px' }));
   headerBanner.appendChild(createSkeleton({ width: '45%', height: '1.75rem', borderRadius: '0.5rem' }));
@@ -197,7 +197,7 @@ export function createDashboardSkeleton(): HTMLElement {
   const quickActionGrid = createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 gap-3.5' });
   for (let i = 0; i < 4; i++) {
     const actCard = createElement('div', {
-      className: 'bg-white dark:bg-gray-800 rounded-xl border border-gray-200/80 dark:border-gray-700/80 p-4 shadow-xs flex items-center gap-3.5',
+      className: 'bg-white rounded-xl border border-gray-200/80 p-4 shadow-xs flex items-center gap-3.5',
     });
     const actIcon = createSkeleton({ width: '2.75rem', height: '2.75rem', borderRadius: '0.5rem' });
     const actText = createSkeletonText(2);
@@ -209,7 +209,7 @@ export function createDashboardSkeleton(): HTMLElement {
 
   const rightCol = createElement('div', { className: 'space-y-6' });
   const activityCard = createElement('div', {
-    className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-xs space-y-4',
+    className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs space-y-4',
   });
   activityCard.appendChild(createSkeleton({ width: '50%', height: '1.25rem' }));
   activityCard.appendChild(createSkeletonActivityList(4));

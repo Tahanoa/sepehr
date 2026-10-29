@@ -1,7 +1,7 @@
 /**
  * POLARIS ANNOUNCEMENTS & PARENT COMMUNICATION PAGE
  * School announcements directory, target audience selection, create/edit form,
- * draft/published state toggles, and detail view modal with dark mode support.
+ * draft/published state toggles, and detail view modal.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
@@ -36,17 +36,17 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
     // Header Row
     const headerRow = createElement('div', {
-      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80 dark:border-gray-700/80',
+      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80',
     });
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('announcement', 'w-6 h-6 text-[#012622] dark:text-teal-400')} اطلاعیه‌ها و ارتباطات مدرسه`;
+    title.innerHTML = `${getDashboardIcon('announcement', 'w-6 h-6 text-[#012622]')} اطلاعیه‌ها و ارتباطات مدرسه`;
 
     const desc = createElement('p', {
-      className: 'text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-normal',
+      className: 'text-xs sm:text-sm text-gray-600 font-normal',
       textContent: `ارسال اطلاعیه‌های آموزشی، ارتباط با اولیا و معلمان، تنظیم مخاطبان هدف و زمان‌بندی انتشار.`,
     });
 
@@ -55,7 +55,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
     const addBtn = createElement('button', {
       className:
-        'px-4 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ایجاد اطلاعیه / ارسال کمپین`,
     });
     addBtn.addEventListener('click', () => openCampaignModal());
@@ -64,10 +64,10 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
     headerRow.appendChild(addBtn);
 
     // Tab Navigation Bar
-    const tabBar = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 dark:border-gray-700 pb-2' });
+    const tabBar = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 pb-2' });
     const tabAnnouncements = createElement('button', {
       className: `px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-        activeTab === 'announcements' ? 'bg-[#012622] dark:bg-teal-700 text-white shadow-2xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+        activeTab === 'announcements' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
       }`,
       textContent: 'اطلاعیه‌های داخلی سامانه',
     });
@@ -78,7 +78,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
     const tabSMS = createElement('button', {
       className: `px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-        activeTab === 'sms' ? 'bg-[#012622] dark:bg-teal-700 text-white shadow-2xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+        activeTab === 'sms' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
       }`,
       textContent: 'گزارش SMS شبیه‌سازی شده',
     });
@@ -92,7 +92,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
     const tabParentInbox = createElement('button', {
       className: `px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-        activeTab === 'parent_inbox' ? 'bg-[#012622] dark:bg-teal-700 text-white shadow-2xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+        activeTab === 'parent_inbox' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
       }`,
       innerHTML: `<span>صندوق پیام‌های اولیا</span>${
         unreadCount > 0 ? `<span class="px-1.5 py-0.5 bg-rose-500 text-white text-[10px] font-black rounded-full">${unreadCount}</span>` : ''
@@ -109,13 +109,13 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
     // Filter Toolbar
     const toolbar = createElement('div', {
-      className: 'bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs grid grid-cols-1 sm:grid-cols-2 gap-3',
+      className: 'bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs grid grid-cols-1 sm:grid-cols-2 gap-3',
     });
 
     const searchWrapper = createElement('div', { className: 'relative' });
     const searchInput = createElement('input', {
       className:
-        'w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'w-full bg-gray-50 border border-gray-300 rounded-xl ps-9 pe-3 py-2 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
       attributes: { type: 'text', placeholder: 'جستجو در عنوان یا متن اطلاعیه...', value: searchQuery },
     });
     searchInput.addEventListener('input', (e) => {
@@ -124,14 +124,14 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
     });
 
     const searchIcon = createElement('div', {
-      className: 'absolute start-3 top-2.5 text-gray-400 dark:text-gray-500 pointer-events-none',
+      className: 'absolute start-3 top-2.5 text-gray-400 pointer-events-none',
       innerHTML: getDashboardIcon('search', 'w-4 h-4'),
     });
     searchWrapper.appendChild(searchIcon);
     searchWrapper.appendChild(searchInput);
 
     const audienceSelect = createElement('select', {
-      className: 'bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
     });
     audienceSelect.innerHTML = `
       <option value="all" ${selectedAudience === 'all' ? 'selected' : ''}>همه گروه مخاطبان</option>
@@ -153,19 +153,19 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
     if (activeTab === 'announcements') {
       if (filtered.length === 0) {
         const emptyState = createElement('div', {
-          className: 'bg-white dark:bg-gray-800 rounded-2xl p-8 text-center border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs',
+          className: 'bg-white rounded-2xl p-8 text-center border border-gray-200 text-gray-500 text-xs',
           textContent: 'اطلاعیه‌ای با فیلترهای انتخابی موجود نیست.',
         });
         list.appendChild(emptyState);
       } else {
         filtered.forEach((anc) => {
           const card = createElement('div', {
-            className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-2xs space-y-3',
+            className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-3',
           });
 
-          let priorityBadge = 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200';
-          if (anc.priority === 'urgent') priorityBadge = 'bg-rose-100 dark:bg-rose-950/60 text-rose-900 dark:text-rose-300 font-extrabold';
-          else if (anc.priority === 'important') priorityBadge = 'bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 font-bold';
+          let priorityBadge = 'bg-gray-100 text-gray-800';
+          if (anc.priority === 'urgent') priorityBadge = 'bg-rose-100 text-rose-900 font-extrabold';
+          else if (anc.priority === 'important') priorityBadge = 'bg-amber-100 text-amber-900 font-bold';
 
           let audienceText = 'عمومی (همه مخاطبان)';
           if (anc.audience === 'parents') audienceText = 'اولیا دانش‌آموزان';
@@ -173,32 +173,32 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
           else if (anc.audience === 'students') audienceText = 'دانش‌آموزان';
 
           card.innerHTML = `
-            <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-2.5">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
               <div class="flex items-center gap-2">
-                <span class="font-extrabold text-sm text-gray-900 dark:text-gray-100">${anc.title}</span>
+                <span class="font-extrabold text-sm text-gray-900">${anc.title}</span>
                 <span class="px-2 py-0.5 rounded text-[10px] ${priorityBadge}">${anc.priority === 'urgent' ? 'فوری' : 'مهم'}</span>
               </div>
               <div class="flex items-center gap-2">
-                <span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-[10px] font-bold">${audienceText}</span>
+                <span class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg text-[10px] font-bold">${audienceText}</span>
                 <span class="px-2.5 py-1 ${
-                  anc.isPublished ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-300' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  anc.isPublished ? 'bg-emerald-100 text-emerald-900' : 'bg-gray-200 text-gray-700'
                 } rounded-lg text-[10px] font-extrabold">
                   ${anc.isPublished ? 'منتشر شده' : 'پیش‌نویس'}
                 </span>
               </div>
             </div>
 
-            <p class="text-xs text-gray-700 dark:text-gray-300 leading-relaxed font-normal">${anc.content}</p>
+            <p class="text-xs text-gray-700 leading-relaxed font-normal">${anc.content}</p>
 
-            <div class="text-[10px] text-gray-400 dark:text-gray-500 flex items-center justify-between pt-1">
+            <div class="text-[10px] text-gray-400 flex items-center justify-between pt-1">
               <span>نویسنده: ${anc.authorName}</span>
               <span class="font-mono">${anc.createdAt}</span>
             </div>
           `;
 
-          const actionsRow = createElement('div', { className: 'pt-2 border-t border-gray-100 dark:border-gray-700 flex items-center justify-end gap-2 text-xs' });
+          const actionsRow = createElement('div', { className: 'pt-2 border-t border-gray-100 flex items-center justify-end gap-2 text-xs' });
           const toggleBtn = createElement('button', {
-            className: 'px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold rounded-lg transition-colors cursor-pointer',
+            className: 'px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-lg transition-colors cursor-pointer',
             textContent: anc.isPublished ? 'تغییر به پیش‌نویس' : 'انتشار عمومی',
           });
           toggleBtn.addEventListener('click', () => {
@@ -225,12 +225,12 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
       if (smsLogs.length === 0) {
         const emptyState = createElement('div', {
-          className: 'bg-white dark:bg-gray-800 rounded-2xl p-8 text-center border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs',
+          className: 'bg-white rounded-2xl p-8 text-center border border-gray-200 text-gray-500 text-xs',
           textContent: 'سابقه پیامکی یافت نشد.',
         });
         list.appendChild(emptyState);
       } else {
-        const tableCard = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs overflow-hidden' });
+        const tableCard = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 shadow-2xs overflow-hidden' });
         const table = createElement('table', { className: 'polaris-table' });
         table.innerHTML = `
           <thead>
@@ -247,12 +247,12 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
         smsLogs.forEach((log) => {
           const tr = createElement('tr');
           tr.innerHTML = `
-            <td class="font-bold text-xs text-gray-900 dark:text-gray-100">${log.recipientName}</td>
-            <td class="text-center font-mono text-xs text-gray-600 dark:text-gray-400">${log.recipientPhone}</td>
-            <td class="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">${log.messageText}</td>
-            <td class="text-center font-mono text-xs text-gray-500 dark:text-gray-400">${log.sentAt}</td>
+            <td class="font-bold text-xs text-gray-900">${log.recipientName}</td>
+            <td class="text-center font-mono text-xs text-gray-600">${log.recipientPhone}</td>
+            <td class="text-xs text-gray-700 leading-relaxed">${log.messageText}</td>
+            <td class="text-center font-mono text-xs text-gray-500">${log.sentAt}</td>
             <td class="text-center">
-              <span class="px-2.5 py-1 bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-800 rounded-lg text-[10px] font-black">
+              <span class="px-2.5 py-1 bg-amber-100 text-amber-900 border border-amber-200 rounded-lg text-[10px] font-black">
                 شبیه‌سازی شده (دمو)
               </span>
             </td>
@@ -275,39 +275,39 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
       if (convs.length === 0) {
         const emptyState = createElement('div', {
-          className: 'bg-white dark:bg-gray-800 rounded-2xl p-8 text-center border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs',
+          className: 'bg-white rounded-2xl p-8 text-center border border-gray-200 text-gray-500 text-xs',
           textContent: 'هیچ پیام دریافتی از اولیا یافت نشد.',
         });
         list.appendChild(emptyState);
       } else {
         convs.forEach((conv) => {
           const item = createElement('div', {
-            className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-2xs space-y-3 cursor-pointer hover:border-[#012622] dark:hover:border-teal-400 transition-colors',
+            className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-3 cursor-pointer hover:border-[#012622] transition-colors',
           });
 
-          let statusBadge = 'bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 border-amber-200 dark:border-amber-800';
+          let statusBadge = 'bg-amber-100 text-amber-900 border-amber-200';
           let statusText = 'در انتظار پاسخ مدیریت';
           if (conv.status === 'replied') {
-            statusBadge = 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800';
+            statusBadge = 'bg-emerald-100 text-emerald-900 border-emerald-200';
             statusText = 'پاسخ داده شده';
           } else if (conv.status === 'resolved') {
-            statusBadge = 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-600';
+            statusBadge = 'bg-gray-100 text-gray-800 border-gray-200';
             statusText = 'حل شده / بسته';
           }
 
           item.innerHTML = `
-            <div class="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-gray-700">
+            <div class="flex items-center justify-between pb-2 border-b border-gray-100">
               <div class="flex items-center gap-2">
-                <span class="font-extrabold text-xs text-[#012622] dark:text-teal-300">${conv.parentName} (ولی ${conv.studentName} — ${conv.className})</span>
-                <span class="text-[10px] text-gray-500 dark:text-gray-400 font-mono">${conv.parentPhone}</span>
+                <span class="font-extrabold text-xs text-[#012622]">${conv.parentName} (ولی ${conv.studentName} — ${conv.className})</span>
+                <span class="text-[10px] text-gray-500 font-mono">${conv.parentPhone}</span>
               </div>
               <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold border ${statusBadge}">${statusText}</span>
             </div>
 
-            <h3 class="font-bold text-sm text-gray-900 dark:text-gray-100">${conv.subject}</h3>
-            <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">${conv.messages[0]?.content || ''}</p>
+            <h3 class="font-bold text-sm text-gray-900">${conv.subject}</h3>
+            <p class="text-xs text-gray-600 line-clamp-2">${conv.messages[0]?.content || ''}</p>
 
-            <div class="flex items-center justify-between text-[10px] text-gray-400 dark:text-gray-500 pt-1">
+            <div class="flex items-center justify-between text-[10px] text-gray-400 pt-1">
               <span>تعداد پیام‌ها: ${conv.messages.length}</span>
               <span class="font-mono">تاریخ درخواست: ${conv.createdAt}</span>
             </div>
@@ -330,22 +330,22 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
     const staff = schoolStore.getStaff(orgId);
     const classes = schoolStore.getClasses(orgId);
 
-    const form = createElement('form', { className: 'space-y-4 dir-rtl text-xs text-gray-800 dark:text-gray-200' });
+    const form = createElement('form', { className: 'space-y-4 dir-rtl text-xs text-gray-800' });
 
     form.innerHTML = `
       <div>
         <label class="block font-bold mb-1">عنوان / موضوع پیام *</label>
-        <input type="text" id="cmp-title" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-bold text-gray-900 dark:text-gray-100" placeholder="مثال: فراخوان جلسه اولیا و مربیان" />
+        <input type="text" id="cmp-title" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold" placeholder="مثال: فراخوان جلسه اولیا و مربیان" />
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">کانال‌های ارسال *</label>
-          <div class="flex items-center gap-4 bg-gray-50 dark:bg-gray-900 p-2.5 rounded-xl border border-gray-300 dark:border-gray-600">
+          <div class="flex items-center gap-4 bg-gray-50 p-2.5 rounded-xl border border-gray-300">
             <label class="flex items-center gap-1.5 font-bold cursor-pointer">
               <input type="checkbox" id="cmp-ch-internal" checked class="w-4 h-4 text-[#012622] rounded" /> اطلاعیه سامانه
             </label>
-            <label class="flex items-center gap-1.5 font-bold cursor-pointer text-amber-900 dark:text-amber-300">
+            <label class="flex items-center gap-1.5 font-bold cursor-pointer text-amber-900">
               <input type="checkbox" id="cmp-ch-sms" checked class="w-4 h-4 text-amber-600 rounded" /> پیامک SMS (دمو)
             </label>
           </div>
@@ -353,7 +353,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
         <div>
           <label class="block font-bold mb-1">گروه مخاطبان هدف *</label>
-          <select id="cmp-audience" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-bold text-gray-900 dark:text-gray-100">
+          <select id="cmp-audience" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
             <option value="all">همه کاربران (دانش‌آموزان، اولیا و معلمان)</option>
             <option value="parents">اولیا دانش‌آموزان</option>
             <option value="teachers">کادر آموزشی و معلمان</option>
@@ -365,20 +365,20 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
       </div>
 
       <!-- CSV Import Section (Hidden by default) -->
-      <div id="csv-section" class="hidden space-y-2 bg-amber-50/60 dark:bg-amber-950/40 p-3.5 rounded-xl border border-amber-200 dark:border-amber-800/80">
-        <label class="block font-bold text-amber-900 dark:text-amber-200">محتوای CSV گیرندگان (نام, شماره همراه):</label>
-        <textarea id="csv-content" rows="3" class="w-full bg-white dark:bg-gray-800 border border-amber-300 dark:border-amber-700 rounded-lg p-2 text-xs font-mono text-gray-900 dark:text-gray-100" placeholder="رضا عباسی,09121110011&#10;مریم حسینی,09122223344"></textarea>
-        <div id="csv-preview" class="text-[11px] text-gray-700 dark:text-gray-300 font-medium"></div>
+      <div id="csv-section" class="hidden space-y-2 bg-amber-50/60 p-3.5 rounded-xl border border-amber-200">
+        <label class="block font-bold text-amber-900">محتوای CSV گیرندگان (نام, شماره همراه):</label>
+        <textarea id="csv-content" rows="3" class="w-full bg-white border border-amber-300 rounded-lg p-2 text-xs font-mono" placeholder="رضا عباسی,09121110011&#10;مریم حسینی,09122223344"></textarea>
+        <div id="csv-preview" class="text-[11px] text-gray-700 font-medium"></div>
       </div>
 
-      <div class="flex items-center justify-between bg-emerald-50 dark:bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800/80">
-        <span class="font-bold text-emerald-900 dark:text-emerald-200">تعداد تخمینی گیرندگان:</span>
-        <span id="cmp-count-badge" class="px-3 py-1 bg-emerald-700 dark:bg-emerald-600 text-white rounded-lg font-mono font-black text-xs">...</span>
+      <div class="flex items-center justify-between bg-emerald-50 p-2.5 rounded-xl border border-emerald-200">
+        <span class="font-bold text-emerald-900">تعداد تخمینی گیرندگان:</span>
+        <span id="cmp-count-badge" class="px-3 py-1 bg-emerald-700 text-white rounded-lg font-mono font-black text-xs">...</span>
       </div>
 
       <div>
         <label class="block font-bold mb-1">متن پیام *</label>
-        <textarea id="cmp-body" rows="4" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs text-gray-900 dark:text-gray-100 leading-relaxed" placeholder="شرح پیام..."></textarea>
+        <textarea id="cmp-body" rows="4" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs leading-relaxed" placeholder="شرح پیام..."></textarea>
       </div>
     `;
 
@@ -514,7 +514,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
   };
 
   const openAdminConversationModal = (conv: any) => {
-    const container = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800 dark:text-gray-200' });
+    const container = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800' });
 
     const messagesList = createElement('div', { className: 'space-y-3 max-h-[300px] overflow-y-auto p-1' });
 
@@ -522,31 +522,31 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
       const isParent = msg.senderRole === 'parent';
       const msgBox = createElement('div', {
         className: `p-3.5 rounded-2xl border ${
-          isParent ? 'bg-amber-50/70 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800/80 ms-6' : 'bg-emerald-50/70 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/80 me-6'
+          isParent ? 'bg-amber-50/70 border-amber-200 ms-6' : 'bg-emerald-50/70 border-emerald-200 me-6'
         } space-y-1.5`,
       });
 
       msgBox.innerHTML = `
-        <div class="flex items-center justify-between pb-1 border-b border-gray-200/60 dark:border-gray-700 text-[11px]">
-          <span class="font-extrabold ${isParent ? 'text-amber-900 dark:text-amber-200' : 'text-emerald-950 dark:text-emerald-200'}">${msg.senderName}</span>
-          <span class="font-mono text-gray-500 dark:text-gray-400 text-[10px]">${msg.sentAt}</span>
+        <div class="flex items-center justify-between pb-1 border-b border-gray-200/60 text-[11px]">
+          <span class="font-extrabold ${isParent ? 'text-amber-900' : 'text-emerald-950'}">${msg.senderName}</span>
+          <span class="font-mono text-gray-500 text-[10px]">${msg.sentAt}</span>
         </div>
-        <p class="text-xs text-gray-800 dark:text-gray-200 leading-relaxed">${msg.content}</p>
+        <p class="text-xs text-gray-800 leading-relaxed">${msg.content}</p>
       `;
 
       messagesList.appendChild(msgBox);
     });
 
-    const replyBox = createElement('div', { className: 'space-y-2 pt-2 border-t border-gray-200 dark:border-gray-700' });
+    const replyBox = createElement('div', { className: 'space-y-2 pt-2 border-t border-gray-200' });
     replyBox.innerHTML = `
       <label class="block font-bold">ارسال پاسخ رسمی مدیریت:</label>
-      <textarea id="admin-reply-text" rows="3" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100" placeholder="متن پاسخ مدیریت..."></textarea>
+      <textarea id="admin-reply-text" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs" placeholder="متن پاسخ مدیریت..."></textarea>
     `;
 
     const actionsRow = createElement('div', { className: 'flex items-center gap-2' });
 
     const sendReplyBtn = createElement('button', {
-      className: 'flex-1 py-2 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white font-bold rounded-xl transition-colors cursor-pointer',
+      className: 'flex-1 py-2 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl transition-colors cursor-pointer',
       textContent: 'ارسال پاسخ به ولی',
     });
 
@@ -569,7 +569,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
     });
 
     const resolveBtn = createElement('button', {
-      className: 'px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold rounded-xl transition-colors cursor-pointer',
+      className: 'px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl transition-colors cursor-pointer',
       textContent: conv.status === 'resolved' ? 'بازگشایی گفتگو' : 'بستن گفتگو (حل شده)',
     });
 

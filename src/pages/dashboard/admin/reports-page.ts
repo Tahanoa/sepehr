@@ -1,13 +1,14 @@
 /**
  * POLARIS REPORTS & ANALYTICS PAGE
  * School operational statistics, attendance summaries, class/staff distribution breakdown,
- * and academic performance charts with dark mode support.
+ * and academic performance charts.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
+
 import { showToast } from '../../../components/toast';
 
 export function createReportsPage(membership: OrganizationMembership): HTMLElement {
@@ -31,17 +32,17 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
 
     // Header Row
     const headerRow = createElement('div', {
-      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80 dark:border-gray-700/80',
+      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80',
     });
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('reports', 'w-6 h-6 text-[#012622] dark:text-teal-400')} گزارش‌های تحلیلی و آمار مدیریتی`;
+    title.innerHTML = `${getDashboardIcon('reports', 'w-6 h-6 text-[#012622]')} گزارش‌های تحلیلی و آمار مدیریتی`;
 
     const desc = createElement('p', {
-      className: 'text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-normal',
+      className: 'text-xs sm:text-sm text-gray-600 font-normal',
       textContent: `مشاهده تحلیل‌های کلی حضور و غیاب، عملکرد تحصیلی، کمپین‌های ارتباطی و گزارش مالی.`,
     });
 
@@ -50,7 +51,7 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
 
     const exportCsvBtn = createElement('button', {
       className:
-        'px-4 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
+        'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
       innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> دانلود خروجی CSV`,
     });
     exportCsvBtn.addEventListener('click', () => exportCurrentReportToCSV());
@@ -59,7 +60,7 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
     headerRow.appendChild(exportCsvBtn);
 
     // Report Tabs
-    const tabBar = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 dark:border-gray-700 pb-2 overflow-x-auto' });
+    const tabBar = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 pb-2 overflow-x-auto' });
 
     const tabs: { key: typeof activeReportTab; label: string }[] = [
       { key: 'overview', label: 'نگاه کلی و آمارهای اصلی' },
@@ -72,7 +73,7 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
     tabs.forEach((t) => {
       const btn = createElement('button', {
         className: `px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0 ${
-          activeReportTab === t.key ? 'bg-[#012622] dark:bg-teal-700 text-white shadow-2xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+          activeReportTab === t.key ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
         textContent: t.label,
       });
@@ -93,37 +94,37 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
 
       const statsGrid = createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4' });
       statsGrid.innerHTML = `
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs space-y-2">
-          <div class="text-xs text-gray-500 dark:text-gray-400 font-bold">کل دانش‌آموزان فعال</div>
-          <div class="text-2xl font-black text-[#012622] dark:text-teal-300 font-mono">${activeStudents.toLocaleString('fa-IR')} نفر</div>
-          <div class="text-[11px] text-emerald-800 dark:text-emerald-400 font-bold">در ${classes.length} کلاس آموزشی</div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-2">
+          <div class="text-xs text-gray-500 font-bold">کل دانش‌آموزان فعال</div>
+          <div class="text-2xl font-black text-[#012622] font-mono">${activeStudents.toLocaleString('fa-IR')} نفر</div>
+          <div class="text-[11px] text-emerald-800 font-bold">در ${classes.length} کلاس آموزشی</div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs space-y-2">
-          <div class="text-xs text-gray-500 dark:text-gray-400 font-bold">کادر آموزشی و معلمان</div>
-          <div class="text-2xl font-black text-[#012622] dark:text-teal-300 font-mono">${activeStaff.toLocaleString('fa-IR')} نفر</div>
-          <div class="text-[11px] text-emerald-800 dark:text-emerald-400 font-bold">معلمان فعال</div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-2">
+          <div class="text-xs text-gray-500 font-bold">کادر آموزشی و معلمان</div>
+          <div class="text-2xl font-black text-[#012622] font-mono">${activeStaff.toLocaleString('fa-IR')} نفر</div>
+          <div class="text-[11px] text-emerald-800 font-bold">معلمان فعال</div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs space-y-2">
-          <div class="text-xs text-gray-500 dark:text-gray-400 font-bold">میانگین نرخ حضور و غیاب</div>
-          <div class="text-2xl font-black text-emerald-800 dark:text-emerald-300 font-mono">٪${attRate}</div>
-          <div class="text-[11px] text-gray-500 dark:text-gray-400">مجموع ثبت‌های حضور</div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-2">
+          <div class="text-xs text-gray-500 font-bold">میانگین نرخ حضور و غیاب</div>
+          <div class="text-2xl font-black text-emerald-800 font-mono">٪${attRate}</div>
+          <div class="text-[11px] text-gray-500">مجموع ثبت‌های حضور</div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs space-y-2">
-          <div class="text-xs text-gray-500 dark:text-gray-400 font-bold">آزمون‌های برنامه‌ریزی‌شده</div>
-          <div class="text-2xl font-black text-[#012622] dark:text-teal-300 font-mono">${exams.length.toLocaleString('fa-IR')} مورد</div>
-          <div class="text-[11px] text-amber-800 dark:text-amber-400 font-bold">فعال در ترم جاری</div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-2">
+          <div class="text-xs text-gray-500 font-bold">آزمون‌های برنامه‌ریزی‌شده</div>
+          <div class="text-2xl font-black text-[#012622] font-mono">${exams.length.toLocaleString('fa-IR')} مورد</div>
+          <div class="text-[11px] text-amber-800 font-bold">فعال در ترم جاری</div>
         </div>
       `;
 
       const mainGrid = createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-2 gap-6' });
 
-      const cardA = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-2xs space-y-4' });
+      const cardA = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-4' });
       cardA.innerHTML = `
-        <h3 class="font-extrabold text-sm text-gray-900 dark:text-gray-100 flex items-center gap-2 pb-3 border-b border-gray-100 dark:border-gray-700">
-          ${getDashboardIcon('classes', 'w-4 h-4 text-[#012622] dark:text-teal-400')} توزیع جمعیت دانش‌آموزان در کلاس‌ها
+        <h3 class="font-extrabold text-sm text-gray-900 flex items-center gap-2 pb-3 border-b border-gray-100">
+          ${getDashboardIcon('classes', 'w-4 h-4 text-[#012622]')} توزیع جمعیت دانش‌آموزان در کلاس‌ها
         </h3>
         <div class="space-y-3 text-xs">
           ${classes
@@ -132,12 +133,12 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
               const percent = Math.min(100, Math.round((cStudents.length / c.capacity) * 100));
               return `
                 <div class="space-y-1">
-                  <div class="flex justify-between font-bold text-gray-800 dark:text-gray-200">
+                  <div class="flex justify-between font-bold text-gray-800">
                     <span>${c.name} (${c.gradeLevel})</span>
                     <span class="font-mono">${cStudents.length} از ${c.capacity} نفر (٪${percent})</span>
                   </div>
-                  <div class="w-full bg-gray-100 dark:bg-gray-700 h-2.5 rounded-full overflow-hidden">
-                    <div class="h-full bg-[#012622] dark:bg-teal-500 rounded-full" style="width: ${percent}%"></div>
+                  <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
+                    <div class="h-full bg-[#012622] rounded-full" style="width: ${percent}%"></div>
                   </div>
                 </div>
               `;
@@ -146,10 +147,10 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
         </div>
       `;
 
-      const cardB = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-2xs space-y-4' });
+      const cardB = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-4' });
       cardB.innerHTML = `
-        <h3 class="font-extrabold text-sm text-gray-900 dark:text-gray-100 flex items-center gap-2 pb-3 border-b border-gray-100 dark:border-gray-700">
-          ${getDashboardIcon('teacher', 'w-4 h-4 text-[#012622] dark:text-teal-400')} گزارش ساعات تدریس معلمان
+        <h3 class="font-extrabold text-sm text-gray-900 flex items-center gap-2 pb-3 border-b border-gray-100">
+          ${getDashboardIcon('teacher', 'w-4 h-4 text-[#012622]')} گزارش ساعات تدریس معلمان
         </h3>
         <div class="space-y-3 text-xs">
           ${staff
@@ -157,12 +158,12 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
               const percent = Math.min(100, Math.round((st.weeklyHours / 30) * 100));
               return `
                 <div class="space-y-1">
-                  <div class="flex justify-between font-bold text-gray-800 dark:text-gray-200">
+                  <div class="flex justify-between font-bold text-gray-800">
                     <span>${st.fullName} (${st.roleTitle})</span>
-                    <span class="font-mono text-emerald-800 dark:text-emerald-400">${st.weeklyHours} ساعت در هفته</span>
+                    <span class="font-mono text-emerald-800">${st.weeklyHours} ساعت در هفته</span>
                   </div>
-                  <div class="w-full bg-gray-100 dark:bg-gray-700 h-2.5 rounded-full overflow-hidden">
-                    <div class="h-full bg-[#003B36] dark:bg-teal-600 rounded-full" style="width: ${percent}%"></div>
+                  <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
+                    <div class="h-full bg-[#003B36] rounded-full" style="width: ${percent}%"></div>
                   </div>
                 </div>
               `;
@@ -177,9 +178,9 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
       contentArea.appendChild(statsGrid);
       contentArea.appendChild(mainGrid);
     } else if (activeReportTab === 'attendance') {
-      const attTable = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 shadow-2xs space-y-4' });
+      const attTable = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs space-y-4' });
       attTable.innerHTML = `
-        <h3 class="font-bold text-sm text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 pb-3">گزارش تفکیکی حضور و غیاب</h3>
+        <h3 class="font-bold text-sm text-gray-900 border-b border-gray-100 pb-3">گزارش تفکیکی حضور و غیاب</h3>
         <table class="polaris-table">
           <thead>
             <tr>
@@ -193,26 +194,26 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
           <tbody>
             ${
               attendance.length === 0
-                ? `<tr><td colspan="5" class="text-center text-gray-500 dark:text-gray-400 py-4">سابقه‌ای ثبت نشده است.</td></tr>`
+                ? `<tr><td colspan="5" class="text-center text-gray-500 py-4">سابقه‌ای ثبت نشده است.</td></tr>`
                 : attendance
                     .map(
                       (a) => `
                   <tr>
-                    <td class="font-mono text-xs font-bold text-gray-900 dark:text-gray-100">${a.date}</td>
-                    <td class="font-bold text-xs text-gray-900 dark:text-gray-100">${a.studentName}</td>
-                    <td class="text-xs text-gray-700 dark:text-gray-300">${classes.find((c) => c.id === a.classId)?.name || 'کلاس'}</td>
+                    <td class="font-mono text-xs font-bold">${a.date}</td>
+                    <td class="font-bold text-xs">${a.studentName}</td>
+                    <td class="text-xs">${classes.find((c) => c.id === a.classId)?.name || 'کلاس'}</td>
                     <td class="text-center">
                       <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
                         a.status === 'present'
-                          ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300'
+                          ? 'bg-emerald-100 text-emerald-800'
                           : a.status === 'absent'
-                          ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300'
-                          : 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300'
+                          ? 'bg-rose-100 text-rose-800'
+                          : 'bg-amber-100 text-amber-800'
                       }">
                         ${a.status === 'present' ? 'حاضر' : a.status === 'absent' ? 'غایب' : 'تأخیر'}
                       </span>
                     </td>
-                    <td class="text-xs text-gray-600 dark:text-gray-400">${a.notes || '—'}</td>
+                    <td class="text-xs text-gray-600">${a.notes || '—'}</td>
                   </tr>
                 `
                     )
@@ -223,19 +224,19 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
       `;
       contentArea.appendChild(attTable);
     } else if (activeReportTab === 'academic') {
-      const acadTable = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 shadow-2xs space-y-4' });
+      const acadTable = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs space-y-4' });
       acadTable.innerHTML = `
-        <h3 class="font-bold text-sm text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 pb-3">گزارش آزمون‌های برگزارشده و میانگین نمرات</h3>
+        <h3 class="font-bold text-sm text-gray-900 border-b border-gray-100 pb-3">گزارش آزمون‌های برگزارشده و میانگین نمرات</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
           ${exams
             .map(
               (ex) => `
-            <div class="p-4 bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-700 rounded-xl space-y-2">
-              <div class="flex justify-between font-bold text-gray-900 dark:text-gray-100">
+            <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-2">
+              <div class="flex justify-between font-bold text-gray-900">
                 <span>${ex.title}</span>
-                <span class="font-mono text-emerald-800 dark:text-emerald-300">${ex.subjectName}</span>
+                <span class="font-mono text-emerald-800">${ex.subjectName}</span>
               </div>
-              <div class="text-gray-600 dark:text-gray-400">تاریخ: <span class="font-mono">${ex.examDate}</span> | نوع سنجش: ${ex.evalType === 'descriptive' ? 'توصیفی' : 'عددی'}</div>
+              <div class="text-gray-600">تاریخ: <span class="font-mono">${ex.examDate}</span> | نوع سنجش: ${ex.evalType === 'descriptive' ? 'توصیفی' : 'عددی'}</div>
             </div>
           `
             )
@@ -244,40 +245,40 @@ export function createReportsPage(membership: OrganizationMembership): HTMLEleme
       `;
       contentArea.appendChild(acadTable);
     } else if (activeReportTab === 'communication') {
-      const commBox = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 shadow-2xs space-y-4' });
+      const commBox = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs space-y-4' });
       commBox.innerHTML = `
-        <h3 class="font-bold text-sm text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 pb-3">گزارش کمپین‌های پیامکی و اطلاعیه‌ها</h3>
+        <h3 class="font-bold text-sm text-gray-900 border-b border-gray-100 pb-3">گزارش کمپین‌های پیامکی و اطلاعیه‌ها</h3>
         <div class="grid grid-cols-3 gap-3 text-center text-xs">
-          <div class="bg-gray-50 dark:bg-gray-900/60 p-3 rounded-xl border border-gray-200 dark:border-gray-700">
-            <div class="text-gray-500 dark:text-gray-400 font-bold">اطلاعیه‌های داخلی</div>
-            <div class="text-xl font-black text-[#012622] dark:text-teal-300 font-mono mt-1">${announcements.length}</div>
+          <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
+            <div class="text-gray-500 font-bold">اطلاعیه‌های داخلی</div>
+            <div class="text-xl font-black text-[#012622] font-mono mt-1">${announcements.length}</div>
           </div>
-          <div class="bg-amber-50 dark:bg-amber-950/40 p-3 rounded-xl border border-amber-200 dark:border-amber-800/80">
-            <div class="text-amber-900 dark:text-amber-300 font-bold">پیامک‌های شبیه‌سازی‌شده</div>
-            <div class="text-xl font-black text-amber-950 dark:text-amber-100 font-mono mt-1">${smsLogs.length}</div>
+          <div class="bg-amber-50 p-3 rounded-xl border border-amber-200">
+            <div class="text-amber-900 font-bold">پیامک‌های شبیه‌سازی‌شده</div>
+            <div class="text-xl font-black text-amber-950 font-mono mt-1">${smsLogs.length}</div>
           </div>
-          <div class="bg-emerald-50 dark:bg-emerald-950/40 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800/80">
-            <div class="text-emerald-900 dark:text-emerald-300 font-bold">گفتگوهای اولیا</div>
-            <div class="text-xl font-black text-emerald-950 dark:text-emerald-100 font-mono mt-1">${parentConvs.length}</div>
+          <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+            <div class="text-emerald-900 font-bold">گفتگوهای اولیا</div>
+            <div class="text-xl font-black text-emerald-950 font-mono mt-1">${parentConvs.length}</div>
           </div>
         </div>
       `;
       contentArea.appendChild(commBox);
     } else if (activeReportTab === 'financial') {
-      const finBox = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 shadow-2xs space-y-4' });
+      const finBox = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs space-y-4' });
       const paidTotal = invoices.filter((i) => i.status === 'paid').reduce((sum, i) => sum + i.totalAmount, 0);
       const unpaidTotal = invoices.filter((i) => i.status !== 'paid').reduce((sum, i) => sum + i.totalAmount, 0);
 
       finBox.innerHTML = `
-        <h3 class="font-bold text-sm text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 pb-3">خلاصه صورت‌حساب‌ها و شهریه‌های شبیه‌سازی شده</h3>
+        <h3 class="font-bold text-sm text-gray-900 border-b border-gray-100 pb-3">خلاصه صورت‌حساب‌ها و شهریه‌های شبیه‌سازی شده</h3>
         <div class="grid grid-cols-2 gap-4 text-xs text-center">
-          <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/80 rounded-xl space-y-1">
-            <div class="font-bold text-emerald-900 dark:text-emerald-300">مجموع شهریه‌های دریافتی</div>
-            <div class="text-xl font-black text-emerald-950 dark:text-emerald-100 font-mono">${paidTotal.toLocaleString('fa-IR')} تومان</div>
+          <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1">
+            <div class="font-bold text-emerald-900">مجموع شهریه‌های دریافتی</div>
+            <div class="text-xl font-black text-emerald-950 font-mono">${paidTotal.toLocaleString('fa-IR')} تومان</div>
           </div>
-          <div class="p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/80 rounded-xl space-y-1">
-            <div class="font-bold text-rose-900 dark:text-rose-300">مجموع مطالبات و معوقات</div>
-            <div class="text-xl font-black text-rose-950 dark:text-rose-100 font-mono">${unpaidTotal.toLocaleString('fa-IR')} تومان</div>
+          <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl space-y-1">
+            <div class="font-bold text-rose-900">مجموع مطالبات و معوقات</div>
+            <div class="text-xl font-black text-rose-950 font-mono">${unpaidTotal.toLocaleString('fa-IR')} تومان</div>
           </div>
         </div>
       `;

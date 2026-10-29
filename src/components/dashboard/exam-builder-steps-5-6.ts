@@ -1,7 +1,7 @@
 /**
  * POLARIS MULTI-STEP EXAM BUILDER - STEPS 5 & 6
  * Step 5: Security & Exam Configuration Settings
- * Step 6: Review, Validation & Publishing with dark mode support
+ * Step 6: Review, Validation & Publishing
  */
 
 import { Exam, InterruptionPolicy, ExamQuestion, SchoolClass } from '../../types/school';
@@ -11,19 +11,19 @@ export function renderExamBuilderStep5(
   draft: Partial<Exam>,
   onUpdate: (updates: Partial<Exam>) => void
 ): HTMLElement {
-  const container = createElement('div', { className: 'space-y-4 text-xs text-gray-800 dark:text-gray-200 dir-rtl' });
+  const container = createElement('div', { className: 'space-y-4 text-xs text-gray-800 dir-rtl' });
 
   container.innerHTML = `
-    <div class="bg-gray-50/70 dark:bg-gray-900/60 p-4 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 space-y-4">
+    <div class="bg-gray-50/70 p-4 rounded-2xl border border-gray-200/80 space-y-4">
       <div>
-        <h3 class="font-extrabold text-sm text-[#012622] dark:text-teal-400">گام ۵ — تنظیمات امنیتی و رفتار جلسه آزمون</h3>
-        <p class="text-[11px] text-gray-500 dark:text-gray-400">پیکربندی قوانین تصادفی‌سازی، ناوبری، قطع اتصال و بازگشت دانش‌آموز.</p>
+        <h3 class="font-extrabold text-sm text-[#012622]">گام ۵ — تنظیمات امنیتی و رفتار جلسه آزمون</h3>
+        <p class="text-[11px] text-gray-500">پیکربندی قوانین تصادفی‌سازی، ناوبری، قطع اتصال و بازگشت دانش‌آموز.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block font-bold mb-1">سیاست خروج یا قطع خروج از آزمون *</label>
-          <select id="cfg-interruption" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-semibold text-gray-900 dark:text-gray-100">
+          <select id="cfg-interruption" class="w-full bg-white border border-gray-300 rounded-xl p-2.5 text-xs font-semibold">
             <option value="warn_flag" ${draft.interruptionPolicy === 'warn_flag' || !draft.interruptionPolicy ? 'selected' : ''}>هشدار و ثبت در گزارش جهت بررسی معلم (پیش‌فرض)</option>
             <option value="warn_continue" ${draft.interruptionPolicy === 'warn_continue' ? 'selected' : ''}>هشدار و اجازه ادامه آزمون بدون ثبت گزارش</option>
             <option value="terminate" ${draft.interruptionPolicy === 'terminate' ? 'selected' : ''}>توقیف و ثبت نهایی خودکار پاسخ‌های تا این لحظه</option>
@@ -32,13 +32,13 @@ export function renderExamBuilderStep5(
 
         <div>
           <label class="block font-bold mb-1">بازگشت و بازنشانی صفحه</label>
-          <select id="cfg-resume" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs text-gray-900 dark:text-gray-100">
+          <select id="cfg-resume" class="w-full bg-white border border-gray-300 rounded-xl p-2.5 text-xs">
             <option value="true" ${draft.allowResume !== false ? 'selected' : ''}>اجازه ادامه آزمون پس از تازه‌سازی/بازگشت (بدون ریست زمان‌سنج)</option>
             <option value="false" ${draft.allowResume === false ? 'selected' : ''}>عدم امکان بازگشت پس از خروج از صفحه</option>
           </select>
         </div>
 
-        <div class="space-y-2 pt-2 border-t border-gray-200 dark:border-gray-700 sm:col-span-2">
+        <div class="space-y-2 pt-2 border-t border-gray-200 sm:col-span-2">
           <div class="flex items-center gap-2">
             <input type="checkbox" id="cfg-back" ${draft.allowBackNavigation !== false ? 'checked' : ''} class="w-4 h-4 rounded text-[#012622]" />
             <label for="cfg-back" class="font-bold cursor-pointer">امکان پیمایش به سوالات قبلی و تغییر پاسخ‌ها فعال باشد</label>
@@ -101,7 +101,7 @@ export function renderExamBuilderStep6(
   questions: ExamQuestion[],
   assignedClasses: SchoolClass[]
 ): { element: HTMLElement; warnings: string[] } {
-  const container = createElement('div', { className: 'space-y-4 text-xs text-gray-800 dark:text-gray-200 dir-rtl' });
+  const container = createElement('div', { className: 'space-y-4 text-xs text-gray-800 dir-rtl' });
 
   const warnings: string[] = [];
 
@@ -117,26 +117,26 @@ export function renderExamBuilderStep6(
   const classNames = assignedClasses.map((c) => c.name).join('، ');
 
   container.innerHTML = `
-    <div class="bg-gray-50/70 dark:bg-gray-900/60 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4">
+    <div class="bg-gray-50/70 p-5 rounded-2xl border border-gray-200 space-y-4">
       <div>
-        <h3 class="font-extrabold text-sm text-[#012622] dark:text-teal-400">گام ۶ — بازبینی نهایی و انتشار آزمون</h3>
-        <p class="text-[11px] text-gray-500 dark:text-gray-400">بررسی کامل مشخصات، سوالات و هشدارهای سیستم پیش از قرارگیری در دسترسی دانش‌آموزان.</p>
+        <h3 class="font-extrabold text-sm text-[#012622]">گام ۶ — بازبینی نهایی و انتشار آزمون</h3>
+        <p class="text-[11px] text-gray-500">بررسی کامل مشخصات، سوالات و هشدارهای سیستم پیش از قرارگیری در دسترسی دانش‌آموزان.</p>
       </div>
 
       ${warnings.length > 0 ? `
-        <div class="p-3.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/80 text-amber-950 dark:text-amber-200 rounded-xl space-y-1">
+        <div class="p-3.5 bg-amber-50 border border-amber-300 text-amber-950 rounded-xl space-y-1">
           <div class="font-extrabold text-xs">⚠️ هشدارهای بررسی پیش از انتشار:</div>
           <ul class="list-disc list-inside space-y-0.5">
             ${warnings.map((w) => `<li>${w}</li>`).join('')}
           </ul>
         </div>
       ` : `
-        <div class="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800/80 text-emerald-950 dark:text-emerald-300 rounded-xl font-bold flex items-center gap-2">
+        <div class="p-3 bg-emerald-50 border border-emerald-300 text-emerald-950 rounded-xl font-bold flex items-center gap-2">
           <span>✅ تمامی پارامترها و بارم‌بندی آزمون معتبر بوده و آماده انتشار است.</span>
         </div>
       `}
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white p-4 rounded-xl border border-gray-200">
         <div><strong>عنوان آزمون:</strong> ${draft.title || '—'}</div>
         <div><strong>درس:</strong> ${draft.subjectName || '—'}</div>
         <div><strong>کلاس‌های دریافت‌کننده:</strong> ${classNames || '—'}</div>

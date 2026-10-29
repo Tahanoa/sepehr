@@ -1,7 +1,7 @@
 /**
  * POLARIS LOCAL SIMULATED PARENT SMS MODAL
  * Interactive SMS notification composer with templates, estimated character count,
- * target selection, simulated sending, and logging into schoolStore with dark mode support.
+ * target selection, simulated sending, and logging into schoolStore.
  */
 
 import { createElement } from '../../utils/dom';
@@ -31,12 +31,12 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
   });
 
   const dialog = createElement('div', {
-    className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl w-full max-w-xl overflow-hidden flex flex-col max-h-[90vh]',
+    className: 'bg-white rounded-2xl border border-gray-200 shadow-2xl w-full max-w-xl overflow-hidden flex flex-col max-h-[90vh]',
   });
 
   // Header
   const header = createElement('div', {
-    className: 'bg-[#012622] dark:bg-[#071513] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
+    className: 'bg-[#012622] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
   });
   header.innerHTML = `
     <div class="flex items-center gap-3">
@@ -59,9 +59,9 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
 
   // Notice Banner
   const banner = createElement('div', {
-    className: 'bg-amber-50 dark:bg-amber-950/40 border-b border-amber-200 dark:border-amber-900/60 px-5 py-2 text-xs text-amber-900 dark:text-amber-200 flex items-center gap-2 shrink-0',
+    className: 'bg-amber-50 border-b border-amber-200 px-5 py-2 text-xs text-amber-900 flex items-center gap-2 shrink-0',
   });
-  banner.innerHTML = `${getDashboardIcon('info', 'w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0')}
+  banner.innerHTML = `${getDashboardIcon('info', 'w-4 h-4 text-amber-700 shrink-0')}
     <span><strong>شبیه‌ساز پیامک:</strong> هیچ پیامک واقعی یا هزینه‌ای ارسال نخواهد شد و رکورد پیامک در لاگ سیستم ذخیره می‌گردد.</span>`;
 
   // Body Form
@@ -72,8 +72,8 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
   const form = createElement('form', { className: 'space-y-4' });
   form.innerHTML = `
     <div class="space-y-1 text-right">
-      <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">گیرنده پیامک:</label>
-      <select id="sms-recipient" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-xs font-bold text-gray-800 dark:text-gray-100 focus:border-[#E98A15] focus:ring-1 focus:ring-[#E98A15]">
+      <label class="block text-xs font-bold text-gray-700">گیرنده پیامک:</label>
+      <select id="sms-recipient" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs font-bold text-gray-800 focus:border-[#E98A15] focus:ring-1 focus:ring-[#E98A15]">
         <option value="all">کلیه اولیا و سرپرستان (همگانی)</option>
         ${students
           .map(
@@ -87,8 +87,8 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
     </div>
 
     <div class="space-y-1 text-right">
-      <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">انتخاب قالب آماده پیامک:</label>
-      <select id="sms-template" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-xs text-gray-800 dark:text-gray-100 focus:border-[#E98A15] focus:ring-1 focus:ring-[#E98A15]">
+      <label class="block text-xs font-bold text-gray-700">انتخاب قالب آماده پیامک:</label>
+      <select id="sms-template" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-800 focus:border-[#E98A15] focus:ring-1 focus:ring-[#E98A15]">
         <option value="">متن سفارشی (بدون قالب)</option>
         ${SMS_TEMPLATES.map((t) => `<option value="${t.id}">${t.name}</option>`).join('')}
       </select>
@@ -96,10 +96,10 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
 
     <div class="space-y-1 text-right">
       <div class="flex justify-between items-center">
-        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300">متن پیامک:</label>
-        <span id="char-counter" class="text-[11px] text-gray-500 dark:text-gray-400 font-semibold">۰ کاراکتر (۱ پیامک)</span>
+        <label class="block text-xs font-bold text-gray-700">متن پیامک:</label>
+        <span id="char-counter" class="text-[11px] text-gray-500 font-semibold">۰ کاراکتر (۱ پیامک)</span>
       </div>
-      <textarea id="sms-text" rows="4" required class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-xs text-gray-900 dark:text-gray-100 leading-relaxed focus:border-[#E98A15] focus:ring-1 focus:ring-[#E98A15]" placeholder="متن پیامک خود را بنویسید...">${
+      <textarea id="sms-text" rows="4" required class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 leading-relaxed focus:border-[#E98A15] focus:ring-1 focus:ring-[#E98A15]" placeholder="متن پیامک خود را بنویسید...">${
         SMS_TEMPLATES[0]!.text
       }</textarea>
     </div>
@@ -131,17 +131,17 @@ export function createSMSModal(options: SMSModalOptions): HTMLElement {
 
   // Footer Actions
   const footer = createElement('div', {
-    className: 'bg-gray-50 dark:bg-gray-900/60 border-t border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between shrink-0',
+    className: 'bg-gray-50 border-t border-gray-200 p-4 flex items-center justify-between shrink-0',
   });
 
   const cancelBtn = createElement('button', {
-    className: 'px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs font-semibold rounded-xl transition-colors',
+    className: 'px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold rounded-xl transition-colors',
     textContent: 'انصراف',
   });
   cancelBtn.addEventListener('click', onClose);
 
   const sendBtn = createElement('button', {
-    className: 'px-5 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5',
+    className: 'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5',
     innerHTML: `${getDashboardIcon('announcement', 'w-4 h-4')} <span>شبیه‌سازی ارسال SMS</span>`,
   });
 

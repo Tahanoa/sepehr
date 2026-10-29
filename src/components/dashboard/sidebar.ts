@@ -31,7 +31,7 @@ export function createSidebar(options: SidebarOptions): HTMLElement {
   } = options;
 
   const sidebar = createElement('aside', {
-    className: `bg-[#012622] dark:bg-[#071513] text-white flex flex-col justify-between transition-all duration-300 h-full relative z-30 ${
+    className: `bg-[#012622] text-white flex flex-col justify-between transition-all duration-300 h-full relative z-30 ${
       isCollapsed ? 'w-20' : 'w-72'
     }`,
     attributes: { 'aria-label': 'منوی اصلی سامانه' },
@@ -210,36 +210,38 @@ export function createMobileNavigationDrawer(
   isOpen: boolean,
   onClose: () => void
 ): HTMLElement {
-  const backdrop = createElement('div', {
-    id: 'mobile-drawer-root',
-    className: `fixed inset-0 bg-black/60 backdrop-blur-xs z-50 transition-opacity duration-300 lg:hidden ${
-      isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-    }`,
-  });
+  // Prevent background body scrolling when drawer is active
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
 
   const handleClose = () => {
     document.body.style.overflow = '';
     document.removeEventListener('keydown', handleKeyDown);
-    if (backdrop.parentNode) {
-      backdrop.parentNode.removeChild(backdrop);
-    }
     onClose();
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
+    if (e.key === 'Escape' && isOpen) {
       handleClose();
     }
   };
 
   if (isOpen) {
-    document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', handleKeyDown);
   }
 
+  const backdrop = createElement('div', {
+    className: `fixed inset-0 bg-black/60 backdrop-blur-xs z-50 transition-opacity duration-300 lg:hidden ${
+      isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+    }`,
+  });
+
   const drawer = createElement('div', {
-    className: `fixed top-0 start-0 bottom-0 w-80 max-w-[85vw] bg-[#012622] dark:bg-[#071513] text-white z-50 transition-transform duration-300 ease-out transform lg:hidden flex flex-col shadow-2xl ${
-      isOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full'
+    className: `fixed top-0 start-0 bottom-0 w-80 max-w-[85vw] bg-[#012622] text-white z-50 transition-transform duration-300 ease-out transform lg:hidden flex flex-col shadow-2xl ${
+      isOpen ? 'translate-x-0' : 'translate-x-full'
     }`,
     attributes: {
       role: 'dialog',
@@ -249,15 +251,11 @@ export function createMobileNavigationDrawer(
   });
 
   const closeBtn = createElement('button', {
-    className:
-      'absolute top-3.5 end-3.5 p-2.5 text-gray-300 hover:text-white rounded-xl bg-white/10 hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15] z-10 min-w-[44px] min-h-[44px] flex items-center justify-center',
+    className: 'absolute top-3.5 end-3.5 p-2.5 text-gray-300 hover:text-white rounded-xl bg-white/10 hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-[#E98A15] z-10 min-w-[44px] min-h-[44px] flex items-center justify-center',
     attributes: { 'aria-label': 'بستن منو' },
     innerHTML: getDashboardIcon('close', 'w-5 h-5'),
   });
-  closeBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    handleClose();
-  });
+  closeBtn.addEventListener('click', handleClose);
 
   const sidebarContent = createSidebar({
     ...options,
@@ -274,9 +272,7 @@ export function createMobileNavigationDrawer(
   backdrop.appendChild(drawer);
 
   backdrop.addEventListener('click', (e) => {
-    if (e.target === backdrop) {
-      handleClose();
-    }
+    if (e.target === backdrop) handleClose();
   });
 
   return backdrop;

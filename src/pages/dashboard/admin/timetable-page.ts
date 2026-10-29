@@ -5,7 +5,7 @@
  * 2. Teacher Timetables («برنامه دبیران و معلمان»)
  * 3. Schedule Settings & Periods Configuration («تنظیمات زنگ‌ها و روزهای آموزشی»)
  * Real-time synchronization across class, teacher, student, and parent views,
- * dynamic period structure management, and strict conflict detection with dark mode support.
+ * dynamic period structure management, and strict conflict detection.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
@@ -84,17 +84,17 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
 
     // Header Row
     const headerRow = createElement('div', {
-      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80 dark:border-gray-700/80',
+      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80',
     });
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('calendar', 'w-6 h-6 text-[#012622] dark:text-teal-400')} مدیریت برنامه هفتگی و زمان‌بندی آموزشی`;
+    title.innerHTML = `${getDashboardIcon('calendar', 'w-6 h-6 text-[#012622]')} مدیریت برنامه هفتگی و زمان‌بندی آموزشی`;
 
     const desc = createElement('p', {
-      className: 'text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-normal',
+      className: 'text-xs sm:text-sm text-gray-600 font-normal',
       textContent: isManagement
         ? 'مدیریت زنگ‌ها، روزهای فعال، برنامه درسی کلاس‌ها و برنامه تدریس معلمان با سیستم هوشمند پیشگیری از تداخل.'
         : 'مشاهده برنامه هفتگی و زمان‌بندی رسمی کلاس‌های آموزشی.',
@@ -109,8 +109,8 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       const publishBtn = createElement('button', {
         className: `px-3.5 py-2 text-xs font-bold rounded-xl border transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
           config.isPublished
-            ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100'
-            : 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border-amber-300 dark:border-amber-800 hover:bg-amber-100'
+            ? 'bg-emerald-50 text-emerald-900 border-emerald-300 hover:bg-emerald-100'
+            : 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100'
         }`,
         innerHTML: config.isPublished
           ? `✅ برنامه منتشر شده (کلیک برای پیش‌نویس)`
@@ -130,7 +130,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     } else {
       const statusBadge = createElement('span', {
         className: `px-3 py-1.5 rounded-xl text-xs font-bold ${
-          config.isPublished ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800' : 'bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-800'
+          config.isPublished ? 'bg-emerald-100 text-emerald-900 border border-emerald-200' : 'bg-amber-100 text-amber-900 border border-amber-200'
         }`,
         textContent: config.isPublished ? 'برنامه رسمی منتشر شده' : 'پیش‌نویس (غیرقابل مشاهده عمومی)',
       });
@@ -142,11 +142,11 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
 
     // Tab Navigation Bar for Management
     if (isManagement) {
-      const tabsNav = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 dark:border-gray-700 pb-1' });
+      const tabsNav = createElement('div', { className: 'flex items-center gap-2 border-b border-gray-200 pb-1' });
 
       const classTab = createElement('button', {
         className: `px-4 py-2 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
-          activeTab === 'class' ? 'bg-[#012622] dark:bg-teal-700 text-white shadow-2xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+          activeTab === 'class' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
         textContent: 'برنامه کلاس‌ها',
       });
@@ -154,7 +154,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
 
       const teacherTab = createElement('button', {
         className: `px-4 py-2 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
-          activeTab === 'teacher' ? 'bg-[#012622] dark:bg-teal-700 text-white shadow-2xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+          activeTab === 'teacher' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
         textContent: 'برنامه دبیران و معلمان',
       });
@@ -162,7 +162,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
 
       const configTab = createElement('button', {
         className: `px-4 py-2 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
-          activeTab === 'config' ? 'bg-[#012622] dark:bg-teal-700 text-white shadow-2xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+          activeTab === 'config' ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`,
         textContent: 'تنظیمات زنگ‌ها و روزهای آموزشی',
       });
@@ -186,15 +186,15 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
 
     // VIEW 1 & 2: CLASS / TEACHER TIMETABLE GRID
     const toolbar = createElement('div', {
-      className: 'bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3',
+      className: 'bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3',
     });
 
     const selectorBox = createElement('div', { className: 'flex items-center gap-3 w-full sm:w-auto' });
 
     if (activeTab === 'teacher' || (isTeacherRole && !isManagement)) {
-      const teacherLabel = createElement('label', { className: 'text-xs font-bold text-gray-700 dark:text-gray-300 shrink-0', textContent: 'دبیر / مدرس:' });
+      const teacherLabel = createElement('label', { className: 'text-xs font-bold text-gray-700 shrink-0', textContent: 'دبیر / مدرس:' });
       const teacherSelect = createElement('select', {
-        className: 'bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15] max-w-xs',
+        className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15] max-w-xs',
       });
 
       staff.forEach((st) => {
@@ -211,9 +211,9 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       selectorBox.appendChild(teacherLabel);
       selectorBox.appendChild(teacherSelect);
     } else {
-      const classLabel = createElement('label', { className: 'text-xs font-bold text-gray-700 dark:text-gray-300 shrink-0', textContent: 'انتخاب کلاس:' });
+      const classLabel = createElement('label', { className: 'text-xs font-bold text-gray-700 shrink-0', textContent: 'انتخاب کلاس:' });
       const classSelect = createElement('select', {
-        className: 'bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15] max-w-xs',
+        className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15] max-w-xs',
       });
 
       classes.forEach((c) => {
@@ -232,7 +232,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     }
 
     const timingBadge = createElement('div', {
-      className: 'text-xs font-mono font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 px-3.5 py-2 rounded-xl border border-gray-200 dark:border-gray-700',
+      className: 'text-xs font-mono font-bold text-gray-600 bg-gray-50 px-3.5 py-2 rounded-xl border border-gray-200',
       textContent: `تعداد زنگ‌ها: ${periodsList.length.toLocaleString('fa-IR')} | روزهای فعال: ${activeDaysList.length.toLocaleString('fa-IR')} روز`,
     });
 
@@ -248,7 +248,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     }
 
     // Timetable Grid Table
-    const tableContainer = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs overflow-x-auto' });
+    const tableContainer = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 shadow-2xs overflow-x-auto' });
     const table = createElement('table', { className: 'polaris-table min-w-[700px] w-full' });
 
     const thead = createElement('thead');
@@ -265,14 +265,14 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
 
     activeDaysList.forEach((day) => {
       const tr = createElement('tr');
-      const dayTd = createElement('td', { className: 'font-extrabold text-xs text-gray-900 dark:text-gray-100 text-center bg-gray-50/80 dark:bg-gray-900/60', textContent: day.title });
+      const dayTd = createElement('td', { className: 'font-extrabold text-xs text-gray-900 text-center bg-gray-50/80', textContent: day.title });
       tr.appendChild(dayTd);
 
       periodsList.forEach((period) => {
         const td = createElement('td', { className: 'text-center p-2' });
 
         if (period.isBreak) {
-          td.innerHTML = `<span class="text-[11px] text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2 py-1 rounded-lg font-bold">☕ زنگ تفریح</span>`;
+          td.innerHTML = `<span class="text-[11px] text-amber-800 bg-amber-50 px-2 py-1 rounded-lg font-bold">☕ زنگ تفریح</span>`;
           tr.appendChild(td);
           return;
         }
@@ -282,12 +282,12 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
         if (slot) {
           const clsObj = classes.find((c) => c.id === slot.classId);
           const slotBox = createElement('div', {
-            className: 'p-2.5 rounded-xl bg-[#ECE5F0]/80 dark:bg-teal-950/50 border border-[#012622]/20 dark:border-teal-700/60 text-right space-y-1 relative group shadow-2xs hover:border-[#012622] dark:hover:border-teal-400 transition-all cursor-pointer',
+            className: 'p-2.5 rounded-xl bg-[#ECE5F0]/80 border border-[#012622]/20 text-right space-y-1 relative group shadow-2xs hover:border-[#012622] transition-all cursor-pointer',
           });
           slotBox.innerHTML = `
-            <div class="font-bold text-xs text-[#012622] dark:text-teal-300">${slot.subjectName}</div>
-            <div class="text-[10px] text-gray-600 dark:text-gray-300 font-medium">${activeTab === 'teacher' ? `کلاس: ${clsObj ? clsObj.name : 'نامشخص'}` : slot.teacherName}</div>
-            <div class="text-[10px] text-gray-500 dark:text-gray-400 font-mono">${slot.timeLabel || `${period.startTime} - ${period.endTime}`} | ${slot.roomNumber || '۱۰۱'}</div>
+            <div class="font-bold text-xs text-[#012622]">${slot.subjectName}</div>
+            <div class="text-[10px] text-gray-600 font-medium">${activeTab === 'teacher' ? `کلاس: ${clsObj ? clsObj.name : 'نامشخص'}` : slot.teacherName}</div>
+            <div class="text-[10px] text-gray-500 font-mono">${slot.timeLabel || `${period.startTime} - ${period.endTime}`} | ${slot.roomNumber || '۱۰۱'}</div>
           `;
 
           if (isManagement) {
@@ -298,13 +298,13 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
         } else {
           if (isManagement) {
             const emptyBtn = createElement('button', {
-              className: 'w-full py-3 rounded-xl border border-dashed border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:border-[#012622] dark:hover:border-teal-400 hover:text-[#012622] dark:hover:text-teal-300 text-[11px] font-bold transition-all cursor-pointer',
+              className: 'w-full py-3 rounded-xl border border-dashed border-gray-200 text-gray-400 hover:border-[#012622] hover:text-[#012622] text-[11px] font-bold transition-all cursor-pointer',
               textContent: '+ افزودن درس',
             });
             emptyBtn.addEventListener('click', () => openSlotModal(periodsList, day.key, period.number));
             td.appendChild(emptyBtn);
           } else {
-            td.innerHTML = `<span class="text-xs text-gray-300 dark:text-gray-600 font-bold">—</span>`;
+            td.innerHTML = `<span class="text-xs text-gray-300 font-bold">—</span>`;
           }
         }
 
@@ -323,21 +323,21 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
 
   // --- VIEW 3: CONFIGURATION FORM ---
   const renderScheduleConfigView = (_config: ScheduleConfig, periods: PeriodDefinition[], activeDays: WeekDay[]): HTMLElement => {
-    const container = createElement('div', { className: 'space-y-6 dir-rtl text-xs text-gray-800 dark:text-gray-200' });
+    const container = createElement('div', { className: 'space-y-6 dir-rtl text-xs' });
 
     // Active Weekdays Config Card
-    const daysCard = createElement('div', { className: 'bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs space-y-3' });
+    const daysCard = createElement('div', { className: 'bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-3' });
     daysCard.innerHTML = `
-      <h3 class="font-extrabold text-sm text-[#012622] dark:text-teal-400 flex items-center gap-2">
+      <h3 class="font-extrabold text-sm text-[#012622] flex items-center gap-2">
         📅 روزهای آموزشی فعال مدرسه / مرکز
       </h3>
-      <p class="text-gray-500 dark:text-gray-400 text-[11px]">روزهایی که کلاس‌های آموزشی در آن‌ها برگزار می‌شوند را مشخص کنید.</p>
+      <p class="text-gray-500 text-[11px]">روزهایی که کلاس‌های آموزشی در آن‌ها برگزار می‌شوند را مشخص کنید.</p>
 
       <div class="flex items-center gap-3 flex-wrap pt-2">
         ${ALL_WEEKDAYS.map((d) => {
           const isActive = activeDays.includes(d.key);
           return `
-            <label class="p-2.5 px-4 rounded-xl border ${isActive ? 'bg-[#012622] dark:bg-teal-700 text-white border-[#012622] dark:border-teal-600' : 'bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700'} flex items-center gap-2 cursor-pointer font-bold transition-all">
+            <label class="p-2.5 px-4 rounded-xl border ${isActive ? 'bg-[#012622] text-white border-[#012622]' : 'bg-gray-50 text-gray-700 border-gray-200'} flex items-center gap-2 cursor-pointer font-bold transition-all">
               <input type="checkbox" value="${d.key}" class="day-chk text-[#E98A15]" ${isActive ? 'checked' : ''} />
               <span>${d.title}</span>
             </label>
@@ -356,14 +356,14 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     });
 
     // Periods Structure Card
-    const periodsCard = createElement('div', { className: 'bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs space-y-4' });
-    const pHeader = createElement('div', { className: 'flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-3' });
+    const periodsCard = createElement('div', { className: 'bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-4' });
+    const pHeader = createElement('div', { className: 'flex items-center justify-between border-b border-gray-100 pb-3' });
     pHeader.innerHTML = `
       <div>
-        <h3 class="font-extrabold text-sm text-[#012622] dark:text-teal-400">⏰ زنگ‌های درسی و تفریح</h3>
-        <p class="text-gray-500 dark:text-gray-400 text-[11px]">تعریف نام، زمان شروع و پایان و نوع زنگ (آموزشی یا تفریح).</p>
+        <h3 class="font-extrabold text-sm text-[#012622]">⏰ زنگ‌های درسی و تفریح</h3>
+        <p class="text-gray-500 text-[11px]">تعریف نام، زمان شروع و پایان و نوع زنگ (آموزشی یا تفریح).</p>
       </div>
-      <button type="button" id="btn-add-period" class="px-3.5 py-2 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white font-bold rounded-xl text-xs transition-all cursor-pointer">
+      <button type="button" id="btn-add-period" class="px-3.5 py-2 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl text-xs transition-all cursor-pointer">
         + افزودن زنگ جدید
       </button>
     `;
@@ -371,30 +371,30 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     const pList = createElement('div', { className: 'space-y-3' });
 
     periods.forEach((p, idx) => {
-      const row = createElement('div', { className: 'p-3 bg-gray-50 dark:bg-gray-900/60 rounded-xl border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3' });
+      const row = createElement('div', { className: 'p-3 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3' });
 
       row.innerHTML = `
         <div class="flex items-center gap-2 flex-1">
-          <span class="w-6 h-6 rounded-full bg-[#012622] dark:bg-teal-700 text-white flex items-center justify-center font-bold text-xs font-mono">${(idx + 1).toLocaleString('fa-IR')}</span>
-          <input type="text" value="${p.name}" class="p-name-input bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-1.5 text-xs font-bold text-gray-900 dark:text-gray-100 w-48" placeholder="نام زنگ..." />
+          <span class="w-6 h-6 rounded-full bg-[#012622] text-white flex items-center justify-center font-bold text-xs font-mono">${(idx + 1).toLocaleString('fa-IR')}</span>
+          <input type="text" value="${p.name}" class="p-name-input bg-white border border-gray-300 rounded-lg p-1.5 text-xs font-bold w-48" placeholder="نام زنگ..." />
         </div>
 
         <div class="flex items-center gap-3">
           <div>
-            <span class="text-[10px] text-gray-500 dark:text-gray-400 font-bold block">زمان شروع:</span>
-            <input type="text" value="${p.startTime}" class="p-start-input bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-1.5 text-xs font-mono font-bold text-gray-900 dark:text-gray-100 w-20 text-center" />
+            <span class="text-[10px] text-gray-500 font-bold block">زمان شروع:</span>
+            <input type="text" value="${p.startTime}" class="p-start-input bg-white border border-gray-300 rounded-lg p-1.5 text-xs font-mono font-bold w-20 text-center" />
           </div>
           <div>
-            <span class="text-[10px] text-gray-500 dark:text-gray-400 font-bold block">زمان پایان:</span>
-            <input type="text" value="${p.endTime}" class="p-end-input bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-1.5 text-xs font-mono font-bold text-gray-900 dark:text-gray-100 w-20 text-center" />
+            <span class="text-[10px] text-gray-500 font-bold block">زمان پایان:</span>
+            <input type="text" value="${p.endTime}" class="p-end-input bg-white border border-gray-300 rounded-lg p-1.5 text-xs font-mono font-bold w-20 text-center" />
           </div>
 
-          <label class="flex items-center gap-1.5 cursor-pointer font-bold text-amber-900 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/40 p-1.5 rounded-lg border border-amber-200 dark:border-amber-800/80">
+          <label class="flex items-center gap-1.5 cursor-pointer font-bold text-amber-900 bg-amber-50 p-1.5 rounded-lg border border-amber-200">
             <input type="checkbox" class="p-break-input" ${p.isBreak ? 'checked' : ''} />
             <span>زنگ تفریح</span>
           </label>
 
-          <button type="button" class="btn-del-period p-1.5 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 rounded-lg font-bold cursor-pointer" title="حذف زنگ">🗑️</button>
+          <button type="button" class="btn-del-period p-1.5 bg-rose-50 text-rose-700 hover:bg-rose-100 rounded-lg font-bold cursor-pointer" title="حذف زنگ">🗑️</button>
         </div>
       `;
 
@@ -462,7 +462,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     presetPeriodNum?: number,
     existingSlot?: TimetableSlot
   ) => {
-    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800 dark:text-gray-200' });
+    const form = createElement('form', { className: 'space-y-3.5 dir-rtl text-xs text-gray-800' });
 
     const currentClassVal = existingSlot ? existingSlot.classId : selectedClassId;
     const currentTeacherVal = existingSlot ? existingSlot.teacherId : selectedTeacherId;
@@ -471,13 +471,13 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">کلاس / گروه آموزشی *</label>
-          <select id="slot-class" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-extrabold text-gray-900 dark:text-gray-100">
+          <select id="slot-class" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-extrabold">
             ${classes.map((c) => `<option value="${c.id}" ${currentClassVal === c.id ? 'selected' : ''}>${c.name} (${c.gradeLevel})</option>`).join('')}
           </select>
         </div>
         <div>
           <label class="block font-bold mb-1">استاد / مدرس *</label>
-          <select id="slot-teacher" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-bold text-gray-900 dark:text-gray-100">
+          <select id="slot-teacher" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
             ${staff.map((st) => `<option value="${st.id}" ${currentTeacherVal === st.id ? 'selected' : ''}>${st.fullName} (${st.roleTitle})</option>`).join('')}
           </select>
         </div>
@@ -486,13 +486,13 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">روز هفته *</label>
-          <select id="slot-day" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-bold text-gray-900 dark:text-gray-100">
+          <select id="slot-day" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
             ${ALL_WEEKDAYS.map((d) => `<option value="${d.key}" ${(existingSlot ? existingSlot.dayOfWeek : presetDay) === d.key ? 'selected' : ''}>${d.title}</option>`).join('')}
           </select>
         </div>
         <div>
           <label class="block font-bold mb-1">زنگ آموزشی *</label>
-          <select id="slot-period" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-bold text-gray-900 dark:text-gray-100">
+          <select id="slot-period" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
             ${periodsList.map((p) => `<option value="${p.number}" ${(existingSlot ? existingSlot.periodNumber : presetPeriodNum) === p.number ? 'selected' : ''}>${p.name} (${p.startTime} - ${p.endTime})</option>`).join('')}
           </select>
         </div>
@@ -501,22 +501,22 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">درس آموزشی *</label>
-          <select id="slot-subject" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-bold text-gray-900 dark:text-gray-100">
+          <select id="slot-subject" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
             ${subjects.map((sb) => `<option value="${sb.id}" ${existingSlot && existingSlot.subjectId === sb.id ? 'selected' : ''}>${sb.name} (${sb.gradeLevel})</option>`).join('')}
           </select>
         </div>
         <div>
           <label class="block font-bold mb-1">شماره اتاق / کلاس درس</label>
-          <input type="text" id="slot-room" value="${existingSlot ? existingSlot.roomNumber : '۱۰۱'}" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-mono font-bold text-gray-900 dark:text-gray-100" />
+          <input type="text" id="slot-room" value="${existingSlot ? existingSlot.roomNumber : '۱۰۱'}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono font-bold" />
         </div>
       </div>
 
       ${existingSlot ? `
-        <div class="pt-2 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
-          <button type="button" id="btn-delete-slot" class="px-3 py-1.5 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 text-rose-700 dark:text-rose-300 text-xs font-bold rounded-xl transition-all cursor-pointer">
+        <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
+          <button type="button" id="btn-delete-slot" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl transition-all cursor-pointer">
             حذف این زنگ
           </button>
-          <span class="text-[10px] text-gray-500 dark:text-gray-400">ویرایش و ذخیره مقادیر.</span>
+          <span class="text-[10px] text-gray-500">ویرایش و ذخیره مقادیر.</span>
         </div>
       ` : ''}
     `;

@@ -52,7 +52,7 @@ export class DashboardLayout {
     this.onNavigate = options.onNavigate;
 
     this.rootEl = createElement('div', {
-      className: 'min-h-screen bg-gray-50 dark:bg-[#0B1312] text-gray-900 dark:text-gray-100 font-sans dir-rtl overflow-x-hidden relative transition-colors duration-200',
+      className: 'min-h-screen bg-gray-50 text-gray-900 font-sans dir-rtl overflow-x-hidden relative',
     });
 
     this.sidebarContainerEl = createElement('div', {
@@ -109,7 +109,12 @@ export class DashboardLayout {
     this.pageTitle = pageTitle;
     this.content = content;
 
-    this.closeMobileDrawer();
+    this.isMobileOpen = false;
+    const existingDrawer = document.getElementById('mobile-drawer-root');
+    if (existingDrawer) {
+      existingDrawer.remove();
+      document.body.style.overflow = '';
+    }
 
     this.renderSidebar();
     this.renderHeader();
@@ -118,15 +123,6 @@ export class DashboardLayout {
     this.contentViewportEl.className =
       'flex-1 p-3.5 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full transition-all duration-200 animate-fade-in-up min-w-0';
     this.contentViewportEl.appendChild(this.content);
-  }
-
-  private closeMobileDrawer(): void {
-    this.isMobileOpen = false;
-    document.body.style.overflow = '';
-    const existingDrawer = document.getElementById('mobile-drawer-root');
-    if (existingDrawer && existingDrawer.parentNode) {
-      existingDrawer.parentNode.removeChild(existingDrawer);
-    }
   }
 
   private renderSidebar(): void {
@@ -169,33 +165,36 @@ export class DashboardLayout {
   private toggleMobileDrawer(): void {
     this.isMobileOpen = !this.isMobileOpen;
 
-    if (this.isMobileOpen) {
-      const drawer = createMobileNavigationDrawer(
-        {
-          user: this.user,
-          membership: this.membership,
-          navItems: this.navItems,
-          currentPath: this.currentPath,
-          onNavigate: (path) => {
-            this.closeMobileDrawer();
-            this.onNavigate(path);
-          },
+    // Render mobile overlay drawer
+    const drawer = createMobileNavigationDrawer(
+      {
+        user: this.user,
+        membership: this.membership,
+        navItems: this.navItems,
+        currentPath: this.currentPath,
+        onNavigate: (path) => {
+          this.isMobileOpen = false;
+          this.onNavigate(path);
         },
-        true,
-        () => {
-          this.closeMobileDrawer();
-        }
-      );
+      },
+      this.isMobileOpen,
+      () => {
+        this.isMobileOpen = false;
+        this.renderSidebar();
+      }
+    );
 
-      this.rootEl.appendChild(drawer);
-    } else {
-      this.closeMobileDrawer();
+    const existingDrawer = document.getElementById('mobile-drawer-root');
+    if (existingDrawer) {
+      existingDrawer.remove();
     }
+    drawer.id = 'mobile-drawer-root';
+    this.rootEl.appendChild(drawer);
   }
 
   private createDemoBanner(): HTMLElement {
     const banner = createElement('div', {
-      className: 'bg-[#012622] dark:bg-[#071513] text-white px-4 py-2 border-b border-[#E98A15]/40 text-xs flex flex-wrap items-center justify-between gap-2 shrink-0 z-20',
+      className: 'bg-[#012622] text-white px-4 py-2 border-b border-[#E98A15]/40 text-xs flex flex-wrap items-center justify-between gap-2 shrink-0 z-20',
     });
 
     const infoBox = createElement('div', { className: 'flex items-center gap-2 font-medium' });
