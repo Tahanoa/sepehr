@@ -123,7 +123,7 @@ export class AccessPolicy {
    * Retrieves permissions granted to a given role.
    */
   public static getRolePermissions(role: Role): Permission[] {
-    return ROLE_PERMISSIONS[role] || [];
+    return (ROLE_PERMISSIONS[role] || []).filter(p => !(['school_admin','institute_admin'].includes(role) && ['view_exams','manage_exams','manage_grades'].includes(p)));
   }
 
   /**
@@ -182,6 +182,7 @@ export class AccessPolicy {
     sectionKey: string
   ): boolean {
     if (!membership || membership.status !== 'active') return false;
+    if (['school_admin','institute_admin'].includes(membership.role) && ['exams','exam-builder'].includes(sectionKey)) return false;
 
     // Overview is available to all active memberships
     if (sectionKey === 'overview') return true;
@@ -299,3 +300,4 @@ export class AccessPolicy {
     }
   }
 }
+

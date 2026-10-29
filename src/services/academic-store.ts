@@ -57,6 +57,7 @@ export function validateMark(value: string, isDescriptive: boolean): void {
   if (!isDescriptive && value !== '' && (!Number.isFinite(Number(value)) || Number(value) < 0 || Number(value) > 20)) throw Error('نمره باید بین صفر تا بیست باشد.');
 }
 export function saveMarks(m: OrganizationMembership, classId: string, rows: Omit<Mark,'updatedBy'|'updatedAt'>[]): void {
+  if (isAdmin(m)) throw Error('ثبت یا تغییر نمره فقط برای دبیر مجاز است.');
   requireClass(m,classId); const user = context(m), allowed = schoolStore.getStudents(m.organizationId).filter(s => s.classId === classId), subjects = subjectsFor(m,classId);
   for (const row of rows) {
     if (!allowed.some(s => s.id === row.studentId) || !subjects.some(s => s.id === row.subjectId) || !Object.hasOwn(components,row.component)) throw Error('دانش‌آموز یا درس نامعتبر است.');
@@ -121,3 +122,4 @@ export function sendMessage(m: OrganizationMembership, recipientId: string, text
   const at=new Date().toISOString(); chat.messages.push({id:crypto.randomUUID(),sender:self.id,text:text.trim(),at}); chat.read[self.id]=at; write(m.organizationId,state); return chat.id;
 }
 export function markRead(m: OrganizationMembership, id: string): void { const self=selfContact(m), state=read(m.organizationId), chat=state.chats.find(c=>c.id===id && c.participants.some(p=>p.id===self.id)); if(chat) {chat.read[self.id]=new Date().toISOString();write(m.organizationId,state);} }
+

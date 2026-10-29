@@ -13,9 +13,11 @@ function shell(source: HTMLInputElement | HTMLSelectElement) {
   const pop = el('div', { className: 'control-popover', attributes:{ popover:'auto', role:'dialog', 'aria-label':'گزینه‌های ' + labelFor(source), id:`control-${++counter}` } });
   trigger.setAttribute('aria-controls', pop.id);
   source.before(wrap); wrap.append(source, trigger, pop); source.classList.add('control-source'); source.tabIndex=-1; source.setAttribute('aria-hidden','true'); source.dataset.enhanced='true';
-  const position = () => { const r=trigger.getBoundingClientRect(); pop.style.width=`${Math.min(Math.max(r.width,280),innerWidth-24)}px`; pop.style.left=`${Math.max(12,Math.min(r.right-parseFloat(pop.style.width),innerWidth-parseFloat(pop.style.width)-12))}px`; pop.style.top=`${Math.max(12,Math.min(r.bottom+6,innerHeight-Math.min(pop.scrollHeight,400)-12))}px`; };
+  const position = () => { const r=trigger.getBoundingClientRect(); pop.style.margin='0'; pop.style.bottom='auto'; pop.style.right='auto'; pop.style.width=`${Math.min(Math.max(r.width,280),innerWidth-24)}px`; pop.style.left=`${Math.max(12,Math.min(r.right-parseFloat(pop.style.width),innerWidth-parseFloat(pop.style.width)-12))}px`; pop.style.top=`${Math.max(12,Math.min(r.bottom+6,innerHeight-Math.min(pop.scrollHeight,400)-12))}px`; };
   trigger.addEventListener('click', () => { if(pop.matches(':popover-open'))pop.hidePopover(); else { pop.showPopover(); position(); pop.querySelector<HTMLElement>('input, [aria-selected=true], button:not([disabled])')?.focus(); } });
-  pop.addEventListener('toggle', () => trigger.setAttribute('aria-expanded',String(pop.matches(':popover-open'))));
+  pop.addEventListener('toggle', () => {trigger.setAttribute('aria-expanded',String(pop.matches(':popover-open')));if(pop.matches(':popover-open'))requestAnimationFrame(position);});
+  pop.addEventListener('input',()=>requestAnimationFrame(position));
+  pop.addEventListener('click',()=>{if(pop.matches(':popover-open'))requestAnimationFrame(position);});
   pop.addEventListener('keydown', e => { if(e.key==='Escape'){e.stopPropagation();pop.hidePopover();trigger.focus();} });
   const close=()=>{pop.hidePopover(); if(trigger.isConnected)trigger.focus();};
   source.addEventListener('invalid',e=>{e.preventDefault();trigger.setAttribute('aria-invalid','true');trigger.focus();});

@@ -480,6 +480,7 @@ export function getNavigationForRoleAndOrg(
   organizationId: string
 ): NavigationItem[] {
   return MASTER_NAVIGATION.filter((item) => {
+    if (['school_admin','institute_admin'].includes(role) && ['exams','exam-builder'].includes(item.sectionKey || '')) return false;
     // Progress is an existing alias of the student directory, not a second feature.
     if (role === 'counselor' && item.sectionKey === 'progress') return false;
     const roleMatches = item.roles.includes(role);
@@ -542,3 +543,4 @@ export function getDashboardRouteMetadata(
 
   return metadata;
 }
+
