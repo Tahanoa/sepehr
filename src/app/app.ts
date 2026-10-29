@@ -31,7 +31,7 @@ import { createContactPage, createLoginPage, createRegisterPage, createForgotPas
 import { createElement, clearElement } from '../utils/dom';
 
 export function initializeApp(): { getRootElement: () => HTMLElement } {
-  const root = createElement('div', { className: 'min-h-screen flex flex-col bg-gray-50 text-gray-900 font-sans' });
+  const root = createElement('div', { className: 'min-h-screen flex flex-col bg-surface text-foreground font-sans' });
 
   // Containers for Public Layout
   const publicHeaderContainer = createElement('div', { id: 'public-header-container' });

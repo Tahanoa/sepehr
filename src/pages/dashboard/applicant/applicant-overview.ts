@@ -15,11 +15,11 @@ export function createApplicantOverviewPage(membership: OrganizationMembership):
 
   // Welcome Hero
   const welcomeCard = createElement('div', {
-    className: 'bg-gradient-to-br from-[#012622] via-[#003B36] to-[#59114D] rounded-2xl p-6 text-white shadow-md space-y-2',
+    className: 'bg-gradient-to-br from-brand-primary via-brand-secondary to-brand-purple rounded-2xl p-6 text-white shadow-md space-y-2',
   });
   welcomeCard.innerHTML = `
     <div class="flex items-center gap-2">
-      <span class="px-3 py-1 bg-[#E98A15] text-[#012622] text-xs font-black rounded-full">درخواست پذیرش آنلاین</span>
+      <span class="px-3 py-1 bg-brand-accent text-brand-primary text-xs font-black rounded-full">درخواست پذیرش آنلاین</span>
       <span class="text-xs text-amber-200">${membership.organization.name}</span>
     </div>
     <h2 class="text-2xl font-black">به آموزشگاه تخصصی خوش آمدید</h2>
@@ -40,13 +40,13 @@ export function createApplicantOverviewPage(membership: OrganizationMembership):
   links.forEach((link) => {
     const card = createElement('a', {
       attributes: { href: link.path },
-      className: 'bg-white p-5 rounded-2xl border border-gray-200 hover:border-[#012622] hover:bg-gray-50 transition-all flex items-center gap-3 cursor-pointer text-right shadow-2xs',
+      className: 'bg-card text-card-foreground p-5 rounded-2xl border border-border hover:border-primary hover:bg-surface-subtle transition-all flex items-center gap-3 cursor-pointer text-right shadow-2xs',
     });
     card.innerHTML = `
-      <div class="p-3 bg-[#ECE5F0] text-[#012622] rounded-xl shrink-0 font-bold">${getDashboardIcon(link.icon, 'w-6 h-6')}</div>
+      <div class="p-3 bg-primary/10 text-primary rounded-xl shrink-0 font-bold">${getDashboardIcon(link.icon, 'w-6 h-6')}</div>
       <div>
-        <h3 class="font-extrabold text-xs text-gray-900">${link.title}</h3>
-        <p class="text-[11px] text-gray-500 mt-1">${link.desc}</p>
+        <h3 class="font-extrabold text-xs text-foreground">${link.title}</h3>
+        <p class="text-[11px] text-muted-foreground mt-1">${link.desc}</p>
       </div>
     `;
     card.addEventListener('click', (e) => {
@@ -57,22 +57,22 @@ export function createApplicantOverviewPage(membership: OrganizationMembership):
   });
 
   // Recent Applications Status
-  const appCard = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs space-y-3' });
-  appCard.innerHTML = `<h3 class="text-xs sm:text-sm font-black text-gray-900 flex items-center gap-2">${getDashboardIcon('assignment', 'w-4 h-4 text-[#E98A15]')} درخواست‌های پذیرش فعال شما</h3>`;
+  const appCard = createElement('div', { className: 'bg-card text-card-foreground rounded-2xl border border-border p-5 shadow-2xs space-y-3' });
+  appCard.innerHTML = `<h3 class="text-xs sm:text-sm font-black text-foreground flex items-center gap-2">${getDashboardIcon('assignment', 'w-4 h-4 text-brand-accent')} درخواست‌های پذیرش فعال شما</h3>`;
 
   const appBody = createElement('div', { className: 'space-y-2' });
   if (applications.length === 0) {
-    appBody.innerHTML = `<div class="text-xs text-gray-500 py-4 text-center">هنوز درخواست پذیرشی ثبت نکرده‌اید.</div>`;
+    appBody.innerHTML = `<div class="text-xs text-muted-foreground py-4 text-center">هنوز درخواست پذیرشی ثبت نکرده‌اید.</div>`;
   } else {
     applications.forEach((app) => {
-      const item = createElement('div', { className: 'p-3.5 bg-gray-50 border border-gray-200 rounded-xl space-y-1 text-xs' });
+      const item = createElement('div', { className: 'p-3.5 bg-surface-subtle border border-border rounded-xl space-y-1 text-xs' });
       item.innerHTML = `
-        <div class="flex items-center justify-between font-bold text-gray-900">
+        <div class="flex items-center justify-between font-bold text-foreground">
           <span>${app.courseName}</span>
-          <span class="px-2.5 py-0.5 rounded text-[10px] bg-amber-100 text-amber-900 font-extrabold">کد رهگیری: ${app.refCode}</span>
+          <span class="px-2.5 py-0.5 rounded text-[10px] bg-amber-500/10 text-amber-600 dark:text-amber-400 font-extrabold">کد رهگیری: ${app.refCode}</span>
         </div>
-        <div class="text-gray-600">نام متقاضی: ${app.applicantName} | تاریخ ثبت: ${app.submissionDate}</div>
-        <div class="text-emerald-800 font-bold">وضعیت پذیرش: در انتظار تایید و تخصیص کلاس</div>
+        <div class="text-muted-foreground">نام متقاضی: ${app.applicantName} | تاریخ ثبت: ${app.submissionDate}</div>
+        <div class="text-emerald-600 dark:text-emerald-400 font-bold">وضعیت پذیرش: در انتظار تایید و تخصیص کلاس</div>
       `;
       appBody.appendChild(item);
     });

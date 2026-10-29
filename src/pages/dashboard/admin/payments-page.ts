@@ -1,7 +1,7 @@
 /**
  * POLARIS INSTITUTE PAYMENTS & TUITION MANAGEMENT PAGE
  * Interactive tuition invoice listing, status filter, application approvals,
- * simulated payment recording, and receipt preview.
+ * simulated payment recording, and receipt preview with dark mode support.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
@@ -36,17 +36,17 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
 
     // Header Row
     const headerRow = createElement('div', {
-      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80',
+      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80 dark:border-gray-700/80',
     });
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('payment', 'w-6 h-6 text-[#012622]')} امور شهریه و صورت‌حساب‌های مالی`;
+    title.innerHTML = `${getDashboardIcon('payment', 'w-6 h-6 text-[#012622] dark:text-teal-400')} امور شهریه و صورت‌حساب‌های مالی`;
 
     const desc = createElement('p', {
-      className: 'text-xs sm:text-sm text-gray-600 font-normal',
+      className: 'text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-normal',
       textContent: 'مدیریت صورت‌حساب‌ها، ثبت پرداختی‌های جدید، مشاهده رسیدها و بررسی متقاضیان آنلاین.',
     });
 
@@ -58,43 +58,43 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
     // Summary Financial Cards
     const finSummary = createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-3 gap-4' });
     finSummary.innerHTML = `
-      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs space-y-1">
-        <span class="text-xs font-bold text-gray-500">کل دریافتی‌های ثبت‌شده</span>
-        <div class="text-xl font-black text-emerald-800 font-mono">${totalRevenue.toLocaleString('fa-IR')} تومان</div>
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xs space-y-1">
+        <span class="text-xs font-bold text-gray-500 dark:text-gray-400">کل دریافتی‌های ثبت‌شده</span>
+        <div class="text-xl font-black text-emerald-800 dark:text-emerald-300 font-mono">${totalRevenue.toLocaleString('fa-IR')} تومان</div>
       </div>
-      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs space-y-1">
-        <span class="text-xs font-bold text-gray-500">مجموع مانده شهریه معوق</span>
-        <div class="text-xl font-black text-rose-800 font-mono">${totalOutstanding.toLocaleString('fa-IR')} تومان</div>
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xs space-y-1">
+        <span class="text-xs font-bold text-gray-500 dark:text-gray-400">مجموع مانده شهریه معوق</span>
+        <div class="text-xl font-black text-rose-800 dark:text-rose-300 font-mono">${totalOutstanding.toLocaleString('fa-IR')} تومان</div>
       </div>
-      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs space-y-1">
-        <span class="text-xs font-bold text-gray-500">متقاضیان جدید ثبت‌نام</span>
-        <div class="text-xl font-black text-[#012622] font-mono">${applications.length.toLocaleString('fa-IR')} نفر</div>
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xs space-y-1">
+        <span class="text-xs font-bold text-gray-500 dark:text-gray-400">متقاضیان جدید ثبت‌نام</span>
+        <div class="text-xl font-black text-[#012622] dark:text-teal-300 font-mono">${applications.length.toLocaleString('fa-IR')} نفر</div>
       </div>
     `;
 
     // Applications Section (if any)
     if (applications.length > 0) {
-      const appCard = createElement('div', { className: 'bg-amber-50/80 border border-amber-200 rounded-2xl p-5 space-y-3' });
+      const appCard = createElement('div', { className: 'bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/80 rounded-2xl p-5 space-y-3' });
       appCard.innerHTML = `
         <div class="flex items-center justify-between">
-          <h3 class="text-xs font-extrabold text-amber-950 flex items-center gap-2">
+          <h3 class="text-xs font-extrabold text-amber-950 dark:text-amber-200 flex items-center gap-2">
             ${getDashboardIcon('assignment', 'w-4 h-4 text-[#E98A15]')} درخواست‌های جدید ثبت‌نام آنلاین آموزشگاه
           </h3>
-          <span class="px-2 py-0.5 bg-amber-200 text-amber-900 text-[10px] font-bold rounded">${applications.length} مورد</span>
+          <span class="px-2 py-0.5 bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 text-[10px] font-bold rounded">${applications.length} مورد</span>
         </div>
       `;
 
       const appList = createElement('div', { className: 'space-y-2' });
       applications.forEach((app) => {
-        const row = createElement('div', { className: 'p-3 bg-white rounded-xl border border-amber-200/80 flex items-center justify-between text-xs' });
+        const row = createElement('div', { className: 'p-3 bg-white dark:bg-gray-800 rounded-xl border border-amber-200/80 dark:border-amber-800/60 flex items-center justify-between text-xs' });
         row.innerHTML = `
           <div>
-            <span class="font-bold text-gray-900">${app.applicantName}</span> — <span class="text-gray-600">${app.courseName}</span>
-            <div class="text-[11px] text-gray-500 font-mono">کد پیگیری: ${app.refCode} | شهریه: ${app.tuitionFee.toLocaleString('fa-IR')} تومان</div>
+            <span class="font-bold text-gray-900 dark:text-gray-100">${app.applicantName}</span> — <span class="text-gray-600 dark:text-gray-400">${app.courseName}</span>
+            <div class="text-[11px] text-gray-500 dark:text-gray-400 font-mono">کد پیگیری: ${app.refCode} | شهریه: ${app.tuitionFee.toLocaleString('fa-IR')} تومان</div>
           </div>
         `;
         const approveBtn = createElement('button', {
-          className: 'px-3 py-1.5 bg-[#012622] text-white font-bold rounded-lg text-xs hover:bg-[#003B36]',
+          className: 'px-3 py-1.5 bg-[#012622] dark:bg-teal-700 text-white font-bold rounded-lg text-xs hover:bg-[#003B36] dark:hover:bg-teal-600',
           textContent: 'تایید پذیرش و صدور کارت',
         });
         approveBtn.addEventListener('click', () => {
@@ -110,13 +110,13 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
     }
 
     // Invoice Filter & List Table
-    const tableCard = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 shadow-2xs overflow-hidden space-y-3 p-4' });
+    const tableCard = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xs overflow-hidden space-y-3 p-4' });
 
-    const filterRow = createElement('div', { className: 'flex items-center justify-between pb-3 border-b border-gray-100' });
-    filterRow.innerHTML = `<h3 class="text-sm font-bold text-gray-900">صورت‌حساب‌های صادرشده</h3>`;
+    const filterRow = createElement('div', { className: 'flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700' });
+    filterRow.innerHTML = `<h3 class="text-sm font-bold text-gray-900 dark:text-gray-100">صورت‌حساب‌های صادرشده</h3>`;
 
     const filterSelect = createElement('select', {
-      className: 'bg-gray-50 border border-gray-300 rounded-xl px-3 py-1.5 text-xs font-bold text-gray-800',
+      className: 'bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-1.5 text-xs font-bold text-gray-800 dark:text-gray-100',
     });
     filterSelect.innerHTML = `
       <option value="all" ${selectedStatus === 'all' ? 'selected' : ''}>همه صورت‌حساب‌ها</option>
@@ -146,29 +146,29 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
 
     const tbody = createElement('tbody');
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" class="text-center text-gray-500 py-6">هیچ صورت‌حسابی یافت نشد.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center text-gray-500 dark:text-gray-400 py-6">هیچ صورت‌حسابی یافت نشد.</td></tr>`;
     } else {
       filtered.forEach((inv) => {
         const remaining = Math.max(0, inv.totalAmount - inv.paidAmount);
         const tr = createElement('tr');
         tr.innerHTML = `
           <td>
-            <div class="font-bold text-xs text-gray-900">${inv.title}</div>
-            <div class="text-[11px] text-gray-500">${inv.studentName}</div>
+            <div class="font-bold text-xs text-gray-900 dark:text-gray-100">${inv.title}</div>
+            <div class="text-[11px] text-gray-500 dark:text-gray-400">${inv.studentName}</div>
           </td>
-          <td class="text-center font-mono font-bold text-xs">${inv.totalAmount.toLocaleString('fa-IR')} تومان</td>
-          <td class="text-center font-mono font-bold text-xs text-emerald-800">${inv.paidAmount.toLocaleString('fa-IR')} تومان</td>
-          <td class="text-center font-mono font-bold text-xs text-rose-800">${remaining.toLocaleString('fa-IR')} تومان</td>
+          <td class="text-center font-mono font-bold text-xs text-gray-900 dark:text-gray-100">${inv.totalAmount.toLocaleString('fa-IR')} تومان</td>
+          <td class="text-center font-mono font-bold text-xs text-emerald-800 dark:text-emerald-300">${inv.paidAmount.toLocaleString('fa-IR')} تومان</td>
+          <td class="text-center font-mono font-bold text-xs text-rose-800 dark:text-rose-300">${remaining.toLocaleString('fa-IR')} تومان</td>
           <td class="text-center">
             <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
-              inv.status === 'paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+              inv.status === 'paid' ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300'
             }">${inv.status === 'paid' ? 'تسویه کامل' : 'در انتظار پرداخت'}</span>
           </td>
         `;
 
         const actionTd = createElement('td', { className: 'text-center' });
         const payBtn = createElement('button', {
-          className: 'px-3 py-1 bg-[#012622] hover:bg-[#003B36] text-white rounded text-xs font-bold',
+          className: 'px-3 py-1 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white rounded text-xs font-bold',
           textContent: inv.status === 'paid' ? 'رسید پرداخت' : 'ثبت پرداختی',
         });
         payBtn.addEventListener('click', () => {
@@ -194,19 +194,19 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
 
   const openRecordPaymentModal = (inv: TuitionInvoice) => {
     const remaining = Math.max(0, inv.totalAmount - inv.paidAmount);
-    const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800' });
+    const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800 dark:text-gray-200' });
     content.innerHTML = `
-      <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl">
+      <div class="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/80 p-3 rounded-xl">
         <strong>ثبت پرداختی شهریه برای:</strong> ${inv.studentName} (${inv.title})<br>
         <strong>مانده قابل پرداخت:</strong> ${remaining.toLocaleString('fa-IR')} تومان
       </div>
       <div class="space-y-1">
         <label class="block font-bold">مبلغ دریافتی (تومان):</label>
-        <input type="number" id="pay-amount" value="${remaining}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono font-bold" />
+        <input type="number" id="pay-amount" value="${remaining}" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-mono font-bold text-gray-900 dark:text-gray-100" />
       </div>
       <div class="space-y-1">
         <label class="block font-bold">روش پرداخت:</label>
-        <select id="pay-method" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
+        <select id="pay-method" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2 text-xs text-gray-900 dark:text-gray-100">
           <option value="online_demo">درگاه آنلاین شبیه‌سازی شده</option>
           <option value="card_transfer">کارت به کارت / فیش واریزی</option>
           <option value="cash">نقدی / دستگاه کارتخوان</option>
@@ -236,13 +236,13 @@ export function createInstitutePaymentsPage(membership: OrganizationMembership):
 
   const openReceiptModal = (inv: TuitionInvoice) => {
     const lastTrn = inv.transactions[inv.transactions.length - 1];
-    const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800 p-4 bg-gray-50 border border-gray-200 rounded-2xl' });
+    const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800 dark:text-gray-200 p-4 bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-700 rounded-2xl' });
     content.innerHTML = `
-      <div class="text-center pb-3 border-b border-gray-300">
-        <h4 class="text-sm font-black text-[#012622]">رسید رسمی پرداخت شهریه (نسخه دمو)</h4>
-        <p class="text-[11px] text-gray-500 mt-0.5">کد رسید: ${lastTrn?.receiptNumber || 'RCP-10023'}</p>
+      <div class="text-center pb-3 border-b border-gray-300 dark:border-gray-700">
+        <h4 class="text-sm font-black text-[#012622] dark:text-teal-300">رسید رسمی پرداخت شهریه (نسخه دمو)</h4>
+        <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">کد رسید: ${lastTrn?.receiptNumber || 'RCP-10023'}</p>
       </div>
-      <div class="grid grid-cols-2 gap-2 text-gray-700">
+      <div class="grid grid-cols-2 gap-2 text-gray-700 dark:text-gray-300">
         <div><strong>نام فراگیر:</strong> ${inv.studentName}</div>
         <div><strong>عنوان دوره:</strong> ${inv.title}</div>
         <div><strong>مبلغ پرداختی:</strong> ${inv.paidAmount.toLocaleString('fa-IR')} تومان</div>

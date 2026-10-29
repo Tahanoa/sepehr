@@ -1,6 +1,6 @@
 /**
  * POLARIS TEACHER ASSIGNMENTS & HOMEWORK INBOX PAGE
- * Homework creation, due dates, submission review inbox, feedback, and scoring.
+ * Homework creation, due dates, submission review inbox, feedback, and scoring with dark mode support.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
@@ -30,19 +30,19 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
 
     // Header Row
     const headerRow = createElement('div', {
-      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80',
+      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80 dark:border-gray-700/80',
     });
 
     const headerText = createElement('div', { className: 'space-y-1' });
     headerText.innerHTML = `
-      <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2.5">
-        ${getDashboardIcon('assignment', 'w-6 h-6 text-[#012622]')} مدیریت تکالیف و صندوق دریافت پاسخ‌ها
+      <h2 class="text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-100 flex items-center gap-2.5">
+        ${getDashboardIcon('assignment', 'w-6 h-6 text-[#012622] dark:text-teal-400')} مدیریت تکالیف و صندوق دریافت پاسخ‌ها
       </h2>
-      <p class="text-xs sm:text-sm text-gray-600">تعریف تکلیف جدید، تنظیم مهلت تحویل، بررسی پاسخ‌های ارسالی دانش‌آموزان و درج نمره.</p>
+      <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">تعریف تکلیف جدید، تنظیم مهلت تحویل، بررسی پاسخ‌های ارسالی دانش‌آموزان و درج نمره.</p>
     `;
 
     const addBtn = createElement('button', {
-      className: 'px-4 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
+      className: 'px-4 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
       innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> تعریف تکلیف جدید`,
     });
     addBtn.addEventListener('click', () => openAddAssignmentModal());
@@ -54,25 +54,25 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
     const grid = createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-5' });
 
     if (assignments.length === 0) {
-      grid.innerHTML = `<div class="col-span-full bg-white p-8 text-center border border-gray-200 rounded-2xl text-xs text-gray-500">هنوز تکلیفی ثبت نشده است.</div>`;
+      grid.innerHTML = `<div class="col-span-full bg-white dark:bg-gray-800 p-8 text-center border border-gray-200 dark:border-gray-700 rounded-2xl text-xs text-gray-500 dark:text-gray-400">هنوز تکلیفی ثبت نشده است.</div>`;
     } else {
       assignments.forEach((asg) => {
         const submissions = schoolStore.getSubmissionsForAssignment(asg.id);
 
-        const card = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs space-y-3 flex flex-col justify-between' });
+        const card = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 shadow-2xs space-y-3 flex flex-col justify-between' });
         card.innerHTML = `
           <div class="space-y-2">
-            <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-              <span class="font-bold text-xs text-[#012622] bg-[#ECE5F0] px-2.5 py-1 rounded-lg">${asg.className}</span>
-              <span class="text-[11px] text-gray-500 font-mono">مهلت: ${asg.dueDate}</span>
+            <div class="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-gray-700">
+              <span class="font-bold text-xs text-[#012622] dark:text-teal-300 bg-[#ECE5F0] dark:bg-gray-700 px-2.5 py-1 rounded-lg">${asg.className}</span>
+              <span class="text-[11px] text-gray-500 dark:text-gray-400 font-mono">مهلت: ${asg.dueDate}</span>
             </div>
-            <h3 class="font-extrabold text-sm text-gray-900">${asg.title}</h3>
-            <p class="text-xs text-gray-600 leading-relaxed line-clamp-2">${asg.description}</p>
+            <h3 class="font-extrabold text-sm text-gray-900 dark:text-gray-100">${asg.title}</h3>
+            <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2">${asg.description}</p>
           </div>
 
-          <div class="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-            <span class="text-gray-500">تعداد پاسخ‌های دریافتی: <strong class="text-gray-900 font-mono">${submissions.length} مورد</strong></span>
-            <button class="view-sub-btn px-3 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
+          <div class="pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between text-xs">
+            <span class="text-gray-500 dark:text-gray-400">تعداد پاسخ‌های دریافتی: <strong class="text-gray-900 dark:text-gray-100 font-mono">${submissions.length} مورد</strong></span>
+            <button class="view-sub-btn px-3 py-1.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
               صندوق پاسخ‌ها (${submissions.length})
             </button>
           </div>
@@ -97,29 +97,29 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
       return;
     }
 
-    const form = createElement('form', { className: 'space-y-3.5 text-xs text-gray-800 dir-rtl' });
+    const form = createElement('form', { className: 'space-y-3.5 text-xs text-gray-800 dark:text-gray-200 dir-rtl' });
     form.innerHTML = `
       <div>
         <label class="block font-bold mb-1">عنوان تکلیف *</label>
-        <input type="text" id="asg-title" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs" placeholder="مثال: حل تمرینات مشتق فصل سوم" />
+        <input type="text" id="asg-title" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs text-gray-900 dark:text-gray-100" placeholder="مثال: حل تمرینات مشتق فصل سوم" />
       </div>
 
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="block font-bold mb-1">کلاس انتسابی *</label>
-          <select id="asg-classId" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs">
+          <select id="asg-classId" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs text-gray-900 dark:text-gray-100">
             ${classes.map((c) => `<option value="${c.id}">${c.name}</option>`).join('')}
           </select>
         </div>
         <div>
           <label class="block font-bold mb-1">مهلت تحویل *</label>
-          <input type="text" id="asg-dueDate" required value="۱۴۰۲/۱۲/۲۸" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
+          <input type="text" id="asg-dueDate" required value="۱۴۰۲/۱۲/۲۸" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-mono text-gray-900 dark:text-gray-100" />
         </div>
       </div>
 
       <div>
         <label class="block font-bold mb-1">دستورالعمل و توضیحات تکلیف *</label>
-        <textarea id="asg-desc" rows="3" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs" placeholder="توضیحات و فایل‌های پیوست مورد نیاز..."></textarea>
+        <textarea id="asg-desc" rows="3" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs text-gray-900 dark:text-gray-100" placeholder="توضیحات و فایل‌های پیوست مورد نیاز..."></textarea>
       </div>
     `;
 
@@ -159,36 +159,36 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
   const openSubmissionsModal = (asg: Assignment) => {
     const submissions = schoolStore.getSubmissionsForAssignment(asg.id);
 
-    const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800' });
+    const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800 dark:text-gray-200' });
 
     if (submissions.length === 0) {
-      content.innerHTML = `<div class="p-6 text-center text-gray-500 border border-gray-200 rounded-xl">هنوز پاسخی برای این تکلیف ارسال نشده است.</div>`;
+      content.innerHTML = `<div class="p-6 text-center text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-xl">هنوز پاسخی برای این تکلیف ارسال نشده است.</div>`;
     } else {
       const list = createElement('div', { className: 'space-y-3' });
       submissions.forEach((sub) => {
-        const item = createElement('div', { className: 'p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-2' });
+        const item = createElement('div', { className: 'p-4 bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-700 rounded-xl space-y-2' });
         item.innerHTML = `
-          <div class="flex items-center justify-between pb-2 border-b border-gray-200">
-            <span class="font-bold text-gray-900">${sub.studentName}</span>
-            <span class="text-[11px] font-mono text-gray-500">${sub.submissionDate}</span>
+          <div class="flex items-center justify-between pb-2 border-b border-gray-200 dark:border-gray-700">
+            <span class="font-bold text-gray-900 dark:text-gray-100">${sub.studentName}</span>
+            <span class="text-[11px] font-mono text-gray-500 dark:text-gray-400">${sub.submissionDate}</span>
           </div>
-          <p class="text-gray-800 leading-relaxed bg-white p-2.5 rounded-lg border border-gray-200">${sub.textContent}</p>
-          ${sub.fileName ? `<div class="text-[11px] text-indigo-700 font-semibold">📎 فایل پیوست: ${sub.fileName} (${sub.fileSize || '۱ مگابایت'})</div>` : ''}
+          <p class="text-gray-800 dark:text-gray-200 leading-relaxed bg-white dark:bg-gray-800 p-2.5 rounded-lg border border-gray-200 dark:border-gray-700">${sub.textContent}</p>
+          ${sub.fileName ? `<div class="text-[11px] text-indigo-700 dark:text-indigo-400 font-semibold">📎 فایل پیوست: ${sub.fileName} (${sub.fileSize || '۱ مگابایت'})</div>` : ''}
 
-          <div class="pt-2 border-t border-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div class="pt-2 border-t border-gray-200 dark:border-gray-700 grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
               <label class="block font-bold text-[11px] mb-0.5">نمره (از ۲۰):</label>
-              <input type="number" id="sub-score-${sub.id}" value="${sub.score || 20}" max="20" min="0" class="w-full bg-white border border-gray-300 rounded p-1.5 text-xs font-mono font-bold" />
+              <input type="number" id="sub-score-${sub.id}" value="${sub.score || 20}" max="20" min="0" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded p-1.5 text-xs font-mono font-bold text-gray-900 dark:text-gray-100" />
             </div>
             <div>
               <label class="block font-bold text-[11px] mb-0.5">بازخورد معلم:</label>
-              <input type="text" id="sub-feedback-${sub.id}" value="${sub.feedback || 'پاسخ کاملاً درست است.'}" class="w-full bg-white border border-gray-300 rounded p-1.5 text-xs" />
+              <input type="text" id="sub-feedback-${sub.id}" value="${sub.feedback || 'پاسخ کاملاً درست است.'}" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded p-1.5 text-xs text-gray-900 dark:text-gray-100" />
             </div>
           </div>
         `;
 
         const saveBtn = createElement('button', {
-          className: 'mt-2 px-3 py-1.5 bg-[#012622] text-white text-xs font-bold rounded-lg hover:bg-[#003B36]',
+          className: 'mt-2 px-3 py-1.5 bg-[#012622] dark:bg-teal-700 text-white text-xs font-bold rounded-lg hover:bg-[#003B36] dark:hover:bg-teal-600',
           textContent: 'ذخیره نمره و بازخورد',
         });
 

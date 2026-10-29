@@ -2,7 +2,7 @@
  * POLARIS ATTENDANCE MANAGEMENT PAGE
  * Daily attendance recording and monitoring, class filtering, status updates
  * (Present, Absent, Late, Excused), distinction between recorded vs unsubmitted attendance,
- * live summary recalculations, and weekly trend visualizations.
+ * live summary recalculations, and weekly trend visualizations with dark mode support.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
@@ -83,17 +83,17 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
 
     // Header Row
     const headerRow = createElement('div', {
-      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80',
+      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80 dark:border-gray-700/80',
     });
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('attendance', 'w-6 h-6 text-[#012622]')} ثبت و مدیریت حضور و غیاب روزانه`;
+    title.innerHTML = `${getDashboardIcon('attendance', 'w-6 h-6 text-[#012622] dark:text-teal-400')} ثبت و مدیریت حضور و غیاب روزانه`;
 
     const desc = createElement('p', {
-      className: 'text-xs sm:text-sm text-gray-600 font-normal',
+      className: 'text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-normal',
       textContent: 'ثبت آنلاین وضعیت حضور، غیبت غیرمجاز، تأخیر ورودی و مرخصی موجه دانش‌آموزان به تفکیک کلاس.',
     });
 
@@ -105,7 +105,7 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
     if (isManagement) {
       const smsBtn = createElement('button', {
         className:
-          'px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+          'px-3.5 py-2.5 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-800 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
         innerHTML: `${getDashboardIcon('chat', 'w-4 h-4 text-[#E98A15]')} ارسال SMS اولیا`,
       });
       smsBtn.addEventListener('click', () => {
@@ -120,7 +120,7 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
 
       const importBtn = createElement('button', {
         className:
-          'px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl border border-gray-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+          'px-3.5 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-bold rounded-xl border border-gray-300 dark:border-gray-600 transition-all flex items-center justify-center gap-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
         innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ورود CSV`,
       });
       importBtn.addEventListener('click', () => {
@@ -145,7 +145,7 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
     if (!isStudentOrParent) {
       const submitBtn = createElement('button', {
         className:
-          'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+          'px-5 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
         innerHTML: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> ثبت نهایی حضور و غیاب`,
       });
       submitBtn.addEventListener('click', () => {
@@ -181,14 +181,14 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
 
     // Filter Controls
     const toolbar = createElement('div', {
-      className: 'bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs grid grid-cols-1 sm:grid-cols-3 gap-3 items-center',
+      className: 'bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs grid grid-cols-1 sm:grid-cols-3 gap-3 items-center',
     });
 
     // Class Select
     const classSelectGroup = createElement('div', { className: 'space-y-1' });
-    const classLabel = createElement('label', { className: 'block text-[11px] font-bold text-gray-600', textContent: 'انتخاب کلاس:' });
+    const classLabel = createElement('label', { className: 'block text-[11px] font-bold text-gray-600 dark:text-gray-400', textContent: 'انتخاب کلاس:' });
     const classSelect = createElement('select', {
-      className: 'w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      className: 'w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
     });
 
     classes.forEach((c) => {
@@ -208,9 +208,9 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
 
     // Date Select
     const dateGroup = createElement('div', { className: 'space-y-1' });
-    const dateLabel = createElement('label', { className: 'block text-[11px] font-bold text-gray-600', textContent: 'تاریخ ارزیابی:' });
+    const dateLabel = createElement('label', { className: 'block text-[11px] font-bold text-gray-600 dark:text-gray-400', textContent: 'تاریخ ارزیابی:' });
     const dateInput = createElement('input', {
-      className: 'w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+      className: 'w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-xs font-mono font-bold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
       attributes: { type: 'text', value: selectedDate },
     });
     dateInput.addEventListener('change', (e) => {
@@ -226,7 +226,7 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
     const statusBox = createElement('div', { className: 'sm:text-left flex items-center justify-end gap-2' });
     const statusBadge = createElement('span', {
       className: `px-3 py-1.5 rounded-xl text-xs font-bold inline-flex items-center gap-1.5 ${
-        isSubmitted ? 'bg-emerald-100 text-emerald-900 border border-emerald-200' : 'bg-amber-100 text-amber-900 border border-amber-200'
+        isSubmitted ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800' : 'bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-800'
       }`,
       innerHTML: isSubmitted
         ? `✓ نهایی و ثبت شده`
@@ -243,17 +243,17 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
       className: 'grid grid-cols-2 sm:grid-cols-4 gap-3.5',
     });
 
-    const m1 = createElement('div', { className: 'bg-emerald-50 border border-emerald-200/80 rounded-2xl p-3.5 text-center' });
-    m1.innerHTML = `<div class="text-[11px] font-bold text-emerald-800">حاضرین</div><div class="text-xl font-black font-mono text-emerald-950 mt-1">${presentCount.toLocaleString('fa-IR')}</div>`;
+    const m1 = createElement('div', { className: 'bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/80 rounded-2xl p-3.5 text-center' });
+    m1.innerHTML = `<div class="text-[11px] font-bold text-emerald-800 dark:text-emerald-300">حاضرین</div><div class="text-xl font-black font-mono text-emerald-950 dark:text-emerald-100 mt-1">${presentCount.toLocaleString('fa-IR')}</div>`;
 
-    const m2 = createElement('div', { className: 'bg-rose-50 border border-rose-200/80 rounded-2xl p-3.5 text-center' });
-    m2.innerHTML = `<div class="text-[11px] font-bold text-rose-800">غایبین غیرمجاز</div><div class="text-xl font-black font-mono text-rose-950 mt-1">${absentCount.toLocaleString('fa-IR')}</div>`;
+    const m2 = createElement('div', { className: 'bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-800/80 rounded-2xl p-3.5 text-center' });
+    m2.innerHTML = `<div class="text-[11px] font-bold text-rose-800 dark:text-rose-300">غایبین غیرمجاز</div><div class="text-xl font-black font-mono text-rose-950 dark:text-rose-100 mt-1">${absentCount.toLocaleString('fa-IR')}</div>`;
 
-    const m3 = createElement('div', { className: 'bg-amber-50 border border-amber-200/80 rounded-2xl p-3.5 text-center' });
-    m3.innerHTML = `<div class="text-[11px] font-bold text-amber-800">تأخیر ورودی</div><div class="text-xl font-black font-mono text-amber-950 mt-1">${lateCount.toLocaleString('fa-IR')}</div>`;
+    const m3 = createElement('div', { className: 'bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/80 rounded-2xl p-3.5 text-center' });
+    m3.innerHTML = `<div class="text-[11px] font-bold text-amber-800 dark:text-amber-300">تأخیر ورودی</div><div class="text-xl font-black font-mono text-amber-950 dark:text-amber-100 mt-1">${lateCount.toLocaleString('fa-IR')}</div>`;
 
-    const m4 = createElement('div', { className: 'bg-blue-50 border border-blue-200/80 rounded-2xl p-3.5 text-center' });
-    m4.innerHTML = `<div class="text-[11px] font-bold text-blue-800">غایب موجه / مرخصی</div><div class="text-xl font-black font-mono text-blue-950 mt-1">${excusedCount.toLocaleString('fa-IR')}</div>`;
+    const m4 = createElement('div', { className: 'bg-blue-50 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/80 rounded-2xl p-3.5 text-center' });
+    m4.innerHTML = `<div class="text-[11px] font-bold text-blue-800 dark:text-blue-300">غایب موجه / مرخصی</div><div class="text-xl font-black font-mono text-blue-950 dark:text-blue-100 mt-1">${excusedCount.toLocaleString('fa-IR')}</div>`;
 
     metricsGrid.appendChild(m1);
     metricsGrid.appendChild(m2);
@@ -261,7 +261,7 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
     metricsGrid.appendChild(m4);
 
     // Student Roster Table
-    const tableCard = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 shadow-2xs overflow-hidden' });
+    const tableCard = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-2xs overflow-hidden' });
     const table = createElement('table', { className: 'polaris-table' });
 
     table.innerHTML = `
@@ -278,7 +278,7 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
     const tbody = createElement('tbody');
 
     if (classStudents.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 py-6">دانش‌آموزی در این کلاس یافت نشد.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 dark:text-gray-400 py-6">دانش‌آموزی در این کلاس یافت نشد.</td></tr>`;
     } else {
       classStudents.forEach((std) => {
         const tr = createElement('tr');
@@ -289,48 +289,48 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
         const nameTd = createElement('td', {
           innerHTML: `
             <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-full bg-[#012622] text-white font-bold flex items-center justify-center text-xs shrink-0">${std.fullName.slice(0, 1)}</div>
-              <span class="font-bold text-xs text-gray-900">${std.fullName}</span>
+              <div class="w-7 h-7 rounded-full bg-[#012622] dark:bg-teal-700 text-white font-bold flex items-center justify-center text-xs shrink-0">${std.fullName.slice(0, 1)}</div>
+              <span class="font-bold text-xs text-gray-900 dark:text-gray-100">${std.fullName}</span>
             </div>
           `,
         });
 
         // Code cell
-        const codeTd = createElement('td', { className: 'text-center font-mono text-xs text-gray-600', textContent: std.studentCode });
+        const codeTd = createElement('td', { className: 'text-center font-mono text-xs text-gray-600 dark:text-gray-400', textContent: std.studentCode });
 
         // Status choices cell
         const statusTd = createElement('td', { className: 'text-center' });
 
         if (isStudentOrParent) {
-          let badgeClass = 'bg-emerald-100 text-emerald-800';
+          let badgeClass = 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300';
           let labelText = 'حاضر';
           if (currentStatus === 'absent') {
-            badgeClass = 'bg-rose-100 text-rose-800';
+            badgeClass = 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300';
             labelText = 'غایب';
           } else if (currentStatus === 'late') {
-            badgeClass = 'bg-amber-100 text-amber-800';
+            badgeClass = 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300';
             labelText = 'تأخیر';
           } else if (currentStatus === 'excused') {
-            badgeClass = 'bg-blue-100 text-blue-800';
+            badgeClass = 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300';
             labelText = 'غایب موجه';
           }
 
           statusTd.innerHTML = `<span class="px-3 py-1 rounded-lg text-xs font-bold ${badgeClass}">${labelText}</span>`;
         } else {
-          const btnGroup = createElement('div', { className: 'inline-flex items-center rounded-xl p-1 bg-gray-100 border border-gray-200 gap-1' });
+          const btnGroup = createElement('div', { className: 'inline-flex items-center rounded-xl p-1 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 gap-1' });
 
           const statuses: { key: AttendanceStatus; label: string; activeClass: string }[] = [
-            { key: 'present', label: 'حاضر', activeClass: 'bg-emerald-700 text-white font-black shadow-2xs' },
-            { key: 'absent', label: 'غایب', activeClass: 'bg-rose-700 text-white font-black shadow-2xs' },
-            { key: 'late', label: 'تأخیر', activeClass: 'bg-amber-600 text-white font-black shadow-2xs' },
-            { key: 'excused', label: 'موجه', activeClass: 'bg-blue-600 text-white font-black shadow-2xs' },
+            { key: 'present', label: 'حاضر', activeClass: 'bg-emerald-700 dark:bg-emerald-600 text-white font-black shadow-2xs' },
+            { key: 'absent', label: 'غایب', activeClass: 'bg-rose-700 dark:bg-rose-600 text-white font-black shadow-2xs' },
+            { key: 'late', label: 'تأخیر', activeClass: 'bg-amber-600 dark:bg-amber-500 text-white font-black shadow-2xs' },
+            { key: 'excused', label: 'موجه', activeClass: 'bg-blue-600 dark:bg-blue-500 text-white font-black shadow-2xs' },
           ];
 
           statuses.forEach((st) => {
             const isSelected = currentStatus === st.key;
             const btn = createElement('button', {
               className: `px-2.5 py-1 text-[11px] rounded-lg transition-all cursor-pointer ${
-                isSelected ? st.activeClass : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
+                isSelected ? st.activeClass : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-600'
               }`,
               textContent: st.label,
             });
@@ -349,10 +349,10 @@ export function createAttendancePage(membership: OrganizationMembership): HTMLEl
         // Notes cell
         const notesTd = createElement('td');
         if (isStudentOrParent) {
-          notesTd.innerHTML = `<span class="text-xs text-gray-700">${localDrafts[std.id]?.notes || '—'}</span>`;
+          notesTd.innerHTML = `<span class="text-xs text-gray-700 dark:text-gray-300">${localDrafts[std.id]?.notes || '—'}</span>`;
         } else {
           const notesInput = createElement('input', {
-            className: 'w-full bg-gray-50 border border-gray-200 rounded-lg p-1.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#E98A15]',
+            className: 'w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg p-1.5 text-xs text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#E98A15]',
             attributes: { type: 'text', placeholder: 'ثبت علت غیبت/تأخیر...', value: localDrafts[std.id]?.notes || '' },
           });
 

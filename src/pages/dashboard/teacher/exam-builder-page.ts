@@ -24,6 +24,7 @@ import { authService } from '../../../services/auth-service';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
 import { Modal } from '../../../components/modal';
 import { showToast } from '../../../components/toast';
+import { formatNumber } from '../../../utils/formatters';
 
 export function createExamBuilderPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in pb-12' });
@@ -157,7 +158,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     }
 
     questions.forEach((q, idx) => {
-      const qNum = (idx + 1).toLocaleString('fa-IR');
+      const qNum = formatNumber(idx + 1);
       if (!q.prompt.trim() || q.prompt === 'متن سوال جدید را وارد کنید...') {
         warnings.push(`متن سوال شماره ${qNum} وارد نشده یا ناقص است.`);
       }
@@ -179,7 +180,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
     const totalQScore = calculateQuestionsTotalScore();
     if (totalQScore !== draftData.maxScore) {
-      warnings.push(`مجموع نمرات سوالات (${totalQScore}) با سقف نمره آزمون (${draftData.maxScore}) برابر نیست.`);
+      warnings.push(`مجموع نمرات سوالات (${formatNumber(totalQScore)}) با سقف نمره آزمون (${formatNumber(draftData.maxScore)}) برابر نیست.`);
     }
 
     return warnings;
@@ -250,26 +251,26 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
     // Page Top Header
     const topBar = createElement('div', {
-      className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4',
+      className: 'bg-card text-card-foreground rounded-2xl border border-border p-5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4',
     });
 
     const titleArea = createElement('div', { className: 'space-y-1' });
     titleArea.innerHTML = `
       <div class="flex items-center gap-2">
-        <button type="button" id="btn-back-exams" class="p-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-all cursor-pointer" title="بازگشت به فهرست آزمون‌ها">
+        <button type="button" id="btn-back-exams" class="p-1.5 bg-surface-subtle hover:bg-surface-elevated text-foreground rounded-xl transition-all cursor-pointer" title="بازگشت به فهرست آزمون‌ها">
           <svg class="w-5 h-5 dir-rtl-flip" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </button>
-        <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2">
-          ${getDashboardIcon('exam', 'w-6 h-6 text-[#012622]')}
+        <h2 class="text-xl sm:text-2xl font-black text-foreground flex items-center gap-2">
+          ${getDashboardIcon('exam', 'w-6 h-6 text-primary')}
           ${draftData.title ? draftData.title : 'سازنده و طراح جامع آزمون'}
         </h2>
         <span class="px-2.5 py-1 text-[11px] font-bold rounded-lg ${
-          draftData.status === 'published' ? 'bg-emerald-100 text-emerald-900' : 'bg-amber-100 text-amber-900'
+          draftData.status === 'published' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
         }">
           ${draftData.status === 'published' ? 'منتشر شده' : 'پیش‌نویس'}
         </span>
       </div>
-      <p class="text-xs text-gray-600 mr-9">طراحی، تنظیم بارم‌بندی، سوالات متنی/عینی/تشریحی و بازبینی پیش از انتشار آزمون آنلاین.</p>
+      <p class="text-xs text-muted-foreground mr-9">طراحی، تنظیم بارم‌بندی، سوالات متنی/عینی/تشریحی و بازبینی پیش از انتشار آزمون آنلاین.</p>
     `;
 
     topBar.appendChild(titleArea);
@@ -278,7 +279,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     const actionsRow = createElement('div', { className: 'flex items-center gap-2.5 flex-wrap' });
 
     const draftBtn = createElement('button', {
-      className: 'px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer',
+      className: 'px-4 py-2.5 bg-surface-subtle hover:bg-surface-elevated text-foreground text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer border border-border',
       innerHTML: `💾 ذخیره پیش‌نویس`,
     });
     draftBtn.addEventListener('click', () => {
@@ -288,7 +289,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
     const previewToggleBtn = createElement('button', {
       className: `px-4 py-2.5 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-        isPreviewMode ? 'bg-amber-500 text-white' : 'bg-indigo-50 text-indigo-900 border border-indigo-200 hover:bg-indigo-100'
+        isPreviewMode ? 'bg-amber-500 text-white' : 'bg-brand-accent/10 text-brand-accent border border-brand-accent/20 hover:bg-brand-accent/20'
       }`,
       innerHTML: isPreviewMode ? `✏️ خروج از پیش‌نمایش` : `👁️ پیش‌نمایش دانش‌آموز`,
     });
@@ -298,7 +299,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     });
 
     const publishBtn = createElement('button', {
-      className: 'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
+      className: 'px-5 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground text-xs font-bold rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer',
       innerHTML: `🚀 انتشار آزمون`,
     });
     publishBtn.addEventListener('click', () => {
@@ -330,7 +331,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     }
 
     // Workflow Steps Bar
-    const stepsNav = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-2 shadow-2xs' });
+    const stepsNav = createElement('div', { className: 'bg-card text-card-foreground rounded-2xl border border-border p-2 shadow-2xs' });
     const stepsList = [
       { num: 1, title: '۱. اطلاعات آزمون' },
       { num: 2, title: '۲. مخاطبان و امنیت' },
@@ -343,7 +344,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       const isCurrent = currentStep === s.num;
       const btn = createElement('button', {
         className: `py-2.5 px-3 rounded-xl transition-all cursor-pointer ${
-          isCurrent ? 'bg-[#012622] text-white shadow-2xs' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+          isCurrent ? 'bg-primary text-primary-foreground shadow-2xs' : 'bg-surface-subtle text-foreground hover:bg-surface-elevated'
         }`,
         textContent: s.title,
       });
@@ -373,10 +374,10 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     }
 
     // Step Navigation Controls Footer
-    const navFooter = createElement('div', { className: 'flex items-center justify-between pt-4 border-t border-gray-200' });
+    const navFooter = createElement('div', { className: 'flex items-center justify-between pt-4 border-t border-border' });
 
     const prevStepBtn = createElement('button', {
-      className: `px-5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+      className: `px-5 py-2 bg-surface-subtle hover:bg-surface-elevated text-foreground text-xs font-bold rounded-xl transition-all border border-border cursor-pointer ${
         currentStep === 1 ? 'opacity-50 cursor-not-allowed' : ''
       }`,
       textContent: '➔ گام قبلی',
@@ -389,7 +390,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     });
 
     const nextStepBtn = createElement('button', {
-      className: `px-5 py-2 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl transition-all cursor-pointer ${
+      className: `px-5 py-2 bg-primary hover:bg-primary-hover text-primary-foreground text-xs font-bold rounded-xl transition-all cursor-pointer ${
         currentStep === 4 ? 'hidden' : ''
       }`,
       textContent: 'گام بعدی ⬅',
@@ -420,35 +421,35 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
   // --- STEP 1: INFORMATION FORM ---
   const renderStep1Form = () => {
-    const card = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-4 text-xs dir-rtl' });
+    const card = createElement('div', { className: 'bg-card text-card-foreground rounded-2xl border border-border p-5 shadow-2xs space-y-4 text-xs dir-rtl' });
 
     card.innerHTML = `
-      <div class="pb-3 border-b border-gray-100">
-        <h3 class="font-extrabold text-sm text-[#012622]">گام ۱ — اطلاعات پایه و عنوان آزمون</h3>
-        <p class="text-[11px] text-gray-500">مشخصات کلی، عنوان، درس مرتبط و قوانین زمانی آزمون را تعیین کنید.</p>
+      <div class="pb-3 border-b border-border">
+        <h3 class="font-extrabold text-sm text-primary">گام ۱ — اطلاعات پایه و عنوان آزمون</h3>
+        <p class="text-[11px] text-muted-foreground">مشخصات کلی، عنوان، درس مرتبط و قوانین زمانی آزمون را تعیین کنید.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="sm:col-span-2">
-          <label class="block font-bold mb-1 text-gray-800">عنوان آزمون *</label>
-          <input type="text" id="bld-title" value="${draftData.title}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-extrabold focus:bg-white transition-all" placeholder="مثال: آزمون جامع حسابان ۲ — فصل مشتق و کاربردها" />
+          <label class="block font-bold mb-1 text-foreground">عنوان آزمون *</label>
+          <input type="text" id="bld-title" value="${draftData.title}" class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs font-extrabold text-foreground focus:bg-surface-elevated transition-all" placeholder="مثال: آزمون جامع حسابان ۲ — فصل مشتق و کاربردها" />
         </div>
 
         <div class="sm:col-span-2">
-          <label class="block font-bold mb-1 text-gray-800">توضیحات و راهنمای شرکت در آزمون</label>
-          <textarea id="bld-instructions" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs focus:bg-white transition-all" placeholder="توضیحات لازم درباره‌ی بارم‌بندی، فرمول‌ها یا نکات کلیدی پیش از شروع آزمون...">${draftData.instructions}</textarea>
+          <label class="block font-bold mb-1 text-foreground">توضیحات و راهنمای شرکت در آزمون</label>
+          <textarea id="bld-instructions" rows="3" class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-foreground focus:bg-surface-elevated transition-all" placeholder="توضیحات لازم درباره‌ی بارم‌بندی، فرمول‌ها یا نکات کلیدی پیش از شروع آزمون...">${draftData.instructions}</textarea>
         </div>
 
         <div>
-          <label class="block font-bold mb-1 text-gray-800">درس مرتبط *</label>
-          <select id="bld-subject" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
+          <label class="block font-bold mb-1 text-foreground">درس مرتبط *</label>
+          <select id="bld-subject" class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs font-bold text-foreground">
             ${availableSubjects.map((s) => `<option value="${s.id}" ${draftData.subjectId === s.id ? 'selected' : ''}>${s.name} (${s.gradeLevel})</option>`).join('')}
           </select>
         </div>
 
         <div>
-          <label class="block font-bold mb-1 text-gray-800">نوع آزمون *</label>
-          <select id="bld-examType" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs">
+          <label class="block font-bold mb-1 text-foreground">نوع آزمون *</label>
+          <select id="bld-examType" class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-foreground">
             <option value="quiz" ${draftData.examType === 'quiz' ? 'selected' : ''}>کوییز کلاسی</option>
             <option value="practice" ${draftData.examType === 'practice' ? 'selected' : ''}>آزمون تمرینی و خودسنجی</option>
             <option value="midterm" ${draftData.examType === 'midterm' ? 'selected' : ''}>آزمون میان‌ترم</option>
@@ -460,8 +461,8 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
         </div>
 
         <div>
-          <label class="block font-bold mb-1 text-gray-800">سطح دشواری</label>
-          <select id="bld-difficulty" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs">
+          <label class="block font-bold mb-1 text-foreground">سطح دشواری</label>
+          <select id="bld-difficulty" class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-foreground">
             <option value="easy" ${draftData.difficulty === 'easy' ? 'selected' : ''}>ساده</option>
             <option value="medium" ${draftData.difficulty === 'medium' ? 'selected' : ''}>متوسط</option>
             <option value="hard" ${draftData.difficulty === 'hard' ? 'selected' : ''}>دشوار / کنکوری</option>
@@ -469,36 +470,36 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
         </div>
 
         <div>
-          <label class="block font-bold mb-1 text-gray-800">مدت زمان آزمون (دقیقه) *</label>
-          <input type="number" id="bld-duration" min="5" max="300" value="${draftData.durationMinutes}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono font-bold" />
+          <label class="block font-bold mb-1 text-foreground">مدت زمان آزمون (دقیقه) *</label>
+          <input type="number" id="bld-duration" min="5" max="300" value="${draftData.durationMinutes}" class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs font-mono font-bold text-foreground" />
         </div>
 
         <div>
-          <label class="block font-bold mb-1 text-gray-800">سقف نمره کلی آزمون *</label>
-          <input type="number" id="bld-maxScore" min="1" max="100" value="${draftData.maxScore}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono font-bold" />
+          <label class="block font-bold mb-1 text-foreground">سقف نمره کلی آزمون *</label>
+          <input type="number" id="bld-maxScore" min="1" max="100" value="${draftData.maxScore}" class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs font-mono font-bold text-foreground" />
         </div>
 
         <div>
-          <label class="block font-bold mb-1 text-gray-800">نمره حد قبولی</label>
-          <input type="number" id="bld-passingScore" min="0" max="100" value="${draftData.passingScore}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
+          <label class="block font-bold mb-1 text-foreground">نمره حد قبولی</label>
+          <input type="number" id="bld-passingScore" min="0" max="100" value="${draftData.passingScore}" class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs font-mono text-foreground" />
         </div>
 
         <div>
-          <label class="block font-bold mb-1 text-gray-800">تاریخ برگزاری *</label>
-          <input type="text" id="bld-date" value="${draftData.examDate}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
+          <label class="block font-bold mb-1 text-foreground">تاریخ برگزاری *</label>
+          <input type="text" id="bld-date" value="${draftData.examDate}" class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs font-mono text-foreground" />
         </div>
 
         <div>
-          <label class="block font-bold mb-1 text-gray-800">سیاست انتشار کارنامه</label>
-          <select id="bld-release" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
+          <label class="block font-bold mb-1 text-foreground">سیاست انتشار کارنامه</label>
+          <select id="bld-release" class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs font-bold text-foreground">
             <option value="immediate" ${draftData.resultReleasePolicy === 'immediate' ? 'selected' : ''}>بلافاصله پس از تحویل</option>
             <option value="manual" ${draftData.resultReleasePolicy === 'manual' ? 'selected' : ''}>بررسی و انتشار دستی توسط معلم</option>
           </select>
         </div>
 
-        <div class="sm:col-span-2 pt-2 border-t border-gray-100 flex items-center gap-2">
-          <input type="checkbox" id="bld-review" ${draftData.canReviewAnswers ? 'checked' : ''} class="w-4 h-4 rounded text-[#012622]" />
-          <label for="bld-review" class="font-bold text-gray-800 cursor-pointer">دانش‌آموز می‌تواند پاسخ‌های خود را پیش از تحویل نهایی مرور کند.</label>
+        <div class="sm:col-span-2 pt-2 border-t border-border flex items-center gap-2">
+          <input type="checkbox" id="bld-review" ${draftData.canReviewAnswers ? 'checked' : ''} class="w-4 h-4 rounded text-primary" />
+          <label for="bld-review" class="font-bold text-foreground cursor-pointer">دانش‌آموز می‌تواند پاسخ‌های خود را پیش از تحویل نهایی مرور کند.</label>
         </div>
       </div>
     `;
@@ -536,41 +537,41 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
   // --- STEP 2: RECIPIENTS & SECURITY FORM ---
   const renderStep2Form = () => {
-    const card = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-5 text-xs dir-rtl' });
+    const card = createElement('div', { className: 'bg-card text-card-foreground rounded-2xl border border-border p-5 shadow-2xs space-y-5 text-xs dir-rtl' });
 
     const recipientStudents = allStudents.filter((s) => draftData.selectedClassIds.includes(s.classId));
     const finalRecipients = recipientStudents.filter((s) => !draftData.excludedStudentIds.includes(s.id));
 
     card.innerHTML = `
-      <div class="pb-3 border-b border-gray-100 flex items-center justify-between">
+      <div class="pb-3 border-b border-border flex items-center justify-between">
         <div>
-          <h3 class="font-extrabold text-sm text-[#012622]">گام ۲ — تعیین کلاس‌ها، مخاطبان و امنیت جلسه</h3>
-          <p class="text-[11px] text-gray-500">انتخاب کلاس‌های مجاز، لیست استثنا و قوانین قطع اتصال یا خروج از آزمون.</p>
+          <h3 class="font-extrabold text-sm text-primary">گام ۲ — تعیین کلاس‌ها، مخاطبان و امنیت جلسه</h3>
+          <p class="text-[11px] text-muted-foreground">انتخاب کلاس‌های مجاز، لیست استثنا و قوانین قطع اتصال یا خروج از آزمون.</p>
         </div>
-        <span class="px-3 py-1.5 bg-[#012622] text-white rounded-xl font-bold font-mono text-xs">
-          دریافت‌کنندگان نهایی: ${finalRecipients.length.toLocaleString('fa-IR')} نفر
+        <span class="px-3 py-1.5 bg-primary text-primary-foreground rounded-xl font-bold font-mono text-xs">
+          دریافت‌کنندگان نهایی: ${formatNumber(finalRecipients.length)} نفر
         </span>
       </div>
 
       <!-- Class Selection -->
       <div class="space-y-2">
-        <label class="block font-extrabold text-gray-900">کلاس‌های شرکت‌کننده در آزمون *</label>
+        <label class="block font-extrabold text-foreground">کلاس‌های شرکت‌کننده در آزمون *</label>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           ${availableClasses
             .map((c) => {
               const isChecked = draftData.selectedClassIds.includes(c.id);
               return `
                 <label class="p-3 rounded-xl border ${
-                  isChecked ? 'border-[#012622] bg-[#ECE5F0]/40' : 'border-gray-200 bg-gray-50/50'
-                } flex items-center justify-between cursor-pointer hover:border-[#012622] transition-all">
+                  isChecked ? 'border-primary bg-primary/10' : 'border-border bg-surface-subtle'
+                } flex items-center justify-between cursor-pointer hover:border-primary transition-all">
                   <div class="flex items-center gap-2">
-                    <input type="checkbox" value="${c.id}" class="cls-chk text-[#012622] rounded" ${isChecked ? 'checked' : ''} />
+                    <input type="checkbox" value="${c.id}" class="cls-chk text-primary rounded" ${isChecked ? 'checked' : ''} />
                     <div>
-                      <div class="font-bold text-gray-900">${c.name}</div>
-                      <div class="text-[10px] text-gray-500">${c.gradeLevel}</div>
+                      <div class="font-bold text-foreground">${c.name}</div>
+                      <div class="text-[10px] text-muted-foreground">${c.gradeLevel}</div>
                     </div>
                   </div>
-                  <span class="px-2 py-0.5 bg-white border border-gray-200 text-gray-700 rounded-lg text-[10px] font-mono font-bold">${c.studentCount} دانش‌آموز</span>
+                  <span class="px-2 py-0.5 bg-card border border-border text-foreground rounded-lg text-[10px] font-mono font-bold">${formatNumber(c.studentCount)} دانش‌آموز</span>
                 </label>
               `;
             })
@@ -579,34 +580,34 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       </div>
 
       <!-- Security Policies -->
-      <div class="pt-4 border-t border-gray-100 space-y-4">
-        <h4 class="font-extrabold text-xs text-gray-900">تنظیمات امنیتی و رفتار جلسه آزمون:</h4>
+      <div class="pt-4 border-t border-border space-y-4">
+        <h4 class="font-extrabold text-xs text-foreground">تنظیمات امنیتی و رفتار جلسه آزمون:</h4>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block font-bold mb-1">سیاست خروج یا غیرفعال شدن صفحه *</label>
-            <select id="cfg-interruption" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-semibold">
+            <label class="block font-bold mb-1 text-foreground">سیاست خروج یا غیرفعال شدن صفحه *</label>
+            <select id="cfg-interruption" class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs font-semibold text-foreground">
               <option value="warn_flag" ${draftData.interruptionPolicy === 'warn_flag' ? 'selected' : ''}>هشدار به دانش‌آموز + ثبت در گزارش سلامت جلسه</option>
               <option value="warn_continue" ${draftData.interruptionPolicy === 'warn_continue' ? 'selected' : ''}>فقط نمایش هشدار (بدون ثبت گزارش)</option>
               <option value="terminate" ${draftData.interruptionPolicy === 'terminate' ? 'selected' : ''}>توقیف و ارسال خودکار پاسخ‌های ثبت‌شده</option>
             </select>
           </div>
 
-          <div class="space-y-2 pt-1">
+          <div class="space-y-2 pt-1 text-foreground">
             <label class="flex items-center gap-2 cursor-pointer font-bold">
-              <input type="checkbox" id="cfg-back" ${draftData.allowBackNavigation ? 'checked' : ''} class="w-4 h-4 text-[#012622] rounded" />
+              <input type="checkbox" id="cfg-back" ${draftData.allowBackNavigation ? 'checked' : ''} class="w-4 h-4 text-primary rounded" />
               <span>امکان بازگشت به سوالات قبلی</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer font-bold">
-              <input type="checkbox" id="cfg-autoSubmit" ${draftData.autoSubmitOnTimeout ? 'checked' : ''} class="w-4 h-4 text-[#012622] rounded" />
+              <input type="checkbox" id="cfg-autoSubmit" ${draftData.autoSubmitOnTimeout ? 'checked' : ''} class="w-4 h-4 text-primary rounded" />
               <span>تحویل خودکار هنگام اتمام تایمر</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer font-bold">
-              <input type="checkbox" id="cfg-randQ" ${draftData.randomizeQuestions ? 'checked' : ''} class="w-4 h-4 text-[#012622] rounded" />
+              <input type="checkbox" id="cfg-randQ" ${draftData.randomizeQuestions ? 'checked' : ''} class="w-4 h-4 text-primary rounded" />
               <span>ترتیب تصادفی سوالات (Randomize)</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer font-bold">
-              <input type="checkbox" id="cfg-randOpt" ${draftData.randomizeOptions ? 'checked' : ''} class="w-4 h-4 text-[#012622] rounded" />
+              <input type="checkbox" id="cfg-randOpt" ${draftData.randomizeOptions ? 'checked' : ''} class="w-4 h-4 text-primary rounded" />
               <span>ترتیب تصادفی گزینه‌ها در تست‌ها</span>
             </label>
           </div>
@@ -640,45 +641,45 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
   // --- STEP 3: QUESTIONS EDITOR (ALL 6 TYPES + REORDERING + OPTIONS MANAGEMENT) ---
   const renderStep3QuestionsEditor = () => {
-    const card = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-5 text-xs dir-rtl' });
+    const card = createElement('div', { className: 'bg-card text-card-foreground rounded-2xl border border-border p-5 shadow-2xs space-y-5 text-xs dir-rtl' });
 
     const totalQScore = calculateQuestionsTotalScore();
 
-    const header = createElement('div', { className: 'flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100' });
+    const header = createElement('div', { className: 'flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border' });
     header.innerHTML = `
       <div>
-        <h3 class="font-extrabold text-sm text-[#012622]">گام ۳ — ویرایشگر سؤالات و پاسخ‌نامه کلید</h3>
-        <p class="text-[11px] text-gray-500">طراحی انواع سؤالات تستی، تشریحی، عددی، صحیح/غلط و کوتاه‌پاسخ همراه با تعیین بارم‌بندی.</p>
+        <h3 class="font-extrabold text-sm text-primary">گام ۳ — ویرایشگر سؤالات و پاسخ‌نامه کلید</h3>
+        <p class="text-[11px] text-muted-foreground">طراحی انواع سؤالات تستی، تشریحی، عددی، صحیح/غلط و کوتاه‌پاسخ همراه با تعیین بارم‌بندی.</p>
       </div>
 
       <div class="flex items-center gap-2">
-        <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-xl font-bold font-mono text-xs">
-          تعداد: ${questions.length.toLocaleString('fa-IR')}
+        <span class="px-3 py-1 bg-surface-subtle text-foreground border border-border rounded-xl font-bold font-mono text-xs">
+          تعداد: ${formatNumber(questions.length)}
         </span>
         <span class="px-3 py-1 ${
-          totalQScore === draftData.maxScore ? 'bg-emerald-100 text-emerald-950' : 'bg-amber-100 text-amber-950'
+          totalQScore === draftData.maxScore ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
         } rounded-xl font-bold font-mono text-xs">
-          بارم سؤالات: ${totalQScore.toLocaleString('fa-IR')} از ${draftData.maxScore.toLocaleString('fa-IR')}
+          بارم سؤالات: ${formatNumber(totalQScore)} از ${formatNumber(draftData.maxScore)}
         </span>
       </div>
     `;
 
     // Add Bar
-    const addBar = createElement('div', { className: 'p-3 bg-[#ECE5F0]/60 rounded-2xl border border-[#012622]/20 space-y-2' });
+    const addBar = createElement('div', { className: 'p-3 bg-surface-subtle rounded-2xl border border-border space-y-2' });
     addBar.innerHTML = `
       <div class="flex items-center justify-between flex-wrap gap-2">
-        <span class="font-extrabold text-xs text-[#012622]">افزودن سؤال جدید به آزمون:</span>
-        <button type="button" id="btn-open-question-bank" class="px-3 py-1.5 bg-[#012622] hover:bg-[#003B36] text-white font-bold rounded-xl text-xs transition-all cursor-pointer">
+        <span class="font-extrabold text-xs text-foreground">افزودن سؤال جدید به آزمون:</span>
+        <button type="button" id="btn-open-question-bank" class="px-3 py-1.5 bg-primary hover:bg-primary-hover text-primary-foreground font-bold rounded-xl text-xs transition-all cursor-pointer">
           📚 انتخاب از بانک سوالات
         </button>
       </div>
       <div class="flex items-center gap-1.5 flex-wrap">
-        <button type="button" data-qtype="single_choice" class="btn-add-qtype px-3 py-1.5 bg-white border border-gray-300 rounded-xl font-bold hover:bg-gray-100 cursor-pointer">+ تک‌گزینه‌ای</button>
-        <button type="button" data-qtype="multiple_select" class="btn-add-qtype px-3 py-1.5 bg-white border border-gray-300 rounded-xl font-bold hover:bg-gray-100 cursor-pointer">+ چندگزینه‌ای</button>
-        <button type="button" data-qtype="true_false" class="btn-add-qtype px-3 py-1.5 bg-white border border-gray-300 rounded-xl font-bold hover:bg-gray-100 cursor-pointer">+ صحیح / غلط</button>
-        <button type="button" data-qtype="short_answer" class="btn-add-qtype px-3 py-1.5 bg-white border border-gray-300 rounded-xl font-bold hover:bg-gray-100 cursor-pointer">+ پاسخ کوتاه</button>
-        <button type="button" data-qtype="descriptive" class="btn-add-qtype px-3 py-1.5 bg-white border border-gray-300 rounded-xl font-bold hover:bg-gray-100 cursor-pointer">+ تشریحی</button>
-        <button type="button" data-qtype="numeric" class="btn-add-qtype px-3 py-1.5 bg-white border border-gray-300 rounded-xl font-bold hover:bg-gray-100 cursor-pointer">+ عددی</button>
+        <button type="button" data-qtype="single_choice" class="btn-add-qtype px-3 py-1.5 bg-card text-card-foreground border border-border rounded-xl font-bold hover:bg-surface-elevated cursor-pointer">+ تک‌گزینه‌ای</button>
+        <button type="button" data-qtype="multiple_select" class="btn-add-qtype px-3 py-1.5 bg-card text-card-foreground border border-border rounded-xl font-bold hover:bg-surface-elevated cursor-pointer">+ چندگزینه‌ای</button>
+        <button type="button" data-qtype="true_false" class="btn-add-qtype px-3 py-1.5 bg-card text-card-foreground border border-border rounded-xl font-bold hover:bg-surface-elevated cursor-pointer">+ صحیح / غلط</button>
+        <button type="button" data-qtype="short_answer" class="btn-add-qtype px-3 py-1.5 bg-card text-card-foreground border border-border rounded-xl font-bold hover:bg-surface-elevated cursor-pointer">+ پاسخ کوتاه</button>
+        <button type="button" data-qtype="descriptive" class="btn-add-qtype px-3 py-1.5 bg-card text-card-foreground border border-border rounded-xl font-bold hover:bg-surface-elevated cursor-pointer">+ تشریحی</button>
+        <button type="button" data-qtype="numeric" class="btn-add-qtype px-3 py-1.5 bg-card text-card-foreground border border-border rounded-xl font-bold hover:bg-surface-elevated cursor-pointer">+ عددی</button>
       </div>
     `;
 
@@ -720,16 +721,16 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     const qListContainer = createElement('div', { className: 'space-y-4' });
 
     if (questions.length === 0) {
-      qListContainer.innerHTML = `<div class="p-8 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-300 text-gray-500">هنوز سوالی اضافه نشده است. از نوع‌های بالا یا بانک سوالات برای افزودن استفاده کنید.</div>`;
+      qListContainer.innerHTML = `<div class="p-8 text-center bg-surface-subtle rounded-2xl border border-dashed border-border text-muted-foreground">هنوز سوالی اضافه نشده است. از نوع‌های بالا یا بانک سوالات برای افزودن استفاده کنید.</div>`;
     } else {
       questions.forEach((q, idx) => {
-        const qCard = createElement('div', { className: 'p-4 bg-gray-50/80 rounded-2xl border border-gray-200 space-y-3' });
+        const qCard = createElement('div', { className: 'p-4 bg-surface-subtle rounded-2xl border border-border space-y-3' });
 
         qCard.innerHTML = `
-          <div class="flex items-center justify-between pb-2 border-b border-gray-200">
+          <div class="flex items-center justify-between pb-2 border-b border-border">
             <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-full bg-[#012622] text-white flex items-center justify-center text-xs font-extrabold font-mono">${(idx + 1).toLocaleString('fa-IR')}</span>
-              <span class="font-extrabold text-xs text-[#012622]">
+              <span class="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-extrabold font-mono">${formatNumber(idx + 1)}</span>
+              <span class="font-extrabold text-xs text-foreground">
                 ${
                   q.type === 'single_choice' ? 'سؤال تک‌گزینه‌ای (MCQ)' :
                   q.type === 'multiple_select' ? 'سؤال چندگزینه‌ای' :
@@ -742,41 +743,41 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
             <!-- Actions: Move Up, Move Down, Duplicate, Delete -->
             <div class="flex items-center gap-1.5">
-              <button type="button" class="btn-move-up p-1.5 bg-white border border-gray-300 rounded-lg font-bold hover:bg-gray-100 ${idx === 0 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}" title="انتقال به بالا">⬆️</button>
-              <button type="button" class="btn-move-down p-1.5 bg-white border border-gray-300 rounded-lg font-bold hover:bg-gray-100 ${idx === questions.length - 1 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}" title="انتقال به پایین">⬇️</button>
+              <button type="button" class="btn-move-up p-1.5 bg-card text-card-foreground border border-border rounded-lg font-bold hover:bg-surface-elevated ${idx === 0 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}" title="انتقال به بالا">⬆️</button>
+              <button type="button" class="btn-move-down p-1.5 bg-card text-card-foreground border border-border rounded-lg font-bold hover:bg-surface-elevated ${idx === questions.length - 1 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}" title="انتقال به پایین">⬇️</button>
 
-              <label class="font-bold text-[11px] text-gray-600 mr-2">بارم:</label>
-              <input type="number" min="0.5" max="50" step="0.5" value="${q.points}" class="q-points-input w-16 bg-white border border-gray-300 rounded-lg text-center font-mono font-bold py-1 text-xs" />
+              <label class="font-bold text-[11px] text-muted-foreground mr-2">بارم:</label>
+              <input type="number" min="0.5" max="50" step="0.5" value="${q.points}" class="q-points-input w-16 bg-surface border border-border rounded-lg text-center font-mono font-bold py-1 text-xs text-foreground" />
 
-              <button type="button" class="btn-dup-q p-1.5 bg-white border border-gray-300 rounded-lg font-bold hover:bg-gray-100 cursor-pointer" title="کپی سوال">📋</button>
-              <button type="button" class="btn-del-q p-1.5 bg-rose-50 text-rose-700 border border-rose-200 rounded-lg font-bold hover:bg-rose-100 cursor-pointer" title="حذف سوال">🗑️</button>
+              <button type="button" class="btn-dup-q p-1.5 bg-card text-card-foreground border border-border rounded-lg font-bold hover:bg-surface-elevated cursor-pointer" title="کپی سوال">📋</button>
+              <button type="button" class="btn-del-q p-1.5 bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 rounded-lg font-bold hover:bg-rose-500/20 cursor-pointer" title="حذف سوال">🗑️</button>
             </div>
           </div>
 
           <div>
-            <label class="block font-bold mb-1 text-gray-800">متن سؤال *</label>
-            <textarea class="q-prompt-input w-full bg-white border border-gray-300 rounded-xl p-2.5 text-xs" rows="2">${q.prompt}</textarea>
+            <label class="block font-bold mb-1 text-foreground">متن سؤال *</label>
+            <textarea class="q-prompt-input w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-foreground" rows="2">${q.prompt}</textarea>
           </div>
 
           <!-- Type Specific Editors -->
           ${(q.type === 'single_choice' || q.type === 'multiple_select' || q.type === 'mcq') && q.options ? `
-            <div class="space-y-2 pt-2 border-t border-gray-200">
+            <div class="space-y-2 pt-2 border-t border-border">
               <div class="flex items-center justify-between">
-                <label class="font-bold text-gray-800">گزینه‌ها و تعیین پاسخ صحیح کلید:</label>
-                <button type="button" class="btn-add-opt px-2.5 py-1 bg-white border border-gray-300 hover:bg-gray-100 rounded-lg text-[11px] font-bold cursor-pointer">+ افزودن گزینه</button>
+                <label class="font-bold text-foreground">گزینه‌ها و تعیین پاسخ صحیح کلید:</label>
+                <button type="button" class="btn-add-opt px-2.5 py-1 bg-card text-card-foreground border border-border hover:bg-surface-elevated rounded-lg text-[11px] font-bold cursor-pointer">+ افزودن گزینه</button>
               </div>
 
               <div class="space-y-2">
                 ${q.options
                   .map((opt, oIdx) => `
                     <div class="flex items-center gap-2">
-                      <input type="${q.type === 'multiple_select' ? 'checkbox' : 'radio'}" name="correct-q-${q.id}" value="${opt.id}" class="q-correct-opt text-[#012622]" ${
+                      <input type="${q.type === 'multiple_select' ? 'checkbox' : 'radio'}" name="correct-q-${q.id}" value="${opt.id}" class="q-correct-opt text-primary" ${
                         q.type === 'multiple_select'
                           ? (q.correctOptionIds || []).includes(opt.id) ? 'checked' : ''
                           : q.correctOptionId === opt.id ? 'checked' : ''
                       } />
-                      <input type="text" value="${opt.text}" data-opt-idx="${oIdx}" class="q-opt-text w-full bg-white border border-gray-300 rounded-xl p-2 text-xs" />
-                      <button type="button" data-opt-idx="${oIdx}" class="btn-remove-opt p-1.5 text-rose-600 hover:text-rose-900 bg-rose-50 rounded-lg cursor-pointer" title="حذف گزینه">✖</button>
+                      <input type="text" value="${opt.text}" data-opt-idx="${oIdx}" class="q-opt-text w-full bg-surface border border-border rounded-xl p-2 text-xs text-foreground" />
+                      <button type="button" data-opt-idx="${oIdx}" class="btn-remove-opt p-1.5 text-rose-600 dark:text-rose-400 hover:opacity-80 bg-rose-500/10 rounded-lg cursor-pointer" title="حذف گزینه">✖</button>
                     </div>
                   `)
                   .join('')}
@@ -785,36 +786,36 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           ` : ''}
 
           ${q.type === 'true_false' ? `
-            <div class="flex items-center gap-4 pt-2 border-t border-gray-200">
-              <span class="font-bold text-gray-800">پاسخ صحیح کلید:</span>
-              <label class="flex items-center gap-1.5 cursor-pointer font-bold text-emerald-800">
-                <input type="radio" name="tf-${q.id}" value="true" class="q-tf-opt text-[#012622]" ${q.correctBool === true ? 'checked' : ''} />
+            <div class="flex items-center gap-4 pt-2 border-t border-border">
+              <span class="font-bold text-foreground">پاسخ صحیح کلید:</span>
+              <label class="flex items-center gap-1.5 cursor-pointer font-bold text-emerald-600 dark:text-emerald-400">
+                <input type="radio" name="tf-${q.id}" value="true" class="q-tf-opt text-primary" ${q.correctBool === true ? 'checked' : ''} />
                 <span>صحیح (درست)</span>
               </label>
-              <label class="flex items-center gap-1.5 cursor-pointer font-bold text-rose-800">
-                <input type="radio" name="tf-${q.id}" value="false" class="q-tf-opt text-[#012622]" ${q.correctBool === false ? 'checked' : ''} />
+              <label class="flex items-center gap-1.5 cursor-pointer font-bold text-rose-600 dark:text-rose-400">
+                <input type="radio" name="tf-${q.id}" value="false" class="q-tf-opt text-primary" ${q.correctBool === false ? 'checked' : ''} />
                 <span>غلط (نادرست)</span>
               </label>
             </div>
           ` : ''}
 
           ${q.type === 'numeric' ? `
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-gray-200">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-border">
               <div>
-                <label class="block font-bold mb-1">پاسخ عددی صحیح *</label>
-                <input type="number" step="any" value="${q.numericTarget ?? 0}" class="q-num-target w-full bg-white border border-gray-300 rounded-xl p-2 text-xs font-mono font-bold" />
+                <label class="block font-bold mb-1 text-foreground">پاسخ عددی صحیح *</label>
+                <input type="number" step="any" value="${q.numericTarget ?? 0}" class="q-num-target w-full bg-surface border border-border rounded-xl p-2 text-xs font-mono font-bold text-foreground" />
               </div>
               <div>
-                <label class="block font-bold mb-1">حد خطای مجاز (تولرانس ±)</label>
-                <input type="number" step="any" value="${q.numericTolerance ?? 0}" class="q-num-tol w-full bg-white border border-gray-300 rounded-xl p-2 text-xs font-mono" />
+                <label class="block font-bold mb-1 text-foreground">حد خطای مجاز (تولرانس ±)</label>
+                <input type="number" step="any" value="${q.numericTolerance ?? 0}" class="q-num-tol w-full bg-surface border border-border rounded-xl p-2 text-xs font-mono text-foreground" />
               </div>
             </div>
           ` : ''}
 
           ${q.type === 'short_answer' || q.type === 'descriptive' ? `
-            <div class="pt-2 border-t border-gray-200 space-y-1">
-              <label class="block font-bold text-gray-800">پاسخ مرجع / راهنمای تصحیح استاد:</label>
-              <textarea class="q-ref-input w-full bg-white border border-gray-300 rounded-xl p-2.5 text-xs" rows="2" placeholder="پاسخ کامل یا کلیدواژه‌های کلیدی تصحیح...">${q.referenceAnswer || ''}</textarea>
+            <div class="pt-2 border-t border-border space-y-1">
+              <label class="block font-bold text-foreground">پاسخ مرجع / راهنمای تصحیح استاد:</label>
+              <textarea class="q-ref-input w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-foreground" rows="2" placeholder="پاسخ کامل یا کلیدواژه‌های کلیدی تصحیح...">${q.referenceAnswer || ''}</textarea>
             </div>
           ` : ''}
         `;
@@ -944,7 +945,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
   // --- STEP 4: REVIEW & PUBLISH ---
   const renderStep4ReviewAndPublish = () => {
-    const card = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-5 text-xs dir-rtl' });
+    const card = createElement('div', { className: 'bg-card text-card-foreground rounded-2xl border border-border p-5 shadow-2xs space-y-5 text-xs dir-rtl' });
 
     const warnings = validateExam();
     const totalQScore = calculateQuestionsTotalScore();
@@ -955,15 +956,15 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       .join('، ');
 
     card.innerHTML = `
-      <div class="pb-3 border-b border-gray-100">
-        <h3 class="font-extrabold text-sm text-[#012622]">گام ۴ — بازبینی نهایی و تأیید انتشار</h3>
-        <p class="text-[11px] text-gray-500">بررسی کامل صحت نمرات، کلید پاسخ‌ها، مخاطبان و آمادگی نهایی جهت انتشار.</p>
+      <div class="pb-3 border-b border-border">
+        <h3 class="font-extrabold text-sm text-primary">گام ۴ — بازبینی نهایی و تأیید انتشار</h3>
+        <p class="text-[11px] text-muted-foreground">بررسی کامل صحت نمرات، کلید پاسخ‌ها، مخاطبان و آمادگی نهایی جهت انتشار.</p>
       </div>
 
       ${
         warnings.length > 0
           ? `
-        <div class="p-4 bg-amber-50 border border-amber-300 text-amber-950 rounded-2xl space-y-1.5">
+        <div class="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 rounded-2xl space-y-1.5">
           <div class="font-extrabold text-xs flex items-center gap-1.5">
             <span>⚠️ هشدارهای بررسی صحت داده‌ها پیش از انتشار:</span>
           </div>
@@ -973,20 +974,20 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
         </div>
       `
           : `
-        <div class="p-4 bg-emerald-50 border border-emerald-300 text-emerald-950 rounded-2xl font-bold flex items-center gap-2">
-          <svg class="w-5 h-5 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <div class="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-2xl font-bold flex items-center gap-2">
+          <svg class="w-5 h-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
           <span>تمامی پارامترهای آزمون معتبر و بدون خطا بوده و آماده انتشار نهایی می‌باشد.</span>
         </div>
       `
       }
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-200">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-surface-subtle p-4 rounded-2xl border border-border text-foreground">
         <div><strong>عنوان آزمون:</strong> ${draftData.title || '—'}</div>
         <div><strong>درس:</strong> ${draftData.subjectName}</div>
         <div><strong>کلاس‌های مخاطب:</strong> ${assignedClassNames || 'هیچ'}</div>
-        <div><strong>مدت زمان:</strong> ${draftData.durationMinutes} دقیقه</div>
-        <div><strong>تعداد سوالات:</strong> ${questions.length.toLocaleString('fa-IR')} سوال</div>
-        <div><strong>مجموع بارم سوالات:</strong> ${totalQScore.toLocaleString('fa-IR')} از ${draftData.maxScore.toLocaleString('fa-IR')}</div>
+        <div><strong>مدت زمان:</strong> ${formatNumber(draftData.durationMinutes)} دقیقه</div>
+        <div><strong>تعداد سوالات:</strong> ${formatNumber(questions.length)} سوال</div>
+        <div><strong>مجموع بارم سوالات:</strong> ${formatNumber(totalQScore)} از ${formatNumber(draftData.maxScore)}</div>
         <div><strong>سیاست کارنامه:</strong> ${draftData.resultReleasePolicy === 'immediate' ? 'انتشار بلافاصله' : 'تأیید دستی معلم'}</div>
         <div><strong>سیاست قطع خروج:</strong> ${draftData.interruptionPolicy === 'terminate' ? 'توقیف جلسه' : 'هشدار و بررسی معلم'}</div>
       </div>
@@ -997,7 +998,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
   // --- PERSISTENT SUMMARY SIDEBAR ---
   const renderPersistentSummarySidebar = (): HTMLElement => {
-    const sidebar = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs space-y-4 text-xs dir-rtl h-fit sticky top-4' });
+    const sidebar = createElement('div', { className: 'bg-card text-card-foreground rounded-2xl border border-border p-5 shadow-2xs space-y-4 text-xs dir-rtl h-fit sticky top-4' });
 
     const totalQScore = calculateQuestionsTotalScore();
     const assignedClassNames = availableClasses
@@ -1006,49 +1007,49 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       .join('، ');
 
     sidebar.innerHTML = `
-      <h3 class="font-extrabold text-xs text-[#012622] pb-2 border-b border-gray-100 flex items-center justify-between">
+      <h3 class="font-extrabold text-xs text-primary pb-2 border-b border-border flex items-center justify-between">
         <span>خلاصه وضعیت آزمون</span>
-        <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-mono">گام ${currentStep.toLocaleString('fa-IR')} از ۴</span>
+        <span class="px-2 py-0.5 bg-surface-subtle text-foreground rounded text-[10px] font-mono border border-border">گام ${formatNumber(currentStep)} از ۴</span>
       </h3>
 
-      <div class="space-y-2.5 text-gray-700">
+      <div class="space-y-2.5 text-foreground">
         <div>
-          <span class="text-gray-500 block text-[10px]">عنوان:</span>
-          <span class="font-bold text-gray-900">${draftData.title || 'بدون عنوان'}</span>
+          <span class="text-muted-foreground block text-[10px]">عنوان:</span>
+          <span class="font-bold text-foreground">${draftData.title || 'بدون عنوان'}</span>
         </div>
 
         <div>
-          <span class="text-gray-500 block text-[10px]">درس مرتبط:</span>
-          <span class="font-bold text-gray-900">${draftData.subjectName} (${draftData.gradeLevel})</span>
+          <span class="text-muted-foreground block text-[10px]">درس مرتبط:</span>
+          <span class="font-bold text-foreground">${draftData.subjectName} (${draftData.gradeLevel})</span>
         </div>
 
         <div>
-          <span class="text-gray-500 block text-[10px]">کلاس‌های مخاطب:</span>
-          <span class="font-bold text-gray-900">${assignedClassNames || 'انتخاب نشده'}</span>
+          <span class="text-muted-foreground block text-[10px]">کلاس‌های مخاطب:</span>
+          <span class="font-bold text-foreground">${assignedClassNames || 'انتخاب نشده'}</span>
         </div>
 
-        <div class="pt-2 border-t border-gray-100 grid grid-cols-2 gap-2">
+        <div class="pt-2 border-t border-border grid grid-cols-2 gap-2">
           <div>
-            <span class="text-gray-500 block text-[10px]">تعداد سوالات:</span>
-            <span class="font-bold text-gray-900 font-mono text-sm">${questions.length.toLocaleString('fa-IR')}</span>
+            <span class="text-muted-foreground block text-[10px]">تعداد سوالات:</span>
+            <span class="font-bold text-foreground font-mono text-sm">${formatNumber(questions.length)}</span>
           </div>
           <div>
-            <span class="text-gray-500 block text-[10px]">مدت زمان:</span>
-            <span class="font-bold text-gray-900 font-mono text-sm">${draftData.durationMinutes} دقیقه</span>
+            <span class="text-muted-foreground block text-[10px]">مدت زمان:</span>
+            <span class="font-bold text-foreground font-mono text-sm">${formatNumber(draftData.durationMinutes)} دقیقه</span>
           </div>
         </div>
 
-        <div class="pt-2 border-t border-gray-100 space-y-1">
+        <div class="pt-2 border-t border-border space-y-1">
           <div class="flex items-center justify-between">
-            <span class="text-gray-500 text-[10px]">بارم سوالات:</span>
+            <span class="text-muted-foreground text-[10px]">بارم سوالات:</span>
             <span class="font-bold font-mono text-xs ${
-              totalQScore === draftData.maxScore ? 'text-emerald-800' : 'text-amber-800'
+              totalQScore === draftData.maxScore ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'
             }">
-              ${totalQScore} از ${draftData.maxScore}
+              ${formatNumber(totalQScore)} از ${formatNumber(draftData.maxScore)}
             </span>
           </div>
-          <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
-            <div class="bg-[#012622] h-full" style="width: ${Math.min(100, (totalQScore / (draftData.maxScore || 1)) * 100)}%"></div>
+          <div class="w-full bg-surface-subtle h-1.5 rounded-full overflow-hidden border border-border">
+            <div class="bg-primary h-full" style="width: ${Math.min(100, (totalQScore / (draftData.maxScore || 1)) * 100)}%"></div>
           </div>
         </div>
       </div>
@@ -1059,23 +1060,23 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
   // --- STUDENT EXAM PREVIEW CONTAINER ---
   const renderStudentPreviewContainer = (): HTMLElement => {
-    const previewWrapper = createElement('div', { className: 'bg-white rounded-2xl border border-indigo-200 p-6 shadow-md space-y-6 dir-rtl' });
+    const previewWrapper = createElement('div', { className: 'bg-card text-card-foreground rounded-2xl border border-border p-6 shadow-md space-y-6 dir-rtl' });
 
     previewWrapper.innerHTML = `
-      <div class="bg-indigo-900 text-white p-4 rounded-xl flex items-center justify-between">
+      <div class="bg-primary text-primary-foreground p-4 rounded-xl flex items-center justify-between">
         <div>
-          <span class="text-xs text-amber-300 font-bold">👁️ حالت پیش‌نمایش دانش‌آموز (Student Exam View)</span>
+          <span class="text-xs text-brand-accent font-bold">👁️ حالت پیش‌نمایش دانش‌آموز (Student Exam View)</span>
           <h2 class="font-extrabold text-base">${draftData.title || 'عنوان آزمون'} (${draftData.subjectName})</h2>
         </div>
-        <div class="bg-indigo-800 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-amber-300">
-          ⏱️ زمان: ${draftData.durationMinutes} دقیقه | بارم: ${draftData.maxScore}
+        <div class="bg-primary-hover px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-brand-accent">
+          ⏱️ زمان: ${formatNumber(draftData.durationMinutes)} دقیقه | بارم: ${formatNumber(draftData.maxScore)}
         </div>
       </div>
 
       ${
         draftData.instructions
           ? `
-        <div class="p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-700">
+        <div class="p-3.5 bg-surface-subtle border border-border rounded-xl text-xs text-foreground">
           <strong>دستورالعمل آزمون:</strong> ${draftData.instructions}
         </div>
       `
@@ -1084,22 +1085,22 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
       <div class="space-y-6">
         ${questions.length === 0 ? `
-          <div class="p-8 text-center text-gray-500">سوالی برای پیش‌نمایش وجود ندارد.</div>
+          <div class="p-8 text-center text-muted-foreground">سوالی برای پیش‌نمایش وجود ندارد.</div>
         ` : questions.map((q, idx) => `
-          <div class="p-5 bg-gray-50 rounded-2xl border border-gray-200 space-y-3">
-            <div class="flex items-center justify-between pb-2 border-b border-gray-200">
-              <span class="font-extrabold text-xs text-[#012622]">سوال ${(idx + 1).toLocaleString('fa-IR')} از ${questions.length.toLocaleString('fa-IR')}</span>
-              <span class="font-bold text-xs bg-gray-200 px-2 py-0.5 rounded">${q.points} نمره</span>
+          <div class="p-5 bg-surface-subtle rounded-2xl border border-border space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-border">
+              <span class="font-extrabold text-xs text-primary">سوال ${formatNumber(idx + 1)} از ${formatNumber(questions.length)}</span>
+              <span class="font-bold text-xs bg-surface border border-border px-2 py-0.5 rounded text-foreground">${formatNumber(q.points)} نمره</span>
             </div>
-            <p class="font-bold text-sm text-gray-900">${q.prompt}</p>
+            <p class="font-bold text-sm text-foreground">${q.prompt}</p>
 
             <!-- Render Question Input without Answers -->
             ${(q.type === 'single_choice' || q.type === 'mcq') && q.options ? `
               <div class="space-y-2 pt-2">
                 ${q.options.map((opt) => `
-                  <label class="flex items-center gap-2.5 p-2.5 bg-white border border-gray-200 rounded-xl cursor-pointer">
-                    <input type="radio" name="prev-q-${q.id}" class="text-[#012622]" />
-                    <span class="text-xs text-gray-900">${opt.text}</span>
+                  <label class="flex items-center gap-2.5 p-2.5 bg-card border border-border rounded-xl cursor-pointer">
+                    <input type="radio" name="prev-q-${q.id}" class="text-primary" />
+                    <span class="text-xs text-foreground">${opt.text}</span>
                   </label>
                 `).join('')}
               </div>
@@ -1108,9 +1109,9 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
             ${q.type === 'multiple_select' && q.options ? `
               <div class="space-y-2 pt-2">
                 ${q.options.map((opt) => `
-                  <label class="flex items-center gap-2.5 p-2.5 bg-white border border-gray-200 rounded-xl cursor-pointer">
-                    <input type="checkbox" class="text-[#012622] rounded" />
-                    <span class="text-xs text-gray-900">${opt.text}</span>
+                  <label class="flex items-center gap-2.5 p-2.5 bg-card border border-border rounded-xl cursor-pointer">
+                    <input type="checkbox" class="text-primary rounded" />
+                    <span class="text-xs text-foreground">${opt.text}</span>
                   </label>
                 `).join('')}
               </div>
@@ -1118,11 +1119,11 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
             ${q.type === 'true_false' ? `
               <div class="flex items-center gap-4 pt-2">
-                <label class="p-2.5 bg-white border border-gray-200 rounded-xl flex items-center gap-2 cursor-pointer font-bold text-xs">
+                <label class="p-2.5 bg-card border border-border rounded-xl flex items-center gap-2 cursor-pointer font-bold text-xs text-foreground">
                   <input type="radio" name="prev-tf-${q.id}" />
                   <span>صحیح (درست)</span>
                 </label>
-                <label class="p-2.5 bg-white border border-gray-200 rounded-xl flex items-center gap-2 cursor-pointer font-bold text-xs">
+                <label class="p-2.5 bg-card border border-border rounded-xl flex items-center gap-2 cursor-pointer font-bold text-xs text-foreground">
                   <input type="radio" name="prev-tf-${q.id}" />
                   <span>غلط (نادرست)</span>
                 </label>
@@ -1131,13 +1132,13 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
             ${q.type === 'numeric' ? `
               <div class="pt-2">
-                <input type="number" step="any" placeholder="پاسخ عددی خود را وارد کنید..." class="w-full max-w-xs bg-white border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
+                <input type="number" step="any" placeholder="پاسخ عددی خود را وارد کنید..." class="w-full max-w-xs bg-surface border border-border rounded-xl p-2.5 text-xs font-mono text-foreground" />
               </div>
             ` : ''}
 
             ${q.type === 'short_answer' || q.type === 'descriptive' ? `
               <div class="pt-2">
-                <textarea rows="3" placeholder="پاسخ کامل خود را بنویسید..." class="w-full bg-white border border-gray-300 rounded-xl p-2.5 text-xs"></textarea>
+                <textarea rows="3" placeholder="پاسخ کامل خود را بنویسید..." class="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-foreground"></textarea>
               </div>
             ` : ''}
           </div>
@@ -1153,26 +1154,26 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     const bankItems = schoolStore.getQuestionBank(orgId);
     const selectedBankIds: string[] = [];
 
-    const container = createElement('div', { className: 'space-y-3 text-xs dir-rtl text-gray-800' });
+    const container = createElement('div', { className: 'space-y-3 text-xs dir-rtl text-foreground' });
 
     container.innerHTML = `
-      <p class="text-gray-600 text-[11px]">سؤالات مورد نظر را از بانک سوالات مرکز انتخاب کنید. سوالات انتخابی کپی خواهند شد.</p>
-      <div class="space-y-2 max-h-64 overflow-y-auto p-2 bg-gray-50 rounded-xl border border-gray-200">
+      <p class="text-muted-foreground text-[11px]">سؤالات مورد نظر را از بانک سوالات مرکز انتخاب کنید. سوالات انتخابی کپی خواهند شد.</p>
+      <div class="space-y-2 max-h-64 overflow-y-auto p-2 bg-surface-subtle rounded-xl border border-border">
         ${
           bankItems.length === 0
-            ? '<div class="p-4 text-center text-gray-500">بانک سوالات در حال حاضر خالی است.</div>'
+            ? '<div class="p-4 text-center text-muted-foreground">بانک سوالات در حال حاضر خالی است.</div>'
             : bankItems
                 .map(
                   (qb) => `
-            <label class="p-2.5 bg-white rounded-xl border border-gray-200 flex items-start justify-between cursor-pointer hover:border-[#012622]">
+            <label class="p-2.5 bg-card rounded-xl border border-border flex items-start justify-between cursor-pointer hover:border-primary">
               <div class="flex items-start gap-2">
-                <input type="checkbox" value="${qb.id}" class="qb-modal-chk text-[#012622] rounded mt-0.5" />
+                <input type="checkbox" value="${qb.id}" class="qb-modal-chk text-primary rounded mt-0.5" />
                 <div>
-                  <div class="font-bold text-gray-900">${qb.prompt}</div>
-                  <div class="text-[10px] text-gray-500">${qb.subjectName} | بارم: ${qb.points} نمره</div>
+                  <div class="font-bold text-foreground">${qb.prompt}</div>
+                  <div class="text-[10px] text-muted-foreground">${qb.subjectName} | بارم: ${formatNumber(qb.points)} نمره</div>
                 </div>
               </div>
-              <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-bold">${qb.type}</span>
+              <span class="px-2 py-0.5 bg-surface-subtle text-foreground border border-border rounded text-[10px] font-bold">${qb.type}</span>
             </label>
           `
                 )
@@ -1218,7 +1219,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           }
         });
 
-        showToast({ title: 'کپی شد', message: `${selectedBankIds.length.toLocaleString('fa-IR')} سوال از بانک به آزمون اضافه شد.`, type: 'success' });
+        showToast({ title: 'کپی شد', message: `${formatNumber(selectedBankIds.length)} سوال از بانک به آزمون اضافه شد.`, type: 'success' });
         render();
       },
     });

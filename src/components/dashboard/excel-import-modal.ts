@@ -1,7 +1,7 @@
 /**
  * POLARIS REUSABLE EXCEL / CSV IMPORT MODAL
  * Supports parsing CSV/XLSX text, column mapping, row-by-row validation in Persian,
- * duplicate detection, sample template generation, and direct import into schoolStore.
+ * duplicate detection, sample template generation, and direct import into schoolStore with dark mode support.
  */
 
 import { createElement } from '../../utils/dom';
@@ -32,12 +32,12 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
   });
 
   const dialog = createElement('div', {
-    className: 'bg-white rounded-2xl border border-gray-200 shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]',
+    className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]',
   });
 
   // Header
   const header = createElement('div', {
-    className: 'bg-[#012622] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
+    className: 'bg-[#012622] dark:bg-[#071513] text-white p-5 flex items-center justify-between border-b border-white/10 shrink-0',
   });
   header.innerHTML = `
     <div class="flex items-center gap-3">
@@ -63,16 +63,16 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
 
   // 1. Download Template Section
   const templateBox = createElement('div', {
-    className: 'bg-gray-50 border border-gray-200 p-4 rounded-xl flex items-center justify-between gap-4',
+    className: 'bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center justify-between gap-4',
   });
   templateBox.innerHTML = `
     <div>
-      <h4 class="text-xs font-bold text-gray-800">دانلود قالب استاندار نمونه</h4>
-      <p class="text-[11px] text-gray-500">جهت جلوگیری از خطای ساختاری، ابتدا فایل نمونه CSV را دریافت و تکمیل نمایید.</p>
+      <h4 class="text-xs font-bold text-gray-800 dark:text-gray-200">دانلود قالب استاندارد نمونه</h4>
+      <p class="text-[11px] text-gray-500 dark:text-gray-400">جهت جلوگیری از خطای ساختاری، ابتدا فایل نمونه CSV را دریافت و تکمیل نمایید.</p>
     </div>
   `;
   const downloadBtn = createElement('button', {
-    className: 'px-3.5 py-2 bg-white border border-gray-300 hover:border-[#012622] text-gray-800 text-xs font-bold rounded-lg shadow-sm transition-colors flex items-center gap-1.5 shrink-0',
+    className: 'px-3.5 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:border-[#012622] text-gray-800 dark:text-gray-200 text-xs font-bold rounded-lg shadow-sm transition-colors flex items-center gap-1.5 shrink-0',
     innerHTML: `<svg class="w-4 h-4 text-[#E98A15]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> دانلود الگوی فایل`,
   });
 
@@ -102,15 +102,15 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
 
   // 2. Upload Area
   const uploadDropZone = createElement('div', {
-    className: 'border-2 border-dashed border-gray-300 hover:border-[#012622] rounded-2xl p-8 text-center bg-gray-50 hover:bg-gray-100/50 transition-colors cursor-pointer space-y-3',
+    className: 'border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-[#012622] dark:hover:border-teal-500 rounded-2xl p-8 text-center bg-gray-50 dark:bg-gray-900/40 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer space-y-3',
   });
   uploadDropZone.innerHTML = `
-    <div class="w-12 h-12 bg-white rounded-xl border border-gray-200 flex items-center justify-center mx-auto text-[#012622] shadow-sm">
+    <div class="w-12 h-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 flex items-center justify-center mx-auto text-[#012622] dark:text-teal-300 shadow-sm">
       <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
     </div>
     <div>
-      <p class="text-xs font-bold text-gray-800">کلیک کنید یا فایل .csv / .xlsx خود را بکشید و این‌جا رها کنید</p>
-      <p class="text-[11px] text-gray-500 mt-1">حداکثر حجم قابل پذیرش: ۵ مگابایت — رمزگذاری UTF-8</p>
+      <p class="text-xs font-bold text-gray-800 dark:text-gray-200">کلیک کنید یا فایل .csv / .xlsx خود را بکشید و این‌جا رها کنید</p>
+      <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-1">حداکثر حجم قابل پذیرش: ۵ مگابایت — رمزگذاری UTF-8</p>
     </div>
   `;
 
@@ -198,43 +198,43 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
     previewContainer.innerHTML = '';
 
     const summaryBar = createElement('div', {
-      className: 'p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between text-xs',
+      className: 'p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/80 rounded-xl flex items-center justify-between text-xs',
     });
     summaryBar.innerHTML = `
-      <span class="font-bold text-amber-900">پیش‌نمایش پردازش: کل ${parsedRows.length} سطر</span>
+      <span class="font-bold text-amber-900 dark:text-amber-200">پیش‌نمایش پردازش: کل ${parsedRows.length} سطر</span>
       <div class="flex gap-3">
-        <span class="text-emerald-700 font-bold">معتبر: ${validCount} سطر</span>
-        ${invalidCount > 0 ? `<span class="text-red-700 font-bold">دارای خطا: ${invalidCount} سطر</span>` : ''}
+        <span class="text-emerald-700 dark:text-emerald-300 font-bold">معتبر: ${validCount} سطر</span>
+        ${invalidCount > 0 ? `<span class="text-red-700 dark:text-red-300 font-bold">دارای خطا: ${invalidCount} سطر</span>` : ''}
       </div>
     `;
     previewContainer.appendChild(summaryBar);
 
     // Table
     const tableWrapper = createElement('div', {
-      className: 'border border-gray-200 rounded-xl overflow-x-auto max-h-60',
+      className: 'border border-gray-200 dark:border-gray-700 rounded-xl overflow-x-auto max-h-60',
     });
     const table = createElement('table', { className: 'w-full text-right text-xs' });
 
-    const thead = createElement('thead', { className: 'bg-gray-100 text-gray-700 sticky top-0' });
-    let trHead = '<tr><th class="p-2 border-b">وضعیت</th>';
+    const thead = createElement('thead', { className: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 sticky top-0' });
+    let trHead = '<tr><th class="p-2 border-b dark:border-gray-600">وضعیت</th>';
     headers.forEach((h) => {
-      trHead += `<th class="p-2 border-b">${h}</th>`;
+      trHead += `<th class="p-2 border-b dark:border-gray-600">${h}</th>`;
     });
     trHead += '</tr>';
     thead.innerHTML = trHead;
     table.appendChild(thead);
 
-    const tbody = createElement('tbody', { className: 'divide-y divide-gray-200' });
+    const tbody = createElement('tbody', { className: 'divide-y divide-gray-200 dark:divide-gray-700' });
     parsedRows.forEach((row) => {
       const isValid = row['_isValid'] === 'true';
-      const tr = createElement('tr', { className: isValid ? 'hover:bg-gray-50' : 'bg-red-50/50' });
+      const tr = createElement('tr', { className: isValid ? 'hover:bg-gray-50 dark:hover:bg-gray-700/50' : 'bg-red-50/50 dark:bg-red-950/30' });
 
       let rowHtml = `<td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${
-        isValid ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+        isValid ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300' : 'bg-red-100 dark:bg-red-950/60 text-red-800 dark:text-red-300'
       }">${isValid ? 'تایید شده' : row['_error']}</span></td>`;
 
       headers.forEach((h) => {
-        rowHtml += `<td class="p-2 truncate max-w-[120px]">${row[h] || '-'}</td>`;
+        rowHtml += `<td class="p-2 truncate max-w-[120px] dark:text-gray-200">${row[h] || '-'}</td>`;
       });
 
       tr.innerHTML = rowHtml;
@@ -248,17 +248,17 @@ export function createExcelImportModal(options: ExcelImportModalOptions): HTMLEl
 
   // Footer Actions
   const footer = createElement('div', {
-    className: 'bg-gray-50 border-t border-gray-200 p-4 flex items-center justify-between shrink-0',
+    className: 'bg-gray-50 dark:bg-gray-900/60 border-t border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between shrink-0',
   });
 
   const cancelBtn = createElement('button', {
-    className: 'px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold rounded-xl transition-colors',
+    className: 'px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs font-semibold rounded-xl transition-colors',
     textContent: 'انصراف',
   });
   cancelBtn.addEventListener('click', onClose);
 
   const confirmBtn = createElement('button', {
-    className: 'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5',
+    className: 'px-5 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white text-xs font-bold rounded-xl shadow transition-colors flex items-center gap-1.5',
     innerHTML: `${getDashboardIcon('attendance', 'w-4 h-4')} <span>تایید و ثبت رکوردها</span>`,
   });
 

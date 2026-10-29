@@ -1,7 +1,7 @@
 /**
  * POLARIS SCHOOL SETTINGS PAGE
  * Editable school profile, academic year configuration, parent messaging settings,
- * local storage persistence, and "Reset Demo Data" option.
+ * local storage persistence, and "Reset Demo Data" option with dark mode support.
  */
 
 import { OrganizationMembership } from '../../../types/auth';
@@ -22,17 +22,17 @@ export function createSettingsPage(membership: OrganizationMembership): HTMLElem
 
     // Header Row
     const headerRow = createElement('div', {
-      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80',
+      className: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200/80 dark:border-gray-700/80',
     });
 
     const headerText = createElement('div', { className: 'space-y-1' });
     const title = createElement('h2', {
-      className: 'text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5',
+      className: 'text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('settings', 'w-6 h-6 text-[#012622]')} تنظیمات و اطلاعات مرکز آموزشی`;
+    title.innerHTML = `${getDashboardIcon('settings', 'w-6 h-6 text-[#012622] dark:text-teal-400')} تنظیمات و اطلاعات مرکز آموزشی`;
 
     const desc = createElement('p', {
-      className: 'text-xs sm:text-sm text-gray-600 font-normal',
+      className: 'text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-normal',
       textContent: `پیکربندی مشخصات عمومی مدرسه، سال تحصیلی جاری، تنظیمات پیام‌رسانی اولیا و بازنشانی داده‌های آزمایشی.`,
     });
 
@@ -42,56 +42,56 @@ export function createSettingsPage(membership: OrganizationMembership): HTMLElem
     headerRow.appendChild(headerText);
 
     // Settings Form Box
-    const formCard = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-6 shadow-2xs space-y-6' });
+    const formCard = createElement('div', { className: 'bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-6 shadow-2xs space-y-6' });
 
-    const form = createElement('form', { className: 'space-y-4 text-xs text-gray-800' });
+    const form = createElement('form', { className: 'space-y-4 text-xs text-gray-800 dark:text-gray-200' });
 
     form.innerHTML = `
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block font-bold mb-1">نام رسمی مرکز آموزشی *</label>
-          <input type="text" id="set-schoolName" value="${settings.schoolName}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-[#E98A15]" />
+          <input type="text" id="set-schoolName" value="${settings.schoolName}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#E98A15]" />
         </div>
         <div>
           <label class="block font-bold mb-1">نام مدیر/سرپرست مرکز *</label>
-          <input type="text" id="set-principalName" value="${settings.principalName}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-[#E98A15]" />
+          <input type="text" id="set-principalName" value="${settings.principalName}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#E98A15]" />
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block font-bold mb-1">شماره تلفن واحد اداری *</label>
-          <input type="text" id="set-phone" value="${settings.phone}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-[#E98A15]" />
+          <input type="text" id="set-phone" value="${settings.phone}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-mono text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#E98A15]" />
         </div>
         <div>
           <label class="block font-bold mb-1">سال تحصیلی جاری *</label>
-          <input type="text" id="set-academicYear" value="${settings.academicYear}" required class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-[#E98A15]" />
+          <input type="text" id="set-academicYear" value="${settings.academicYear}" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs font-mono text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#E98A15]" />
         </div>
       </div>
 
       <div>
         <label class="block font-bold mb-1">آدرس پستی مرکز</label>
-        <input type="text" id="set-address" value="${settings.address}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-[#E98A15]" />
+        <input type="text" id="set-address" value="${settings.address}" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-xs text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#E98A15]" />
       </div>
 
-      <div class="pt-4 border-t border-gray-200 space-y-3">
-        <h3 class="font-extrabold text-sm text-gray-900">تنظیمات ارتباطات و اطلاع‌رسانی</h3>
+      <div class="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+        <h3 class="font-extrabold text-sm text-gray-900 dark:text-gray-100">تنظیمات ارتباطات و اطلاع‌رسانی</h3>
 
         <div class="flex items-center gap-3">
           <input type="checkbox" id="set-parentMessaging" ${settings.allowParentMessaging ? 'checked' : ''} class="w-4 h-4 rounded text-[#012622]" />
-          <label for="set-parentMessaging" class="font-semibold text-gray-800 cursor-pointer">امکان ارسال و دریافت پیام مستقیم اولیا فعال باشد</label>
+          <label for="set-parentMessaging" class="font-semibold text-gray-800 dark:text-gray-200 cursor-pointer">امکان ارسال و دریافت پیام مستقیم اولیا فعال باشد</label>
         </div>
 
         <div class="flex items-center gap-3">
           <input type="checkbox" id="set-autoAlerts" ${settings.autoAttendanceAlerts ? 'checked' : ''} class="w-4 h-4 rounded text-[#012622]" />
-          <label for="set-autoAlerts" class="font-semibold text-gray-800 cursor-pointer">هشدار خودکار غیبت غیرمجاز به اولیا صادر شود</label>
+          <label for="set-autoAlerts" class="font-semibold text-gray-800 dark:text-gray-200 cursor-pointer">هشدار خودکار غیبت غیرمجاز به اولیا صادر شود</label>
         </div>
       </div>
     `;
 
     const saveBtn = createElement('button', {
       className:
-        'px-5 py-2.5 bg-[#012622] hover:bg-[#003B36] text-white font-bold text-xs rounded-xl shadow-2xs transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
+        'px-5 py-2.5 bg-[#012622] dark:bg-teal-700 hover:bg-[#003B36] dark:hover:bg-teal-600 text-white font-bold text-xs rounded-xl shadow-2xs transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E98A15]',
       textContent: 'ذخیره و اعمال تنظیمات',
     });
 
@@ -124,16 +124,16 @@ export function createSettingsPage(membership: OrganizationMembership): HTMLElem
 
     // Reset Demo Data Section
     const resetCard = createElement('div', {
-      className: 'bg-rose-50 border border-rose-200 rounded-2xl p-5 shadow-2xs space-y-3 dir-rtl',
+      className: 'bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/80 rounded-2xl p-5 shadow-2xs space-y-3 dir-rtl',
     });
 
     resetCard.innerHTML = `
       <div class="flex items-center justify-between">
         <div class="space-y-1">
-          <h3 class="font-extrabold text-sm text-rose-950 flex items-center gap-2">
-            ${getDashboardIcon('info', 'w-4 h-4 text-rose-700')} بازنشانی داده‌های آزمایشی (Demo Reset)
+          <h3 class="font-extrabold text-sm text-rose-950 dark:text-rose-200 flex items-center gap-2">
+            ${getDashboardIcon('info', 'w-4 h-4 text-rose-700 dark:text-rose-400')} بازنشانی داده‌های آزمایشی (Demo Reset)
           </h3>
-          <p class="text-xs text-rose-800 leading-relaxed">
+          <p class="text-xs text-rose-800 dark:text-rose-300 leading-relaxed">
             در صورت ایجاد تغییرات آزمایشی در دانش‌آموزان، کلاس‌ها یا نمرات، می‌توانید داده‌های دمو را به حالت اولیه بازگردانید.
           </p>
         </div>

@@ -13,7 +13,7 @@ export interface BreadcrumbItem {
 
 export function createBreadcrumbs(items: BreadcrumbItem[]): HTMLElement {
   const nav = createElement('nav', {
-    className: 'flex items-center text-xs font-medium text-gray-500 py-1',
+    className: 'flex items-center text-xs font-medium text-gray-500 dark:text-gray-400 py-1',
     attributes: { 'aria-label': 'مسیر صفحه' },
   });
 
@@ -25,7 +25,7 @@ export function createBreadcrumbs(items: BreadcrumbItem[]): HTMLElement {
 
     if (index > 0) {
       const separator = createElement('span', {
-        className: 'mx-1.5 text-gray-400 flex items-center',
+        className: 'mx-1.5 text-gray-400 dark:text-gray-600 flex items-center',
         innerHTML: getDashboardIcon('chevron-left', 'w-3.5 h-3.5 rtl:rotate-180'),
       });
       li.appendChild(separator);
@@ -33,14 +33,14 @@ export function createBreadcrumbs(items: BreadcrumbItem[]): HTMLElement {
 
     if (isLast || !item.path) {
       const current = createElement('span', {
-        className: 'text-emerald-950 font-semibold truncate max-w-[200px]',
+        className: 'text-emerald-950 dark:text-teal-300 font-semibold truncate max-w-[200px]',
         textContent: item.title,
         attributes: { 'aria-current': 'page' },
       });
       li.appendChild(current);
     } else {
       const link = createElement('a', {
-        className: 'text-gray-600 hover:text-emerald-800 transition-colors duration-150',
+        className: 'text-gray-600 dark:text-gray-300 hover:text-emerald-800 dark:hover:text-teal-400 transition-colors duration-150',
         textContent: item.title,
         attributes: { href: item.path },
       });
