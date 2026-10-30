@@ -114,6 +114,8 @@ export type ResultReleasePolicy = 'immediate' | 'manual';
 export type InterruptionPolicy = 'warn_continue' | 'warn_flag' | 'terminate';
 
 export interface Exam {
+  aiSourceName?: string;
+  aiReviewed?: boolean;
   id: string;
   organizationId: string;
   title: string;
@@ -157,7 +159,7 @@ export interface StudentGrade {
   examId: string;
   studentId: string;
   score?: number; // Numeric score (0-20)
-  descriptiveScore?: 'خیلی خوب' | 'خوب' | 'قابل قبول' | 'نیازمند تلاش بیشتر'; // Primary qualitative assessment
+  descriptiveScore?: 'خیلی خوب' | 'خوب' | 'قابل قبول' | 'نیاز به تلاش بیشتر'; // Primary qualitative assessment
   feedback?: string;
   updatedAt: string;
 }
@@ -224,6 +226,7 @@ export interface Assignment {
 }
 
 export interface HomeworkSubmission {
+  descriptiveScore?: string;
   id: string;
   assignmentId: string;
   organizationId: string;
@@ -340,7 +343,7 @@ export interface StudentExamAttempt {
   mcqAnswers?: Record<string, string>;
   descriptiveAnswers?: Record<string, string>;
   mcqScore?: number;
-  descriptiveScore?: number;
+  descriptiveScore?: number | string;
   totalScore?: number;
   status: 'in_progress' | 'submitted' | 'graded';
   submissionReason?: 'manual' | 'timeout' | 'terminated';

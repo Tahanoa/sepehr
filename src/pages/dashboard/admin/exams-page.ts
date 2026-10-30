@@ -1,3 +1,4 @@
+import { deleteAction } from '../../../components/dashboard/delete-action';
 /**
  * POLARIS EXAMINATIONS & ASSESSMENTS PAGE
  * Exam directory, create/edit exam form, schedule conflict detection for exams,
@@ -153,7 +154,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
               <div><strong>تاریخ آزمون:</strong> <span class="font-mono">${ex.examDate}</span></div>
               <div><strong>ساعت شروع:</strong> <span class="font-mono">${ex.startTime} (${ex.durationMinutes} دقیقه)</span></div>
               <div><strong>کلاس‌های شرکت‌کننده:</strong> ${classNamesStr || 'کلیه کلاس‌ها'}</div>
-              <div><strong>سقف نمره:</strong> <span class="font-mono font-bold">${ex.evalType === 'descriptive' ? 'ارزشیابی توصیفی (۱ تا ۴)' : ex.maxScore}</span></div>
+              <div><strong>سقف نمره:</strong> <span class="font-mono font-bold">${ex.evalType === 'descriptive' ? 'ارزشیابی توصیفی' : ex.maxScore}</span></div>
             </div>
           </div>
         `;
@@ -182,6 +183,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
           textContent: ex.status === 'published' ? 'خروج از انتشار' : 'انتشار',
         });
         togglePublishBtn.addEventListener('click', () => {
+          if(ex.aiSourceName&&!ex.aiReviewed){window.dispatchEvent(new CustomEvent('polaris-navigate',{detail:`/app/${orgId}/exam-builder?examId=${ex.id}`}));return;}
           const newStatus: ExamStatus = ex.status === 'published' ? 'completed' : 'published';
           schoolStore.updateExam(ex.id, { status: newStatus });
           showToast({ title: 'وضعیت انتشار', message: `وضعیت انتشار آزمون تغییر یافت.`, type: 'info' });
@@ -192,6 +194,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
         actionsRow.appendChild(scoreEntryBtn);
         actionsRow.appendChild(togglePublishBtn);
 
+        actionsRow.append(deleteAction('آزمون',()=>schoolStore.deleteExam(ex.id),render));
         card.appendChild(actionsRow);
         grid.appendChild(card);
       });
@@ -252,7 +255,7 @@ export function createExamsPage(membership: OrganizationMembership): HTMLElement
             <option value="خیلی خوب" ${grd?.descriptiveScore === 'خیلی خوب' ? 'selected' : ''}>خیلی خوب</option>
             <option value="خوب" ${grd?.descriptiveScore === 'خوب' ? 'selected' : ''}>خوب</option>
             <option value="قابل قبول" ${grd?.descriptiveScore === 'قابل قبول' ? 'selected' : ''}>قابل قبول</option>
-            <option value="نیازمند تلاش بیشتر" ${grd?.descriptiveScore === 'نیازمند تلاش بیشتر' ? 'selected' : ''}>نیازمند تلاش بیشتر</option>
+            <option value="نیاز به تلاش بیشتر" ${grd?.descriptiveScore === 'نیاز به تلاش بیشتر' ? 'selected' : ''}>نیاز به تلاش بیشتر</option>
           `;
           scoreTd.appendChild(select);
         } else {

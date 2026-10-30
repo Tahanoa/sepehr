@@ -1,3 +1,4 @@
+import { deleteAction } from '../../../components/dashboard/delete-action';
 /**
  * POLARIS CLASS & GRADE MANAGEMENT PAGE
  * Grade and class listings, student counts per class, homeroom teacher assignments,
@@ -129,6 +130,7 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
         actionsRow.appendChild(assignBtn);
         actionsRow.appendChild(editBtn);
 
+        actionsRow.append(deleteAction('کلاس',()=>schoolStore.deleteClass(cls.id),render));
         classCard.appendChild(actionsRow);
         grid.appendChild(classCard);
       });

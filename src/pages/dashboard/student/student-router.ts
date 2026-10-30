@@ -10,8 +10,8 @@ import { createStudentExamsPage } from './student-exams';
 import { createReportCardsPage } from '../shared/report-cards-page';
 import { createStudentMaterialsPage } from './student-materials';
 import { createStudentPaymentsPage } from './student-payments';
-import { createTeacherClassesPage } from '../teacher/teacher-classes';
-import { createTimetablePage } from '../admin/timetable-page';
+import { createStudentSchedule } from './student-schedule';
+
 import { createDashboardNotFoundPage } from '../../../components/dashboard/route-pages';
 
 export function renderStudentSection(sectionKey: string, membership: OrganizationMembership): HTMLElement {
@@ -22,7 +22,7 @@ export function renderStudentSection(sectionKey: string, membership: Organizatio
     case 'overview':
       return createStudentOverviewPage(membership);
     case 'classes':
-      return createTeacherClassesPage(membership);
+      return createStudentSchedule(membership);
     case 'assignments':
       return createStudentAssignmentsPage(membership);
     case 'exams':
@@ -32,7 +32,7 @@ export function renderStudentSection(sectionKey: string, membership: Organizatio
     case 'materials':
       return createStudentMaterialsPage(membership);
     case 'schedule':
-      return createTimetablePage(membership);
+      return createStudentSchedule(membership);
     case 'payments':
       return createStudentPaymentsPage(membership);
     default:

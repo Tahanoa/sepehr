@@ -63,7 +63,7 @@ export function createStudentAssignmentsPage(membership: OrganizationMembership)
                   : 'bg-blue-100 text-blue-800'
                 : 'bg-amber-100 text-amber-900'
             }">
-              ${mySub ? (mySub.status === 'graded' ? `نمره: ${mySub.score} از ۲۰` : 'ارسال شده (در انتظار بررسی)') : 'در انتظار ارسال پاسخ'}
+              ${mySub ? (mySub.status === 'graded' ? `نمره: ${mySub.descriptiveScore||`${mySub.score} از ۲۰`}` : 'ارسال شده (در انتظار بررسی)') : 'در انتظار ارسال پاسخ'}
             </span>
 
             <button class="action-btn px-4 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
@@ -97,7 +97,7 @@ export function createStudentAssignmentsPage(membership: OrganizationMembership)
         ${
           mySub.status === 'graded'
             ? `<div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl space-y-1.5 text-emerald-900">
-                <div class="font-bold text-sm">نمره کسب‌شده: ${mySub.score} از ۲۰</div>
+                <div class="font-bold text-sm">نمره کسب‌شده: ${mySub.descriptiveScore||`${mySub.score} از ۲۰`}</div>
                 <div><strong>بازخورد استاد:</strong> ${mySub.feedback || 'پاسخ کامل و صحیح است.'}</div>
               </div>`
             : `<div class="p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl">پاسخ شما با موفقیت دریافت گردیده و در صف بررسی استاد قرار دارد.</div>`

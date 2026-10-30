@@ -460,6 +460,8 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
       }
     `;
 
+    const reportButton=createElement('button',{textContent:'مشاهده کارنامه',className:'sepehr-primary'});
+    reportButton.addEventListener('click',()=>{modal.close();window.dispatchEvent(new CustomEvent('polaris-navigate',{detail:`/app/${orgId}/grades?student=${std.id}`}));});content.append(reportButton);
     const modal = new Modal({
       title: 'پرونده تفصیلی دانش‌آموز',
       content,

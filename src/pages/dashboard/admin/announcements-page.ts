@@ -346,7 +346,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
               <input type="checkbox" id="cmp-ch-internal" checked class="w-4 h-4 text-[rgb(var(--theme-primary))] rounded" /> اطلاعیه سامانه
             </label>
             <label class="flex items-center gap-1.5 font-bold cursor-pointer text-amber-900">
-              <input type="checkbox" id="cmp-ch-sms" checked class="w-4 h-4 text-amber-600 rounded" /> پیامک SMS (دمو)
+              <input type="checkbox" id="cmp-ch-sms" checked class="w-4 h-4 text-amber-600 rounded" /> پیامک فقط به اولیا (دمو)
             </label>
           </div>
         </div>
@@ -390,6 +390,7 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
 
     const calculateRecipients = () => {
       const aud = audienceSelect.value;
+      const sms=form.querySelector('#cmp-ch-sms') as HTMLInputElement;sms.disabled=aud==='students'||aud==='teachers'||aud==='csv_import';if(sms.disabled)sms.checked=false;
       if (aud === 'all') {
         const count = students.length + staff.length;
         countBadge.textContent = `${count.toLocaleString('fa-IR')} نفر`;
@@ -472,26 +473,12 @@ export function createAnnouncementsPage(membership: OrganizationMembership): HTM
         if (sendSMS) {
           let recipientsList: { name: string; phone: string }[] = [];
 
-          if (aud === 'csv_import') {
-            const lines = csvContent.value.split('\n');
-            lines.forEach((line) => {
-              const parts = line.split(',');
-              if (parts.length >= 2) {
-                const phone = parts[1]!.trim();
-                if (phone.length >= 10) {
-                  recipientsList.push({ name: parts[0]!.trim() || 'مخاطب CSV', phone });
-                }
-              }
-            });
-          } else {
-            students.forEach((s) => {
-              if (s.guardianPhone) recipientsList.push({ name: `${s.guardianName} (ولی ${s.fullName})`, phone: s.guardianPhone });
-            });
-            staff.forEach((st) => {
-              if (st.phone) recipientsList.push({ name: st.fullName, phone: st.phone });
-            });
+          const classTarget=aud.replace('class_', '');
+          if(aud !== 'students' && aud !== 'teachers' && aud !== 'csv_import') {
+            for(const student of students.filter(s=>!aud.startsWith('class_') || s.classId===classTarget)) {
+              if(student.guardianPhone && !recipientsList.some(r=>r.phone===student.guardianPhone)) recipientsList.push({name:student.guardianName,phone:student.guardianPhone});
+            }
           }
-
           recipientsList.forEach((r) => {
             schoolStore.addSMSLog({
               organizationId: orgId,

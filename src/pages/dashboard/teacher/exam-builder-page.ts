@@ -1,3 +1,4 @@
+import { el, panel, field, input, button } from '../../../components/workspace';
 import { confirmAction } from '../../../components/feedback';
 /**
  * POLARIS DEDICATED FULL-PAGE EXAM BUILDER PAGE
@@ -49,6 +50,8 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
   // Builder State
   let currentStep: 1 | 2 | 3 | 4 = 1;
   let isPreviewMode = false;
+  let sourceName=existingExam?.aiSourceName||'', reviewed=existingExam?.aiReviewed||false;
+  let selectedSource:File|undefined;
 
   const draftData: {
     id?: string;
@@ -146,6 +149,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
   const validateExam = (): string[] => {
     const warnings: string[] = [];
+    if(sourceName&&!reviewed)warnings.push('بازبینی سؤال‌های پیشنهادی توسط معلم تأیید نشده است.');
 
     if (!draftData.title.trim()) {
       warnings.push('عنوان آزمون وارد نشده است.');
@@ -191,6 +195,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
     const examPayload: Omit<Exam, 'id'> = {
       organizationId: orgId,
+      aiSourceName:sourceName,aiReviewed:reviewed,
       title: draftData.title || 'آزمون جدید',
       description: draftData.instructions,
       instructions: draftData.instructions,
@@ -206,7 +211,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       passingScore: draftData.passingScore || 10,
       term: 'term_1',
       status,
-      evalType: draftData.examType === 'descriptive' ? 'descriptive' : 'numeric',
+      evalType: membership.organization.type==='elementary_school' || draftData.examType === 'descriptive' ? 'descriptive' : 'numeric',
       examType: draftData.examType,
       difficulty: draftData.difficulty,
       attemptLimit: draftData.attemptLimit,
@@ -330,6 +335,18 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       return;
     }
 
+    const ai=panel();ai.classList.add('ai-studio');
+    ai.append(el('span',{textContent:'AI · پیش‌نمایش قابلیت',className:'ai-badge'}),el('h3',{textContent:'از منبع درس تا پیش‌نویس آزمون',className:'sepehr-section-title'}),el('p',{textContent:'فایل منبع را انتخاب کنید تا مسیر ساخت آزمون را ببینید. این نسخه نمایشی است؛ فایل آپلود یا تحلیل نمی‌شود و سؤال‌ها نمونه‌های ثابت و قابل ویرایش هستند.'}));
+    const upload=input('','file');upload.accept='.pdf,.docx,.txt';const fileStatus=el('p',{textContent:sourceName||'PDF، Word یا متن · حداکثر ۱۰ مگابایت',className:'sepehr-muted'});
+    upload.addEventListener('change',()=>{selectedSource=upload.files?.[0];fileStatus.textContent=selectedSource?.name||'فایلی انتخاب نشده';});
+    ai.append(field('بارگذاری فایل منبع آزمون (نمایشی)',upload),fileStatus,button('ساخت نمونه سؤال با AI',()=>{void(async()=>{
+      if(!selectedSource||selectedSource.size>10*1024*1024||!/\.(pdf|docx|txt)$/i.test(selectedSource.name)){showToast({title:'فایل منبع',message:'یک فایل PDF، Word یا متن تا ۱۰ مگابایت انتخاب کنید.',type:'warning'});return;}
+      if(questions.length&&!await confirmAction('نمونه سؤال‌ها به انتهای سؤال‌های فعلی افزوده شوند؟'))return;
+      sourceName=selectedSource.name;reviewed=false;
+      questions.push({id:crypto.randomUUID(),examId:draftData.id||'',type:'descriptive',prompt:'نمونه نمایشی: مفهوم اصلی این درس را با یک مثال توضیح دهید.',points:10,referenceAnswer:'توضیح روشن مفهوم همراه با مثال مرتبط.'},{id:crypto.randomUUID(),examId:draftData.id||'',type:'descriptive',prompt:'نمونه نمایشی: دو کاربرد موضوع درس را شرح دهید.',points:10,referenceAnswer:'دو کاربرد مرتبط همراه با استدلال.'});draftData.maxScore=calculateQuestionsTotalScore();currentStep=3;render();
+    })();},true));
+    if(sourceName){const check=input('','checkbox');check.checked=reviewed;check.addEventListener('change',()=>{reviewed=check.checked;});ai.append(field('تمام سؤال‌ها، پاسخ‌های مرجع و بارم‌بندی را بازبینی و تأیید کرده‌ام.',check));}
+    rootWrapper.append(ai);
     // Workflow Steps Bar
     const stepsNav = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-2 shadow-2xs' });
     const stepsList = [

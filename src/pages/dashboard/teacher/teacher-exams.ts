@@ -1,5 +1,6 @@
+import { deleteAction } from '../../../components/dashboard/delete-action';
 import { classesFor } from '../../../services/academic-store';
-import { el, button, input, field, status } from '../../../components/workspace';
+import { el, button, input, field, status, select } from '../../../components/workspace';
 /**
  * POLARIS TEACHER EXAM BUILDER, MANAGEMENT & INTEGRITY LOG PAGE
  * Complete multi-step builder, tabbed exam dashboard, descriptive grading queue,
@@ -157,12 +158,14 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
           render();
         });
         card.querySelector('.pub-btn')!.addEventListener('click', () => {
+          if(ex.aiSourceName&&!ex.aiReviewed){window.dispatchEvent(new CustomEvent('polaris-navigate',{detail:`/app/${orgId}/exam-builder?examId=${ex.id}`}));return;}
           const newStatus: ExamStatus = ex.status === 'published' ? 'scheduled' : 'published';
           schoolStore.updateExam(ex.id, { status: newStatus });
           showToast({ title: 'وضعیت بروز شد', message: 'وضعیت انتشار آزمون با موفقیت تغییر کرد.', type: 'info' });
           render();
         });
 
+        card.append(deleteAction('آزمون',()=>schoolStore.deleteExam(ex.id),render));
         grid.appendChild(card);
       });
     }
@@ -277,6 +280,7 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
   const openDescriptiveGradingQueueModal = (ex: Exam, attempts: any[]) => {
     const container = createElement('div', { className: 'space-y-4 dir-rtl text-xs text-gray-800 max-h-[60vh] overflow-y-auto p-1' });
 
+    container.append(el('div',{className:'ai-studio',textContent:'✦ دستیار تصحیح AI · نسخه نمایشی — بررسی پاسخ‌برگ ← پیشنهاد نمره ← بازبینی دبیر ← ثبت نهایی. هیچ پاسخ یا فایلی به سرویس هوش مصنوعی ارسال نمی‌شود.'}));
     if (attempts.length === 0) {
       container.innerHTML = `<div class="p-6 text-center text-gray-500 bg-gray-50 rounded-xl">هنوز پاسخی برای این آزمون ثبت نشده است.</div>`;
     } else {
@@ -292,7 +296,11 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
             <div>نمره نهایی ثبت شده: <strong class="font-mono">${att.totalScore ?? 'نامشخص'} از ${ex.maxScore}</strong></div>
           </div>
         `;
-        if(att.status !== 'in_progress') {
+        if(membership.organization.type==='elementary_school'){
+          item.querySelector('.grid')?.remove();
+          const value=select(['','خیلی خوب','خوب','قابل قبول','نیاز به تلاش بیشتر'].map(v=>({id:v,name:v||'انتخاب سطح'})),String(att.descriptiveScore||''),()=>{}),message=status();
+          item.append(field('ارزشیابی توصیفی پاسخ‌برگ',value),button('✦ پیشنهاد AI (نمایشی)',()=>{value.value='خوب';message.textContent='نمونه ثابت نمایشی است؛ پاسخ‌ها را مرور و سطح نهایی را تعیین کنید.';}),button('ثبت ارزشیابی بازبینی‌شده',()=>{if(!value.value){message.textContent='سطح ارزشیابی را انتخاب کنید.';return;}const saved={...att,descriptiveScore:value.value,status:'graded'};delete saved.totalScore;delete saved.mcqScore;schoolStore.saveExamAttempt(saved);message.textContent='ارزشیابی ثبت شد.';},true),message);
+        }else if(att.status !== 'in_progress') {
           const fields=new Map<string,HTMLInputElement>();
           const questions=schoolStore.getExamQuestions(ex.id), scores:Record<string,number>={...(att.questionScores||{})}, notice=status();
           for(const q of questions){
@@ -302,7 +310,7 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
             score.addEventListener('input',()=>{scores[q.id]=Number(score.value);});
             const details=el('details');details.append(el('summary',{textContent:'پاسخ و نمرهٔ سؤال '+(questions.indexOf(q)+1)}),section);item.append(details);
           }
-          item.prepend(button('تصحیح آزمایشی کل پاسخ‌برگ',()=>{
+          item.prepend(button('✦ تصحیح با AI · کل پاسخ‌برگ (نمایشی)',()=>{
             for(const q of questions){const answer=att.answers?.[q.id] ?? att.descriptiveAnswers?.[q.id] ?? att.mcqAnswers?.[q.id] ?? '';const words=(q.referenceAnswer||'').split(/\s+/).filter(Boolean);const score=words.length?Math.round(q.points*words.filter(w=>String(answer).includes(w)).length/words.length*4)/4:undefined;if(score===undefined)continue;scores[q.id]=score;fields.get(q.id)!.value=String(score);}
             notice.textContent='پیشنهادهای کل پاسخ‌برگ آماده شد؛ صرفاً شبیه‌سازی تطابق واژه‌ها، نه مدل AI واقعی. سؤال فاقد پاسخ مرجع نیازمند نمرهٔ دستی است. پس از بازبینی ثبت کنید.';
           },true));
