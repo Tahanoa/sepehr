@@ -1,3 +1,5 @@
+import { descriptive } from '../../../services/academic-store';
+import { deleteAction } from '../../../components/dashboard/delete-action';
 /**
  * POLARIS TEACHER ASSIGNMENTS & HOMEWORK INBOX PAGE
  * Homework creation, due dates, submission review inbox, feedback, and scoring.
@@ -23,9 +25,10 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
     classes = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
   }
 
-  const assignments = schoolStore.getAssignments(orgId);
+
 
   const render = () => {
+    const assignments=schoolStore.getAssignments(orgId).filter(a=>classes.some(c=>c.id===a.classId));
     rootWrapper.innerHTML = '';
 
     // Header Row
@@ -83,6 +86,7 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
           viewSubBtn.addEventListener('click', () => openSubmissionsModal(asg));
         }
 
+        card.append(deleteAction('تکلیف',()=>schoolStore.deleteAssignment(asg.id),render));
         grid.appendChild(card);
       });
     }
@@ -158,6 +162,7 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
 
   const openSubmissionsModal = (asg: Assignment) => {
     const submissions = schoolStore.getSubmissionsForAssignment(asg.id);
+    const isDesc=descriptive(membership,asg.classId);
 
     const content = createElement('div', { className: 'space-y-4 text-xs dir-rtl text-gray-800' });
 
@@ -177,8 +182,9 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
 
           <div class="pt-2 border-t border-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
-              <label class="block font-bold text-[11px] mb-0.5">نمره (از ۲۰):</label>
-              <input type="number" id="sub-score-${sub.id}" value="${sub.score || 20}" max="20" min="0" class="w-full bg-white border border-gray-300 rounded p-1.5 text-xs font-mono font-bold" />
+              <label class="block font-bold text-[11px] mb-0.5">${isDesc?"ارزشیابی توصیفی:":"نمره (از ۲۰):"}</label>
+              ${isDesc?`<select id="sub-score-${sub.id}" aria-label="ارزشیابی"><option value="">انتخاب سطح</option>${['خیلی خوب','خوب','قابل قبول','نیاز به تلاش بیشتر'].map(v=>`<option ${sub.descriptiveScore===v?'selected':''}>${v}</option>`).join('')}</select>`:`<input type="number" id="sub-score-${sub.id}" value="${sub.score ?? ''}" max="20" min="0" class="w-full bg-white border border-gray-300 rounded p-1.5" />`}
+
             </div>
             <div>
               <label class="block font-bold text-[11px] mb-0.5">بازخورد معلم:</label>
@@ -196,7 +202,8 @@ export function createTeacherAssignmentsPage(membership: OrganizationMembership)
           const scoreInput = item.querySelector(`#sub-score-${sub.id}`) as HTMLInputElement;
           const feedbackInput = item.querySelector(`#sub-feedback-${sub.id}`) as HTMLInputElement;
 
-          const scoreVal = scoreInput ? parseFloat(scoreInput.value) : 20;
+          const scoreVal = isDesc ? scoreInput.value : parseFloat(scoreInput.value);
+          if(!scoreInput.value || (typeof scoreVal==='number'&&(!Number.isFinite(scoreVal)||scoreVal<0||scoreVal>20))){showToast({title:'ارزشیابی',message:'ارزشیابی معتبر وارد کنید.',type:'warning'});return;}
           const feedbackVal = feedbackInput ? feedbackInput.value : 'تایید شد';
 
           schoolStore.gradeHomeworkSubmission(sub.id, scoreVal, feedbackVal);

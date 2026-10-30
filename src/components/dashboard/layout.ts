@@ -1,3 +1,4 @@
+import { pageGuide } from './page-guide';
 /**
  * POLARIS SHARED DASHBOARD LAYOUT COMPONENT
  * Main viewport controller connecting responsive sidebar, header, content body,
@@ -74,7 +75,7 @@ export class DashboardLayout {
       className: 'flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full transition-all duration-200',
     });
 
-    this.contentViewportEl.appendChild(this.content);
+    this.contentViewportEl.append(pageGuide(this.membership,this.currentPath),this.content);
 
     this.mainWrapperEl.appendChild(demoBanner);
     this.mainWrapperEl.appendChild(this.headerContainerEl);
@@ -123,7 +124,7 @@ export class DashboardLayout {
     clearElement(this.contentViewportEl);
     this.contentViewportEl.className =
       'flex-1 p-3.5 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full transition-all duration-200 animate-fade-in-up min-w-0';
-    this.contentViewportEl.appendChild(this.content);
+    this.contentViewportEl.append(pageGuide(this.membership,this.currentPath),this.content);
   }
 
   private renderSidebar(): void {

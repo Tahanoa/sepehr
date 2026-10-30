@@ -1,3 +1,4 @@
+import { deleteAction } from '../../../components/dashboard/delete-action';
 /**
  * POLARIS TEACHER & STAFF MANAGEMENT PAGE
  * Directory of teachers and staff, search, role filters, teaching assignments,
@@ -214,6 +215,7 @@ export function createTeachersPage(membership: OrganizationMembership): HTMLElem
         actionsRow.appendChild(toggleBtn);
         actionsRow.appendChild(editBtn);
 
+        actionsRow.append(deleteAction('همکار',()=>schoolStore.deleteStaff(st.id),render));
         card.appendChild(actionsRow);
         grid.appendChild(card);
       });

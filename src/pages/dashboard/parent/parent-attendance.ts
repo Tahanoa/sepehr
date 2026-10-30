@@ -1,3 +1,5 @@
+import { linkedStudents } from '../../../services/academic-store';
+import { el,field,input,button,select,status,guard,isoToday } from '../../../components/workspace';
 /**
  * POLARIS PARENT ATTENDANCE REPORT PAGE
  */
@@ -11,13 +13,14 @@ export function createParentAttendancePage(membership: OrganizationMembership): 
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
 
-  const students = schoolStore.getStudents(orgId);
-  const child = students.find((s) => s.guardianName.includes('رضایی') || s.guardianName.includes('عباسی') || s.guardianName.includes('تهرانی')) || students[0];
+  const children=linkedStudents(membership);
+  let child=children[0];
 
-  const attendance = schoolStore.getAttendance(orgId).filter((a) => child && a.studentId === child.id);
+
 
   const render = () => {
     rootWrapper.innerHTML = '';
+    const attendance=schoolStore.getAttendance(orgId).filter(a=>a.studentId===child?.id);
 
     const headerRow = createElement('div', { className: 'pb-2 border-b border-gray-200 space-y-1' });
     headerRow.innerHTML = `
@@ -67,6 +70,9 @@ export function createParentAttendancePage(membership: OrganizationMembership): 
 
     rootWrapper.appendChild(headerRow);
     rootWrapper.appendChild(tableCard);
+    if(child){const form=el('form',{className:'sepehr-panel space-y-4'}),date=input(isoToday(),'date'),reason=el('textarea',{attributes:{rows:'3',required:'true',maxlength:'1000'}}),notice=status();
+    form.append(el('h3',{textContent:'اعلام غیبت فرزند'}),field('فرزند',select(children.map(s=>({id:s.id,name:s.fullName})),child.id,id=>{child=children.find(s=>s.id===id);render();})),field('تاریخ غیبت',date),field('علت غیبت',reason),el('p',{textContent:'درخواست برای بررسی مدرسه ارسال می‌شود و به‌تنهایی غیبت را موجه نمی‌کند.',className:'sepehr-muted'}),button('ثبت اعلام غیبت',()=>guard(notice,()=>{if(!child||!date.value||!reason.value.trim())throw Error('تاریخ و علت غیبت را وارد کنید.');schoolStore.addParentConversation({organizationId:orgId,parentId:membership.userId,parentName:child.guardianName,parentPhone:child.guardianPhone,category:'attendance',studentId:child.id,studentName:child.fullName,className:child.className,subject:'اعلام غیبت فرزند'},`تاریخ: ${date.value} — علت: ${reason.value.trim()}`);reason.value='';notice.textContent='اعلام غیبت ثبت شد؛ مدرسه آن را در صندوق پیام اولیا بررسی می‌کند.';}),true),notice);rootWrapper.insertBefore(form,tableCard);}
+
   };
 
   render();

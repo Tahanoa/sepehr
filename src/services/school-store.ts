@@ -462,6 +462,11 @@ class SchoolStoreService {
     if (!std) return false;
 
     this.state.students = this.state.students.filter((s) => s.id !== id);
+    this.state.attendance=this.state.attendance.filter(a=>a.studentId!==id);
+    this.state.grades=this.state.grades.filter(g=>g.studentId!==id);
+    this.state.submissions=this.state.submissions.filter(g=>g.studentId!==id);
+    this.state.examAttempts=this.state.examAttempts.filter(g=>g.studentId!==id);
+
     this.recalculateClassStudentCounts(std.organizationId);
     this.saveState();
     return true;
@@ -526,6 +531,28 @@ class SchoolStoreService {
     return this.state.classes[idx]!;
   }
 
+  public deleteClass(id: string): boolean {
+    if (this.state.students.some(s=>s.classId===id)) throw Error('ابتدا دانش‌آموزان این کلاس را منتقل کنید.');
+    this.state.classes = this.state.classes.filter(c=>c.id!==id);
+    this.state.timetable = this.state.timetable.filter(t=>t.classId!==id);
+    for(const a of this.state.assignments.filter(a=>a.classId===id))this.deleteAssignment(a.id);
+    this.state.materials=this.state.materials.filter(m=>m.classId!==id);
+    for (const exam of this.state.exams) exam.classIds=exam.classIds.filter(c=>c!==id);
+    this.saveState(); return true;
+  }
+  public deleteExam(id: string): void {
+    this.state.exams=this.state.exams.filter(e=>e.id!==id);
+    this.state.examQuestions=this.state.examQuestions.filter(q=>q.examId!==id);
+    this.state.examAttempts=this.state.examAttempts.filter(a=>a.examId!==id);
+    this.state.grades=this.state.grades.filter(g=>g.examId!==id);
+    this.state.examActivityLogs=this.state.examActivityLogs.filter(a=>a.examId!==id);
+    this.saveState();
+  }
+  public deleteAssignment(id: string): void {
+    this.state.assignments=this.state.assignments.filter(a=>a.id!==id);
+    this.state.submissions=this.state.submissions.filter(s=>s.assignmentId!==id);
+    this.saveState();
+  }
   // --- Subjects ---
   public getSubjects(orgId: string): Subject[] {
     return this.state.subjects.filter((sb) => sb.organizationId === orgId);
@@ -675,6 +702,7 @@ class SchoolStoreService {
   }
 
   public addExam(exam: Omit<Exam, 'id'>): Exam {
+    if(exam.status==='published'&&exam.aiSourceName&&!exam.aiReviewed)throw Error('ابتدا سؤال‌های نمونه را در آزمون‌ساز بازبینی و تأیید کنید.');
     const newExam: Exam = {
       ...exam,
       id: 'ex-' + Date.now().toString(36),
@@ -688,7 +716,9 @@ class SchoolStoreService {
     const idx = this.state.exams.findIndex((e) => e.id === id);
     if (idx === -1) return null;
 
-    this.state.exams[idx] = { ...this.state.exams[idx]!, ...updates };
+    const merged={...this.state.exams[idx]!,...updates};
+    if(merged.status==='published'&&merged.aiSourceName&&!merged.aiReviewed)throw Error('ابتدا سؤال‌های نمونه را در آزمون‌ساز بازبینی و تأیید کنید.');
+    this.state.exams[idx] = merged;
     this.saveState();
     return this.state.exams[idx]!;
   }
@@ -941,10 +971,10 @@ class SchoolStoreService {
     return newSub;
   }
 
-  public gradeHomeworkSubmission(id: string, score: number, feedback: string): void {
+  public gradeHomeworkSubmission(id: string, score: number | string, feedback: string): void {
     const item = this.state.submissions.find((s) => s.id === id);
     if (item) {
-      item.score = score;
+      if(typeof score==='string'){if(!['خیلی خوب','خوب','قابل قبول','نیاز به تلاش بیشتر'].includes(score))throw Error('سطح ارزشیابی نامعتبر است.');item.descriptiveScore=score;delete item.score;}else{item.score=score;delete item.descriptiveScore;}
       item.feedback = feedback;
       item.status = 'graded';
       this.saveState();

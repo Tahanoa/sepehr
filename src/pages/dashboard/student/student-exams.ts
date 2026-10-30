@@ -120,7 +120,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
                   : 'bg-amber-100 text-amber-900'
                 : 'bg-blue-100 text-blue-900'
             }">
-              ${attempt ? (attempt.totalScore !== undefined ? `نمره: ${attempt.totalScore} از ${ex.maxScore}` : 'در انتظار تصحیح معلم') : 'آماده شرکت'}
+              ${attempt ? (attempt.descriptiveScore ? `ارزشیابی: ${attempt.descriptiveScore}` : membership.organization.type==='elementary_school' ? 'در انتظار ارزشیابی معلم' : attempt.totalScore !== undefined ? `نمره: ${attempt.totalScore} از ${ex.maxScore}` : 'در انتظار تصحیح معلم') : 'آماده شرکت'}
             </span>
 
             <button class="exam-action-btn px-4 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
@@ -588,7 +588,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
     content.innerHTML = `
       <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl space-y-1.5 text-emerald-950">
         <div class="font-semibold text-sm">کارنامه آزمون: ${ex.title}</div>
-        <div>نمره ثبت شده: <strong class="font-mono text-sm">${attempt.totalScore ?? 'در انتظار تصحیح'} از ${ex.maxScore}</strong></div>
+        <div>نمره ثبت شده: <strong class="font-mono text-sm">${membership.organization.type==='elementary_school' ? (attempt.descriptiveScore||'در انتظار ارزشیابی معلم') : `${attempt.totalScore ?? 'در انتظار تصحیح'} از ${ex.maxScore}`} </strong></div>
         <div>زمان تحویل: <span class="font-mono">${attempt.submittedAt}</span></div>
       </div>
     `;

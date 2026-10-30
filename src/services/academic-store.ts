@@ -8,7 +8,7 @@ export type Component = 'continuous1' | 'final1' | 'continuous2' | 'final2';
 export const components: Record<Component, string> = { continuous1: 'مستمر نوبت اول', final1: 'پایانی نوبت اول', continuous2: 'مستمر نوبت دوم', final2: 'پایانی نوبت دوم' };
 export interface Mark { studentId: string; subjectId: string; year: string; component: Component; value: string; feedback: string; updatedBy: string; updatedAt: string; }
 export interface Journal { studentId: string; subjectId: string; date: string; value: string; note: string; }
-export interface Report { id: string; studentId: string; year: string; term: 'first' | 'second'; published: boolean; descriptive: boolean; rows: { subjectId: string; subject: string; continuous: string; final: string; feedback: string }[]; updatedAt: string; }
+export interface Report { id: string; studentId: string; year: string; term: 'first' | 'second' | 'ongoing'; published: boolean; descriptive: boolean; rows: { subjectId: string; subject: string; continuous: string; final: string; feedback: string }[]; updatedAt: string; }
 export interface Contact { id: string; name: string; role: Role; studentId?: string; }
 export interface Chat { id: string; participants: [Contact,Contact]; messages: { id: string; sender: string; text: string; at: string }[]; read: Record<string, string>; }
 interface State { version: 1; locks: Record<string, boolean>; marks: Mark[]; journal: Journal[]; reports: Report[]; chats: Chat[]; }
@@ -53,6 +53,7 @@ export function setEntryOpen(m: OrganizationMembership, classId: string, year: s
 }
 export function marks(m: OrganizationMembership): Mark[] { const ids=new Set(classesFor(m).flatMap(c=>schoolStore.getStudents(m.organizationId).filter(s=>s.classId===c.id).map(s=>s.id))); return read(m.organizationId).marks.filter(v=>ids.has(v.studentId)); }
 export function validateMark(value: string, isDescriptive: boolean): void {
+  if (isDescriptive && value !== '' && !['خیلی خوب','خوب','قابل قبول','نیاز به تلاش بیشتر'].includes(value)) throw Error('یکی از چهار سطح ارزشیابی ابتدایی را انتخاب کنید.');
   if (value.length > 2000) throw Error('توصیف بیش از حد طولانی است.');
   if (!isDescriptive && value !== '' && (!Number.isFinite(Number(value)) || Number(value) < 0 || Number(value) > 20)) throw Error('نمره باید بین صفر تا بیست باشد.');
 }
@@ -81,13 +82,13 @@ export function reports(m: OrganizationMembership): Report[] {
   if (isAdmin(m)) return all;
   const students = linkedStudents(m); return all.filter(r => r.published && students.some(s => s.id === r.studentId));
 }
-export function buildReport(m: OrganizationMembership, studentId: string, year: string, term: 'first'|'second'): Report {
+export function buildReport(m: OrganizationMembership, studentId: string, year: string, term: 'first'|'second'|'ongoing'): Report {
   context(m); if (!isAdmin(m)) throw Error('صدور کارنامه فقط در اختیار مدیر است.');
   const student = schoolStore.getStudents(m.organizationId).find(s => s.id === studentId); if (!student) throw Error('دانش‌آموز پیدا نشد.');
   const state = read(m.organizationId), suffix = term === 'first' ? '1':'2';
   const rows = subjectsFor(m,student.classId).map(s => {
     const continuous = state.marks.find(v => v.studentId===studentId && v.subjectId===s.id && v.year===year && v.component===`continuous${suffix}`), final = state.marks.find(v => v.studentId===studentId && v.subjectId===s.id && v.year===year && v.component===`final${suffix}`);
-    return { subjectId:s.id, subject:s.name, continuous:continuous?.value || '', final:final?.value || '', feedback:final?.feedback || continuous?.feedback || '' };
+    return { subjectId:s.id, subject:s.name, continuous:continuous?.value || '', final:term === 'ongoing' ? (continuous?.value || '') : (final?.value || ''), feedback:final?.feedback || continuous?.feedback || '' };
   });
   const report: Report = { id:crypto.randomUUID(), studentId, year, term, published:false, descriptive:descriptive(m,student.classId), rows, updatedAt:new Date().toISOString() };
   state.reports = state.reports.filter(r => !(r.studentId===studentId && r.year===year && r.term===term)); state.reports.push(report); write(m.organizationId,state); return report;
@@ -95,6 +96,7 @@ export function buildReport(m: OrganizationMembership, studentId: string, year: 
 export function publishReport(m: OrganizationMembership, id: string, publish: boolean): void {
   context(m); if (!isAdmin(m)) throw Error('دسترسی کافی نیست.'); const state = read(m.organizationId), report = state.reports.find(r => r.id===id); if (!report) throw Error('کارنامه پیدا نشد.');
   if (publish && (!report.rows.length || report.rows.some(r => !r.continuous.trim() || !r.final.trim()))) throw Error('پیش از انتشار، ارزشیابی مستمر و پایانی همهٔ درس‌ها را تکمیل و کارنامه را دوباره بسازید.');
+  if(publish)for(const row of report.rows){validateMark(row.continuous,report.descriptive);validateMark(row.final,report.descriptive);}
   report.published=publish; write(m.organizationId,state);
 }
 export function selfContact(m: OrganizationMembership): Contact {
