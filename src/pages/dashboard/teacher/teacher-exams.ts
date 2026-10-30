@@ -1,3 +1,4 @@
+import { runAIDemo } from '../../../components/dashboard/ai-loading';
 import { deleteAction } from '../../../components/dashboard/delete-action';
 import { classesFor } from '../../../services/academic-store';
 import { el, button, input, field, status, select } from '../../../components/workspace';
@@ -28,7 +29,7 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
 
     const allowedClasses=new Set(classesFor(membership).map(c=>c.id));
     const allExams = schoolStore.getExams(orgId).filter(e=>e.classIds.some(id=>allowedClasses.has(id)));
-    const activityLogs = schoolStore.getExamActivityLogs(orgId);
+    const activityLogs = schoolStore.getExamActivityLogs(orgId).filter(log=>allExams.some(e=>e.id===log.examId));
 
     // Filter exams by tab
     let displayExams = allExams;
@@ -299,7 +300,7 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
         if(membership.organization.type==='elementary_school'){
           item.querySelector('.grid')?.remove();
           const value=select(['','خیلی خوب','خوب','قابل قبول','نیاز به تلاش بیشتر'].map(v=>({id:v,name:v||'انتخاب سطح'})),String(att.descriptiveScore||''),()=>{}),message=status();
-          item.append(field('ارزشیابی توصیفی پاسخ‌برگ',value),button('✦ پیشنهاد AI (نمایشی)',()=>{value.value='خوب';message.textContent='نمونه ثابت نمایشی است؛ پاسخ‌ها را مرور و سطح نهایی را تعیین کنید.';}),button('ثبت ارزشیابی بازبینی‌شده',()=>{if(!value.value){message.textContent='سطح ارزشیابی را انتخاب کنید.';return;}const saved={...att,descriptiveScore:value.value,status:'graded'};delete saved.totalScore;delete saved.mcqScore;schoolStore.saveExamAttempt(saved);message.textContent='ارزشیابی ثبت شد.';},true),message);
+          item.append(field('ارزشیابی توصیفی پاسخ‌برگ',value),button('✦ پیشنهاد AI (نمایشی)',()=>{void runAIDemo(item,()=>{value.value='خوب';message.textContent='نمونه ثابت نمایشی است؛ پاسخ‌ها را مرور و سطح نهایی را تعیین کنید.';});}),button('ثبت ارزشیابی بازبینی‌شده',()=>{if(!value.value){message.textContent='سطح ارزشیابی را انتخاب کنید.';return;}const saved={...att,descriptiveScore:value.value,status:'graded'};delete saved.totalScore;delete saved.mcqScore;schoolStore.saveExamAttempt(saved);message.textContent='ارزشیابی ثبت شد.';},true),message);
         }else if(att.status !== 'in_progress') {
           const fields=new Map<string,HTMLInputElement>();
           const questions=schoolStore.getExamQuestions(ex.id), scores:Record<string,number>={...(att.questionScores||{})}, notice=status();
@@ -310,10 +311,10 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
             score.addEventListener('input',()=>{scores[q.id]=Number(score.value);});
             const details=el('details');details.append(el('summary',{textContent:'پاسخ و نمرهٔ سؤال '+(questions.indexOf(q)+1)}),section);item.append(details);
           }
-          item.prepend(button('✦ تصحیح با AI · کل پاسخ‌برگ (نمایشی)',()=>{
+          item.prepend(button('✦ تصحیح با AI · کل پاسخ‌برگ (نمایشی)',()=>{void runAIDemo(item,()=>{
             for(const q of questions){const answer=att.answers?.[q.id] ?? att.descriptiveAnswers?.[q.id] ?? att.mcqAnswers?.[q.id] ?? '';const words=(q.referenceAnswer||'').split(/\s+/).filter(Boolean);const score=words.length?Math.round(q.points*words.filter(w=>String(answer).includes(w)).length/words.length*4)/4:undefined;if(score===undefined)continue;scores[q.id]=score;fields.get(q.id)!.value=String(score);}
             notice.textContent='پیشنهادهای کل پاسخ‌برگ آماده شد؛ صرفاً شبیه‌سازی تطابق واژه‌ها، نه مدل AI واقعی. سؤال فاقد پاسخ مرجع نیازمند نمرهٔ دستی است. پس از بازبینی ثبت کنید.';
-          },true));
+          });},true));
           item.append(notice,button('ثبت نمرات بازبینی‌شده',()=>{
             if(questions.some(q=>!Number.isFinite(scores[q.id])||scores[q.id]!<0||scores[q.id]!>q.points)){notice.textContent='برای همهٔ سؤال‌ها نمرهٔ معتبر وارد کنید.';return;}
             schoolStore.saveExamAttempt({...att,questionScores:scores,totalScore:Object.values(scores).reduce((a,b)=>a+b,0),status:'graded'});notice.textContent='نمرات با تأیید دبیر ثبت شد.';

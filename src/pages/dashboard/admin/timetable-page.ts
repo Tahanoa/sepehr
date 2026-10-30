@@ -1,3 +1,4 @@
+import { createStudentSchedule } from '../student/student-schedule';
 import { confirmAction } from '../../../components/feedback';
 /**
  * POLARIS TIMETABLE & SCHEDULING PAGE
@@ -30,39 +31,26 @@ const ALL_WEEKDAYS: { key: WeekDay; title: string }[] = [
 ];
 
 export function createTimetablePage(membership: OrganizationMembership): HTMLElement {
+  if(membership.role==='student'||membership.role==='parent')return createStudentSchedule(membership);
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in pb-12' });
   const orgId = membership.organizationId;
   const currentUser = authService.getCurrentUser();
 
   const isManagement = AccessPolicy.canManageOrgRecords(membership);
   const isTeacherRole = membership.role === 'teacher' || membership.role === 'instructor';
-  const isStudentRole = membership.role === 'student';
-  const isParentRole = membership.role === 'parent';
-
   let classes = schoolStore.getClasses(orgId);
-  const staff = schoolStore.getStaff(orgId);
+  const teacherIdentity=currentUser?schoolStore.getStaffByEmailOrPhone(orgId,currentUser.email||currentUser.phone||currentUser.id):null;
+  const staff = schoolStore.getStaff(orgId).filter(st=>!isTeacherRole||st.id===teacherIdentity?.id);
   const subjects = schoolStore.getSubjects(orgId);
-  const students = schoolStore.getStudents(orgId);
-
-  // Determine current student / linked child for student & parent views
-  let studentClassId = '';
-  if (isStudentRole && currentUser) {
-    const studentObj = students.find((s) => s.fullName === currentUser.name || s.studentCode === currentUser.phone) || students[0];
-    if (studentObj) studentClassId = studentObj.classId;
-  } else if (isParentRole) {
-    const linkedStudent = students[0];
-    if (linkedStudent) studentClassId = linkedStudent.classId;
-  }
-
   // Teacher filtered classes
   if (isTeacherRole && currentUser) {
     const teacherClasses = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
-    if (teacherClasses.length > 0) classes = teacherClasses;
+    classes = teacherClasses;
   }
 
   // Active Tab & Selection States
   let activeTab: 'class' | 'teacher' | 'config' = isTeacherRole ? 'teacher' : 'class';
-  let selectedClassId = studentClassId || (classes[0] ? classes[0].id : '');
+  let selectedClassId = (classes[0] ? classes[0].id : '');
 
   // Find staff record for current teacher user if applicable
   const currentTeacherStaff = currentUser ? schoolStore.getStaffByEmailOrPhone(orgId, currentUser.email || currentUser.phone || currentUser.id) : null;
@@ -92,7 +80,7 @@ export function createTimetablePage(membership: OrganizationMembership): HTMLEle
     const title = createElement('h2', {
       className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('calendar', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} مدیریت برنامه هفتگی و زمان‌بندی آموزشی`;
+    title.innerHTML = `${getDashboardIcon('calendar', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} ${isManagement?'مدیریت برنامه هفتگی':'برنامه تدریس من'}`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',

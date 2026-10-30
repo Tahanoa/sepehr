@@ -118,7 +118,7 @@ export function initializeApp(): { getRootElement: () => HTMLElement } {
 
     // 5. Generate Section View
     const sectionTitles = getDashboardSectionTitles();
-    const sectionTitle = sectionTitles[sectionKey] || 'بخش سیستم';
+    const sectionTitle = getNavigationForRoleAndOrg(membership.role,membership.organization.type,organizationId).find(n=>n.sectionKey===sectionKey)?.title || sectionTitles[sectionKey] || 'بخش سیستم';
 
     let viewContent: HTMLElement;
 

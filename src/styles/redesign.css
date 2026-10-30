@@ -162,3 +162,40 @@ button:disabled { opacity:.55;cursor:not-allowed; }
 .report-sheet { border-top:4px solid rgb(var(--theme-primary)); }
 .report-signatures { display:flex;justify-content:space-between;padding-top:3rem; }
 @media print { .print-report {border:1px solid #444;padding:12mm;color:#111;background:#fff;} .print-report th,.print-report td {border:1px solid #888;padding:3mm;} .print-report .workspace-table {overflow:visible;} .print-report tr {break-inside:avoid;} @page {size:A4;margin:12mm;} }
+/* Compact role workspaces: restrained type and gentle, accessible motion. */
+.product-shell { font-size:.875rem; }
+.product-shell h1,.product-shell h2 { font-size:1.05rem!important;line-height:1.9; }
+.product-shell h3,.product-shell .sepehr-section-title { font-size:.9375rem!important;line-height:1.8; }
+.product-shell [class*="text-2xl"],.product-shell [class*="text-3xl"],.product-shell [class*="text-4xl"],.product-shell [class*="text-5xl"] { font-size:1.125rem!important; }
+.product-shell h1[class],.product-shell h2[class] { font-size:1.05rem!important; }
+.product-shell .role-home-hero h2 {font-size:1.05rem;}
+.product-shell button,.product-shell a,.product-shell input,.product-shell select { transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease; }
+.product-shell button:active { transform:translateY(1px); }
+.page-guide-bar {display:flex;justify-content:flex-end;margin-bottom:1rem;}
+.page-guide-trigger {min-height:36px;padding:6px 12px;font-size:.75rem;gap:6px;}
+.page-guide-trigger>span {display:inline-grid;place-items:center;width:20px;height:20px;border:1px solid currentColor;border-radius:50%;}
+.guide-copy {font-size:.875rem;line-height:2.1;}
+.polaris-modal-title {font-size:1rem!important;}
+.polaris-modal-backdrop--open .polaris-modal {animation:workspace-reveal .22s ease-out;}
+.class-columns {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem;}
+.class-meta {display:flex;flex-wrap:wrap;gap:1rem;padding:.75rem;background:rgb(var(--theme-subtle));border-radius:var(--radius-md);font-size:.8125rem;}
+.class-activity {padding:.8rem 0;border-bottom:1px solid var(--color-border-subtle);font-size:.8125rem;}
+.class-peers {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;list-style:none;padding:0;}
+.class-peers li {padding:.75rem;background:rgb(var(--theme-subtle));border-radius:var(--radius-md);font-size:.8125rem;}
+.weekly-grid {overflow-x:auto;border:1px solid var(--color-border-subtle);border-radius:var(--radius-xl);background:var(--color-surface);}
+.weekly-grid table {min-width:740px;width:100%;table-layout:fixed;}
+.weekly-grid th,.weekly-grid td {padding:.65rem;vertical-align:top;font-size:.75rem;border-bottom:1px solid var(--color-border-subtle);}
+.weekly-grid th {background:rgb(var(--theme-subtle));line-height:1.9;}
+.weekly-grid th:first-child {width:88px;}
+.schedule-lesson {padding:.8rem;border-radius:var(--radius-md);background:rgb(var(--theme-subtle));border:1px solid transparent;display:grid;gap:.4rem;font-size:.8125rem;transition:background .25s,border-color .25s;}
+.schedule-lesson small {font-size:.7rem;color:var(--color-text-secondary);}
+.schedule-lesson.is-current {border-color:var(--color-primary);box-shadow:inset 0 0 0 1px var(--color-primary);}
+.schedule-now {display:flex;flex-wrap:wrap;align-items:center;gap:1rem;border-inline-start:3px solid var(--color-primary);}
+.ai-working {display:flex;align-items:center;gap:.9rem;padding:1rem;margin-top:.9rem;background:rgb(var(--theme-subtle));border:1px solid var(--color-border-subtle);border-radius:var(--radius-lg);animation:workspace-reveal .2s ease-out;}
+.ai-working strong,.ai-working small {display:block;font-size:.8125rem;line-height:1.9;}
+.ai-working small {font-size:.75rem;color:var(--color-text-secondary);}
+.ai-spinner {width:28px;height:28px;flex-shrink:0;border:3px solid rgb(var(--theme-primary)/.18);border-top-color:var(--color-primary);border-radius:50%;animation:ai-turn .8s linear infinite;}
+@keyframes ai-turn {to{transform:rotate(360deg)}}
+@keyframes workspace-reveal {from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:640px){.class-columns{grid-template-columns:1fr;}.class-peers{grid-template-columns:repeat(2,minmax(0,1fr));}.page-guide-bar{margin-bottom:.75rem;}.weekly-grid{max-width:100%;}}
+@media(prefers-reduced-motion:reduce){.product-shell *,.polaris-modal,.ai-spinner,.ai-working{animation:none!important;transition:none!important;scroll-behavior:auto!important;}}

@@ -1,3 +1,4 @@
+import { runAIDemo } from '../../../components/dashboard/ai-loading';
 import { el, panel, field, input, button } from '../../../components/workspace';
 import { confirmAction } from '../../../components/feedback';
 /**
@@ -342,8 +343,9 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     ai.append(field('بارگذاری فایل منبع آزمون (نمایشی)',upload),fileStatus,button('ساخت نمونه سؤال با AI',()=>{void(async()=>{
       if(!selectedSource||selectedSource.size>10*1024*1024||!/\.(pdf|docx|txt)$/i.test(selectedSource.name)){showToast({title:'فایل منبع',message:'یک فایل PDF، Word یا متن تا ۱۰ مگابایت انتخاب کنید.',type:'warning'});return;}
       if(questions.length&&!await confirmAction('نمونه سؤال‌ها به انتهای سؤال‌های فعلی افزوده شوند؟'))return;
-      sourceName=selectedSource.name;reviewed=false;
-      questions.push({id:crypto.randomUUID(),examId:draftData.id||'',type:'descriptive',prompt:'نمونه نمایشی: مفهوم اصلی این درس را با یک مثال توضیح دهید.',points:10,referenceAnswer:'توضیح روشن مفهوم همراه با مثال مرتبط.'},{id:crypto.randomUUID(),examId:draftData.id||'',type:'descriptive',prompt:'نمونه نمایشی: دو کاربرد موضوع درس را شرح دهید.',points:10,referenceAnswer:'دو کاربرد مرتبط همراه با استدلال.'});draftData.maxScore=calculateQuestionsTotalScore();currentStep=3;render();
+      const source=selectedSource;
+      await runAIDemo(rootWrapper,()=>{sourceName=source.name;reviewed=false;
+      questions.push({id:crypto.randomUUID(),examId:draftData.id||'',type:'descriptive',prompt:'نمونه نمایشی: مفهوم اصلی این درس را با یک مثال توضیح دهید.',points:10,referenceAnswer:'توضیح روشن مفهوم همراه با مثال مرتبط.'},{id:crypto.randomUUID(),examId:draftData.id||'',type:'descriptive',prompt:'نمونه نمایشی: دو کاربرد موضوع درس را شرح دهید.',points:10,referenceAnswer:'دو کاربرد مرتبط همراه با استدلال.'});draftData.maxScore=calculateQuestionsTotalScore();currentStep=3;render();},ai);
     })();},true));
     if(sourceName){const check=input('','checkbox');check.checked=reviewed;check.addEventListener('change',()=>{reviewed=check.checked;});ai.append(field('تمام سؤال‌ها، پاسخ‌های مرجع و بارم‌بندی را بازبینی و تأیید کرده‌ام.',check));}
     rootWrapper.append(ai);
@@ -374,7 +376,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     });
     stepsNav.appendChild(stepsRow);
     rootWrapper.appendChild(stepsNav);
-    const guide = createElement('p', { className: 'workspace-notice', textContent: ['نام، درس و زمان آزمون را مشخص کنید؛ تنظیمات تکمیلی را در ادامه بررسی کنید.','کلاس‌های مجاز و شرایط شرکت دانش‌آموزان را انتخاب کنید.','سؤال‌ها، پاسخ مرجع و معیار تصحیح را وارد کنید؛ مجموع بارم را کنترل کنید.','پیش‌نمایش دانش‌آموز و هشدارها را بررسی کنید؛ سپس آزمون را منتشر کنید.'][currentStep - 1] || '' });
+    const guide=button('راهنمای این مرحله',()=>{new Modal({title:'راهنمای مرحله آزمون‌ساز',content:el('p',{textContent:['نام، درس و زمان آزمون را مشخص کنید؛ تنظیمات تکمیلی را در ادامه بررسی کنید.','کلاس‌های مجاز و شرایط شرکت دانش‌آموزان را انتخاب کنید.','سؤال‌ها، پاسخ مرجع و معیار تصحیح را وارد کنید؛ مجموع بارم را کنترل کنید.','پیش‌نمایش دانش‌آموز و هشدارها را بررسی کنید؛ سپس آزمون را منتشر کنید.'][currentStep - 1] || ''}),confirmText:'متوجه شدم'}).open();});
     rootWrapper.appendChild(guide);
 
     // Main 2-Column Grid: Form Content + Persistent Summary Sidebar

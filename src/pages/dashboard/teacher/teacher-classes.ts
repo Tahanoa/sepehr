@@ -53,7 +53,7 @@ export function createTeacherClassesPage(membership: OrganizationMembership): HT
       const clsAttendance = allAttendance.filter((a) => a.classId === cls.id && a.submitted);
 
       const presentCount = clsAttendance.filter((a) => a.status === 'present').length;
-      const attPercent = clsAttendance.length > 0 ? Math.round((presentCount / clsAttendance.length) * 100) : 98;
+      const attPercent = clsAttendance.length > 0 ? Math.round((presentCount / clsAttendance.length) * 100) : null;
 
       const isSelected = cls.id === selectedClassId;
 
@@ -78,7 +78,7 @@ export function createTeacherClassesPage(membership: OrganizationMembership): HT
 
             <div class="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100">
               <div class="text-[10px] text-emerald-800 font-bold">نرخ حضور و غیاب</div>
-              <div class="text-base font-bold text-emerald-950 font-mono mt-0.5">٪${attPercent}</div>
+              <div class="text-base font-bold text-emerald-950 font-mono mt-0.5">${attPercent===null?'ثبت نشده':attPercent.toLocaleString('fa-IR')+'٪'}</div>
             </div>
 
             <div class="bg-blue-50/60 p-2.5 rounded-xl border border-blue-100">

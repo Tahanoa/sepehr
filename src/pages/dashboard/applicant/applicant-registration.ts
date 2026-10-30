@@ -1,3 +1,4 @@
+import { authService } from '../../../services/auth-service';
 /**
  * POLARIS PROSPECTIVE APPLICANT ONLINE REGISTRATION WIZARD
  */
@@ -103,6 +104,11 @@ export function createApplicantRegistrationPage(membership: OrganizationMembersh
       window.dispatchEvent(new CustomEvent('polaris-navigate', { detail: `/app/${orgId}/status` }));
     });
 
+    const user=authService.getCurrentUser();
+    (form.querySelector('#app-name') as HTMLInputElement).value=user?.name.replace(/\s*\([^)]*\)/g,'')||'';
+    (form.querySelector('#app-phone') as HTMLInputElement).value=user?.phone||'';
+    (form.querySelector('#app-email') as HTMLInputElement).value=user?.email||'';
+    const course=new URLSearchParams(location.search).get('course');if(course&&classes.some(c=>c.id===course))(form.querySelector('#app-course') as HTMLSelectElement).value=course;
     formCard.appendChild(form);
 
     rootWrapper.appendChild(headerRow);

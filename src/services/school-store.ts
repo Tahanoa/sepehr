@@ -1,3 +1,4 @@
+import { DEMO_USERS } from '../data/demo-data';
 /**
  * POLARIS SCHOOL DATA STORE SERVICE
  * Centralized local state management with persistence, CRUD operations,
@@ -1388,9 +1389,10 @@ class SchoolStoreService {
   // --- Staff & Multi-Class Helpers ---
   public getStaffByEmailOrPhone(orgId: string, identifier: string): StaffMember | null {
     const lower = identifier.toLowerCase();
+    const user=DEMO_USERS.find(u=>u.memberships.some(m=>m.organizationId===orgId)&&(u.email?.toLowerCase()===lower||u.phone===identifier||u.id===identifier));
     return (
       this.getStaff(orgId).find(
-        (st) => st.email.toLowerCase() === lower || st.phone === identifier || st.fullName === identifier || st.id === identifier
+        (st) => st.email.toLowerCase() === lower || st.phone === identifier || st.fullName === identifier || st.id === identifier || (!!user && (st.fullName===user.name || st.phone===user.phone))
       ) || null
     );
   }
@@ -1400,13 +1402,11 @@ class SchoolStoreService {
     const allOrgClasses = this.getClasses(orgId);
 
     if (!staffMember) {
-      return allOrgClasses;
+      return [];
     }
 
     const assignedNamesOrIds = staffMember.assignedClasses || [];
-    if (assignedNamesOrIds.length === 0) {
-      return allOrgClasses;
-    }
+    if (assignedNamesOrIds.length === 0) return allOrgClasses.filter(c=>c.homeroomTeacherId===staffMember.id);
 
     return allOrgClasses.filter(
       (c) =>
