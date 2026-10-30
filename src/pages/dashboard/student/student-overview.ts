@@ -1,3 +1,4 @@
+import { familyAnnouncements } from '../shared/family-data';
 /** Action-first learner home. Counts are scoped to the resolved learner and class. */
 import { OrganizationMembership } from '../../../types/auth';
 import { authService } from '../../../services/auth-service';
@@ -56,7 +57,7 @@ export function createStudentOverviewPage(membership: OrganizationMembership): H
   const tools = createElement('div', { className: 'flex flex-wrap gap-3 mt-4' }); tools.append(navigateLink('همهٔ تکالیف', 'assignments'), navigateLink('آزمون‌های من', 'exams')); work.append(tools);
   const side = createElement('div', { className: 'space-y-6' });
   const updates = createElement('section', { className: 'sepehr-panel' }); updates.append(createElement('h3', { className: 'sepehr-section-title', textContent: 'اطلاعیه‌های مرکز' }));
-  const announcements = schoolStore.getAnnouncements(orgId).slice(0,3);
+  const announcements = familyAnnouncements(membership).slice(0,3);
   if (!announcements.length) updates.append(createElement('p', { className: 'sepehr-muted mt-3', textContent: 'اطلاعیهٔ جدیدی وجود ندارد.' }));
   for (const announcement of announcements) {
     const item = createElement('article', { className: 'py-4 border-b border-gray-100 last:border-0' });

@@ -11,6 +11,7 @@ import { createReportCardsPage } from '../shared/report-cards-page';
 import { createStudentMaterialsPage } from './student-materials';
 import { createStudentPaymentsPage } from './student-payments';
 import { createStudentSchedule } from './student-schedule';
+import { createStudentClasses } from './student-classes';
 
 import { createDashboardNotFoundPage } from '../../../components/dashboard/route-pages';
 
@@ -22,7 +23,7 @@ export function renderStudentSection(sectionKey: string, membership: Organizatio
     case 'overview':
       return createStudentOverviewPage(membership);
     case 'classes':
-      return createStudentSchedule(membership);
+      return createStudentClasses(membership);
     case 'assignments':
       return createStudentAssignmentsPage(membership);
     case 'exams':

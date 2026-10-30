@@ -5,8 +5,8 @@ import { createMessengerPage } from '../shared/messenger-page';
 
 import { OrganizationMembership } from '../../../types/auth';
 import { createCounselorOverviewPage } from './counselor-overview';
-import { createStudentsPage } from '../admin/students-page';
-import { createReportsPage } from '../admin/reports-page';
+import { createCounselorStudents,createCounselorReports } from './counselor-students';
+
 import { createDashboardNotFoundPage } from '../../../components/dashboard/route-pages';
 
 export function renderCounselorSection(sectionKey: string, membership: OrganizationMembership): HTMLElement {
@@ -17,11 +17,11 @@ export function renderCounselorSection(sectionKey: string, membership: Organizat
       return createCounselorOverviewPage(membership);
     case 'students':
     case 'progress':
-      return createStudentsPage(membership);
+      return createCounselorStudents(membership);
     case 'messages':
       return createMessengerPage(membership);
     case 'reports':
-      return createReportsPage(membership);
+      return createCounselorReports(membership);
     default:
       return createDashboardNotFoundPage(orgId);
   }

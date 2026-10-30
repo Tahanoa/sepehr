@@ -23,9 +23,10 @@ export function createTeacherMaterialsPage(membership: OrganizationMembership): 
     classes = schoolStore.getTeacherClasses(orgId, currentUser.email || currentUser.phone || currentUser.id);
   }
 
-  const materials = schoolStore.getMaterials(orgId);
+
 
   const render = () => {
+    const materials=schoolStore.getMaterials(orgId).filter(mat=>classes.some(c=>c.id===mat.classId||(!mat.classId&&c.gradeLevel===schoolStore.getSubjects(orgId).find(s=>s.id===mat.subjectId)?.gradeLevel)));
     rootWrapper.innerHTML = '';
 
     // Header Row

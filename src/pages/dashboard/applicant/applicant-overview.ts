@@ -4,14 +4,14 @@
 
 import { OrganizationMembership } from '../../../types/auth';
 import { createElement } from '../../../utils/dom';
-import { schoolStore } from '../../../services/school-store';
+import { ownApplications } from '../shared/family-data';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
 
 export function createApplicantOverviewPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
 
-  const applications = schoolStore.getApplications(orgId);
+  const applications = ownApplications(membership);
 
   // Welcome Hero
   const welcomeCard = createElement('div', {

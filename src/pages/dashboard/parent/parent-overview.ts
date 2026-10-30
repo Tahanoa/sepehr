@@ -1,3 +1,4 @@
+import { familyAnnouncements } from '../shared/family-data';
 import { linkedStudents } from '../../../services/academic-store';
 /**
  * POLARIS PARENT DASHBOARD OVERVIEW PAGE
@@ -19,7 +20,7 @@ export function createParentOverviewPage(membership: OrganizationMembership): HT
 
   const myChildren = linkedStudents(membership);
 
-  const announcements = schoolStore.getAnnouncements(orgId);
+  const announcements = familyAnnouncements(membership);
 
   // Welcome Hero
   const welcomeCard = createElement('div', {

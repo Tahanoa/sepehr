@@ -4,7 +4,7 @@
  */
 
 import { OrganizationMembership } from '../../../types/auth';
-import { authService } from '../../../services/auth-service';
+import { selectedLearner } from '../shared/family-data';
 import { Assignment } from '../../../types/school';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
@@ -16,11 +16,9 @@ export function createStudentAssignmentsPage(membership: OrganizationMembership)
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
 
-  const user = authService.getCurrentUser();
-  const students = schoolStore.getStudents(orgId);
-  const currentStudent = students.find((s) => s.fullName === user?.name) || students[0];
+  const currentStudent=selectedLearner(membership);
 
-  const assignments = schoolStore.getAssignments(orgId);
+  const assignments = schoolStore.getAssignments(orgId).filter(a=>a.classId===currentStudent?.classId);
 
   const render = () => {
     rootWrapper.innerHTML = '';

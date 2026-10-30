@@ -82,7 +82,7 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
     const title = createElement('h2', {
       className: 'text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2.5',
     });
-    title.innerHTML = `${getDashboardIcon('users', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} مدیریت و پرونده دانش‌آموزان`;
+    title.innerHTML = `${getDashboardIcon('users', 'w-6 h-6 text-[rgb(var(--theme-primary))]')} ${isManagement?'مدیریت و پرونده دانش‌آموزان':'دانش‌آموزان کلاس‌های من'}`;
 
     const desc = createElement('p', {
       className: 'text-xs sm:text-sm text-gray-600 font-normal',
@@ -460,8 +460,8 @@ export function createStudentsPage(membership: OrganizationMembership): HTMLElem
       }
     `;
 
-    const reportButton=createElement('button',{textContent:'مشاهده کارنامه',className:'sepehr-primary'});
-    reportButton.addEventListener('click',()=>{modal.close();window.dispatchEvent(new CustomEvent('polaris-navigate',{detail:`/app/${orgId}/grades?student=${std.id}`}));});content.append(reportButton);
+    const reportButton=createElement('button',{textContent:isManagement?'مشاهده کارنامه':'مشاهده دفتر نمرات',className:'sepehr-primary'});
+    reportButton.addEventListener('click',()=>{modal.close();window.dispatchEvent(new CustomEvent('polaris-navigate',{detail:isManagement?`/app/${orgId}/grades?student=${std.id}`:`/app/${orgId}/grades?class=${std.classId}`}));});content.append(reportButton);
     const modal = new Modal({
       title: 'پرونده تفصیلی دانش‌آموز',
       content,

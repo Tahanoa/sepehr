@@ -58,12 +58,12 @@ try {
   }
   await page.evaluate(() => {localStorage.setItem('polaris_demo_user_id','usr-sec-admin');localStorage.removeItem('polaris_active_membership_id');});
   await page.goto('http://127.0.0.1:4174/app/org-101/grades');
-  await page.getByRole('heading', {name:'کارنامه‌های الکترونیک',exact:true}).waitFor();
-  await page.getByRole('button',{name:'بستن ورود نمرات دبیران',exact:true}).click();
-  await page.getByRole('button',{name:'باز کردن ورود نمرات دبیران',exact:true}).waitFor();
-  await page.getByRole('button',{name:'باز کردن ورود نمرات دبیران',exact:true}).click();
+  await page.getByRole('heading', {level:2,name:'کارنامه‌های الکترونیک',exact:true}).waitFor();
+  await page.getByRole('button',{name:'بستن ورود نمرات همهٔ کلاس‌ها',exact:true}).click();
+  await page.getByRole('button',{name:'باز کردن ورود نمرات همهٔ کلاس‌ها',exact:true}).waitFor();
+  await page.getByRole('button',{name:'باز کردن ورود نمرات همهٔ کلاس‌ها',exact:true}).click();
   await page.goto('http://127.0.0.1:4174/app/org-101/messages');
-  await page.getByRole('heading',{name:'پیام‌رسان',exact:true}).waitFor();
+  await page.getByRole('heading',{level:2,name:'پیام‌رسان',exact:true}).waitFor();
   await page.locator('.inbox-contact').first().click();
   await page.getByLabel('متن پیام').fill('<script>unsafe</script> پیگیری حضور');
   await page.getByRole('button',{name:'ارسال پیام',exact:true}).click();
@@ -82,7 +82,7 @@ try {
   await page.screenshot({path:'/tmp/sepehr-inbox-mobile.png',fullPage:true,animations:'disabled'});
   await page.evaluate(()=>{localStorage.setItem('polaris_demo_user_id','usr-sec-teacher');localStorage.setItem('polaris_active_membership_id','mem-teacher-101');});
   await page.goto('http://127.0.0.1:4174/app/org-101/grades');
-  await page.getByRole('heading',{name:'دفتر نمرات',exact:true}).waitFor();
+  await page.getByRole('heading',{level:2,name:'دفتر نمرات',exact:true}).waitFor();
   await page.locator('select').and(page.getByLabel('روز نمایش در موبایل', {exact:true})).selectOption('0', {force:true});
   assert.equal(await page.locator('.gradebook-grid tbody tr').first().locator('td:visible').count(),1);
   const mark=page.locator('.gradebook-grid tbody tr').first().locator('td:visible input');

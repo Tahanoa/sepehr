@@ -1,3 +1,4 @@
+import { selectedLearner } from '../shared/family-data';
 import { notify } from '../../../components/feedback';
 /**
  * POLARIS STUDENT LEARNING MATERIALS PAGE
@@ -12,7 +13,8 @@ export function createStudentMaterialsPage(membership: OrganizationMembership): 
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
 
-  const materials = schoolStore.getMaterials(orgId);
+  const learner=selectedLearner(membership);
+  const materials = schoolStore.getMaterials(orgId).filter(mat=>!!learner&&(mat.classId===learner.classId||(!mat.classId&&schoolStore.getSubjects(orgId).find(s=>s.id===mat.subjectId)?.gradeLevel===learner.gradeLevel)));
 
   const render = () => {
     rootWrapper.innerHTML = '';

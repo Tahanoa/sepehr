@@ -1,3 +1,4 @@
+import { selectedLearner } from '../shared/family-data';
 import { linkedStudents } from '../../../services/academic-store';
 import { el,field,input,button,select,status,guard,isoToday } from '../../../components/workspace';
 /**
@@ -14,7 +15,7 @@ export function createParentAttendancePage(membership: OrganizationMembership): 
   const orgId = membership.organizationId;
 
   const children=linkedStudents(membership);
-  let child=children[0];
+  let child=selectedLearner(membership);
 
 
 
