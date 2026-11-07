@@ -16,6 +16,7 @@ import { showToast } from '../../../components/toast';
 export function createStudentExamsPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
+  const isElementary = membership.organization.type === 'elementary_school';
 
 
   
@@ -106,7 +107,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
             </div>
             <h3 class="font-semibold text-sm text-gray-900">${ex.title}</h3>
             <div class="text-xs text-gray-600 space-y-1">
-              <div>مدت زمان: <strong>${ex.durationMinutes} دقیقه</strong> | سقف نمره: <strong>${ex.maxScore}</strong></div>
+              <div>مدت زمان: <strong>${ex.durationMinutes} دقیقه</strong>${isElementary ? ' · ارزشیابی توصیفی' : ` | سقف نمره: <strong>${ex.maxScore}</strong>`}</div>
               <div>تعداد سوالات: <strong>${questions.length} سوال</strong></div>
               ${ex.instructions ? `<div class="text-gray-500 text-[11px] line-clamp-1">${ex.instructions}</div>` : ''}
             </div>
@@ -120,7 +121,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
                   : 'bg-amber-100 text-amber-900'
                 : 'bg-blue-100 text-blue-900'
             }">
-              ${attempt ? (attempt.descriptiveScore ? `ارزشیابی: ${attempt.descriptiveScore}` : membership.organization.type==='elementary_school' ? 'در انتظار ارزشیابی معلم' : attempt.totalScore !== undefined ? `نمره: ${attempt.totalScore} از ${ex.maxScore}` : 'در انتظار تصحیح معلم') : 'آماده شرکت'}
+              ${attempt ? (typeof attempt.descriptiveScore === 'string' && attempt.descriptiveScore ? `ارزشیابی: ${attempt.descriptiveScore}` : isElementary ? 'در انتظار ارزشیابی معلم' : attempt.totalScore !== undefined ? `نمره: ${attempt.totalScore} از ${ex.maxScore}` : 'در انتظار تصحیح معلم') : 'آماده شرکت'}
             </span>
 
             <button class="exam-action-btn px-4 py-1.5 bg-[rgb(var(--theme-primary))] hover:bg-[rgb(var(--theme-hover))] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
@@ -152,7 +153,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
     rulesContainer.innerHTML = `
       <div class="bg-amber-50/80 border border-amber-200 p-3.5 rounded-xl space-y-1">
         <div class="font-semibold text-amber-950 text-xs">مشخصات آزمون: ${ex.title}</div>
-        <div class="text-amber-900">مدت زمان: <strong class="font-mono">${ex.durationMinutes} دقیقه</strong> | سقف نمره: <strong class="font-mono">${ex.maxScore}</strong></div>
+        <div class="text-amber-900">مدت زمان: <strong class="font-mono">${ex.durationMinutes} دقیقه</strong>${isElementary ? ' · ارزشیابی توصیفی' : ` | سقف نمره: <strong class="font-mono">${ex.maxScore}</strong>`}</div>
       </div>
 
       <div class="space-y-2">
@@ -328,7 +329,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
       qHeader.innerHTML = `
         <div class="flex items-center justify-between pb-3 border-b border-gray-100">
           <span class="font-bold text-sm text-[rgb(var(--theme-primary))]">سوال ${(currentQIndex + 1).toLocaleString('fa-IR')} از ${questions.length.toLocaleString('fa-IR')}</span>
-          <span class="font-bold text-xs bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] px-2.5 py-1 rounded-lg">بارم: ${q.points} نمره</span>
+${!isElementary ? `          <span class="font-bold text-xs bg-[rgb(var(--theme-subtle))] text-[rgb(var(--theme-primary))] px-2.5 py-1 rounded-lg">بارم: ${q.points} نمره</span>` : ''}
         </div>
         <p class="font-bold text-sm text-gray-900 leading-relaxed">${q.prompt}</p>
       `;
@@ -530,32 +531,38 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
       clearInterval(timerInterval);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
 
-      // Auto Grade Objective Questions
-      let totalObtained = 0;
-
-      questions.forEach((q) => {
-        const studentAns = studentAnswers[q.id];
-        if (q.type === 'single_choice' || q.type === 'mcq') {
-          if (studentAns === q.correctOptionId) totalObtained += q.points || 0;
-        } else if (q.type === 'multiple_select') {
-          const correctArr = q.correctOptionIds || [];
-          if (Array.isArray(studentAns) && studentAns.length === correctArr.length && studentAns.every((val) => correctArr.includes(val))) {
-            totalObtained += q.points || 0;
-          }
-        } else if (q.type === 'true_false') {
-          if (studentAns === q.correctBool) totalObtained += q.points || 0;
-        } else if (q.type === 'numeric') {
-          const numVal = parseFloat(studentAns);
-          if (!isNaN(numVal) && q.numericTarget !== undefined) {
-            const tol = q.numericTolerance || 0;
-            if (Math.abs(numVal - q.numericTarget) <= tol) totalObtained += q.points || 0;
-          }
-        }
-      });
-
       attempt.answers = studentAnswers;
-      attempt.mcqScore = totalObtained;
-      attempt.totalScore = totalObtained;
+      if (isElementary) {
+        delete attempt.mcqScore;
+        delete attempt.totalScore;
+        delete attempt.questionScores;
+      } else {
+        // Auto Grade Objective Questions
+        let totalObtained = 0;
+
+        questions.forEach((q) => {
+          const studentAns = studentAnswers[q.id];
+          if (q.type === 'single_choice' || q.type === 'mcq') {
+            if (studentAns === q.correctOptionId) totalObtained += q.points || 0;
+          } else if (q.type === 'multiple_select') {
+            const correctArr = q.correctOptionIds || [];
+            if (Array.isArray(studentAns) && studentAns.length === correctArr.length && studentAns.every((val) => correctArr.includes(val))) {
+              totalObtained += q.points || 0;
+            }
+          } else if (q.type === 'true_false') {
+            if (studentAns === q.correctBool) totalObtained += q.points || 0;
+          } else if (q.type === 'numeric') {
+            const numVal = parseFloat(studentAns);
+            if (!isNaN(numVal) && q.numericTarget !== undefined) {
+              const tol = q.numericTolerance || 0;
+              if (Math.abs(numVal - q.numericTarget) <= tol) totalObtained += q.points || 0;
+            }
+          }
+        });
+
+        attempt.mcqScore = totalObtained;
+        attempt.totalScore = totalObtained;
+      }
       attempt.status = 'submitted';
       attempt.submittedAt = new Date().toLocaleDateString('fa-IR') + ' - ' + new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
       attempt.submissionReason = reason;
@@ -588,7 +595,7 @@ export function createStudentExamsPage(membership: OrganizationMembership): HTML
     content.innerHTML = `
       <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl space-y-1.5 text-emerald-950">
         <div class="font-semibold text-sm">کارنامه آزمون: ${ex.title}</div>
-        <div>نمره ثبت شده: <strong class="font-mono text-sm">${membership.organization.type==='elementary_school' ? (attempt.descriptiveScore||'در انتظار ارزشیابی معلم') : `${attempt.totalScore ?? 'در انتظار تصحیح'} از ${ex.maxScore}`} </strong></div>
+        <div>${isElementary ? 'نتیجه ارزشیابی' : 'نمره ثبت شده'}: <strong class="font-mono text-sm">${isElementary ? (typeof attempt.descriptiveScore === 'string' && attempt.descriptiveScore || 'در انتظار ارزشیابی معلم') : `${attempt.totalScore ?? 'در انتظار تصحیح'} از ${ex.maxScore}`} </strong></div>
         <div>زمان تحویل: <span class="font-mono">${attempt.submittedAt}</span></div>
       </div>
     `;

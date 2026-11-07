@@ -20,6 +20,7 @@ import { showToast } from '../../../components/toast';
 export function createTeacherExamsPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
   const orgId = membership.organizationId;
+  const isElementary = membership.organization.type === 'elementary_school';
   const currentUser = authService.getCurrentUser();
 
   let activeTab: ExamStatus | 'all' | 'activity_logs' = 'all';
@@ -128,7 +129,7 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
             <h3 class="font-semibold text-sm text-gray-900">${ex.title}</h3>
             <div class="text-xs text-gray-600 space-y-1">
               <div><strong>تاریخ برگزاری:</strong> <span class="font-mono">${ex.examDate} (${ex.durationMinutes} دقیقه)</span></div>
-              <div><strong>تعداد سوالات / سقف نمره:</strong> <span class="font-mono font-bold">${questions.length} سوال (${ex.maxScore} نمره)</span></div>
+              <div><strong>تعداد سؤال‌ها:</strong> <span class="font-mono font-bold">${questions.length} سؤال</span> ${isElementary ? '· ارزشیابی توصیفی' : `· سقف نمره ${ex.maxScore}`}</div>
               <div><strong>تعداد تلاش‌های ثبت شده:</strong> <span class="font-mono font-bold">${attempts.length.toLocaleString('fa-IR')} شرکت‌کننده</span></div>
             </div>
           </div>
@@ -250,7 +251,7 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
         <select id="log-status" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-semibold">
           <option value="reviewed_ok">تایید بررسی — موجه و بدون مشکل آموزشی</option>
           <option value="needs_review">نیازمند بررسی بیشتر / جلسه حضوری با ولی</option>
-          <option value="confirmed_violation">تخلف قطعی بعد از بررسی انسانی (ثبت نمره صفر)</option>
+          <option value="confirmed_violation">تخلف قطعی بعد از بررسی انسانی</option>
         </select>
       </div>
 
@@ -297,10 +298,22 @@ export function createTeacherExamsPage(membership: OrganizationMembership): HTML
             <div>نمره نهایی ثبت شده: <strong class="font-mono">${att.totalScore ?? 'نامشخص'} از ${ex.maxScore}</strong></div>
           </div>
         `;
-        if(membership.organization.type==='elementary_school'){
+        if(isElementary){
           item.querySelector('.grid')?.remove();
+          if (att.status === 'in_progress') {
+            item.append(el('p', { textContent: 'پاسخ‌برگ هنوز تحویل داده نشده است.' }));
+            container.append(item);
+            return;
+          }
+          for (const question of schoolStore.getExamQuestions(ex.id)) {
+            const answer = att.answers?.[question.id] ?? att.descriptiveAnswers?.[question.id] ?? att.mcqAnswers?.[question.id];
+            const details = el('details');
+            details.append(el('summary', { textContent: question.prompt }),
+              el('p', { textContent: answer === undefined || answer === '' ? 'بدون پاسخ' : String(answer) }));
+            item.append(details);
+          }
           const value=select(['','خیلی خوب','خوب','قابل قبول','نیاز به تلاش بیشتر'].map(v=>({id:v,name:v||'انتخاب سطح'})),String(att.descriptiveScore||''),()=>{}),message=status();
-          item.append(field('ارزشیابی توصیفی پاسخ‌برگ',value),button('✦ پیشنهاد AI (نمایشی)',()=>{void runAIDemo(item,()=>{value.value='خوب';message.textContent='نمونه ثابت نمایشی است؛ پاسخ‌ها را مرور و سطح نهایی را تعیین کنید.';});}),button('ثبت ارزشیابی بازبینی‌شده',()=>{if(!value.value){message.textContent='سطح ارزشیابی را انتخاب کنید.';return;}const saved={...att,descriptiveScore:value.value,status:'graded'};delete saved.totalScore;delete saved.mcqScore;schoolStore.saveExamAttempt(saved);message.textContent='ارزشیابی ثبت شد.';},true),message);
+          item.append(field('ارزشیابی توصیفی پاسخ‌برگ',value),button('✦ پیشنهاد AI (نمایشی)',()=>{void runAIDemo(item,()=>{value.value='خوب';message.textContent='نمونه ثابت نمایشی است؛ پاسخ‌ها را مرور و سطح نهایی را تعیین کنید.';});}),button('ثبت ارزشیابی بازبینی‌شده',()=>{if(!value.value){message.textContent='سطح ارزشیابی را انتخاب کنید.';return;}const saved={...att,descriptiveScore:value.value,status:'graded'};delete saved.totalScore;delete saved.mcqScore;delete saved.questionScores;schoolStore.saveExamAttempt(saved);message.textContent='ارزشیابی ثبت شد.';},true),message);
         }else if(att.status !== 'in_progress') {
           const fields=new Map<string,HTMLInputElement>();
           const questions=schoolStore.getExamQuestions(ex.id), scores:Record<string,number>={...(att.questionScores||{})}, notice=status();

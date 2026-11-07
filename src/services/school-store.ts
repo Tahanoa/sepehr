@@ -1,3 +1,4 @@
+import { timeMinutes, timesOverlap, weekdayLabels } from '../utils/class-schedule';
 import { DEMO_USERS } from '../data/demo-data';
 /**
  * POLARIS SCHOOL DATA STORE SERVICE
@@ -512,12 +513,42 @@ class SchoolStoreService {
     return this.state.classes.filter((c) => c.organizationId === orgId);
   }
 
+  private validateClassSchedule(cls: Omit<SchoolClass, 'studentCount'>): void {
+    const { schedule, organizationId, homeroomTeacherId } = cls;
+    if (!schedule) return;
+    const { days, startTime, endTime } = schedule;
+    if (!days.length || days.some(day => !Object.hasOwn(weekdayLabels, day)) ||
+        !(timeMinutes(startTime) < timeMinutes(endTime))) {
+      throw new Error('روزهای برگزاری را انتخاب کنید. ساعت پایان باید بعد از ساعت شروع باشد.');
+    }
+    if (!this.getStaff(organizationId).some(staff => staff.id === homeroomTeacherId)) {
+      throw new Error('برای ثبت زمان‌بندی، معلم یا استاد کلاس را انتخاب کنید.');
+    }
+
+    const conflictingClass = this.getClasses(organizationId).find(other =>
+      other.id !== cls.id && other.homeroomTeacherId === homeroomTeacherId &&
+      other.schedule?.days.some(day => days.includes(day)) &&
+      timesOverlap(startTime, endTime, other.schedule.startTime, other.schedule.endTime)
+    );
+    if (conflictingClass) throw new Error(`استاد در این بازه کلاس «${conflictingClass.name}» دارد.`);
+
+    const conflictingLesson = this.getTimetable(organizationId).find(slot => {
+      if (slot.classId === cls.id || slot.teacherId !== homeroomTeacherId || !days.includes(slot.dayOfWeek)) return false;
+      const [start = '', end = ''] = slot.timeLabel.split(/[-–—]/);
+      return timesOverlap(startTime, endTime, start, end);
+    });
+    if (conflictingLesson) {
+      throw new Error(`این بازه با درس «${conflictingLesson.subjectName}» در برنامه هفتگی استاد تداخل دارد.`);
+    }
+  }
+
   public addClass(cls: Omit<SchoolClass, 'id' | 'studentCount'>): SchoolClass {
     const newClass: SchoolClass = {
       ...cls,
-      id: 'cls-' + Date.now().toString(36),
+      id: 'cls-' + crypto.randomUUID(),
       studentCount: 0,
     };
+    this.validateClassSchedule(newClass);
     this.state.classes.push(newClass);
     this.saveState();
     return newClass;
@@ -527,7 +558,9 @@ class SchoolStoreService {
     const idx = this.state.classes.findIndex((c) => c.id === id);
     if (idx === -1) return null;
 
-    this.state.classes[idx] = { ...this.state.classes[idx]!, ...updates };
+    const updatedClass = { ...this.state.classes[idx]!, ...updates };
+    this.validateClassSchedule(updatedClass);
+    this.state.classes[idx] = updatedClass;
     this.saveState();
     return this.state.classes[idx]!;
   }
@@ -683,6 +716,16 @@ class SchoolStoreService {
     const teacherConflict = slots.find((s) => s.teacherId === teacherId && s.dayOfWeek === dayOfWeek && s.periodNumber === periodNumber);
     if (teacherConflict) {
       return { hasConflict: true, reason: `استاد (${teacherConflict.teacherName}) در روز ${dayStr} و زنگ ${periodNumber.toLocaleString('fa-IR')} در کلاس «${teacherConflict.subjectName}» مشغول به تدریس است.` };
+    }
+
+    const period = this.getScheduleConfig(orgId).periods?.find(p => p.number === periodNumber);
+    const scheduledClass = period && this.getClasses(orgId).find(cls =>
+      cls.id !== classId && cls.homeroomTeacherId === teacherId &&
+      cls.schedule?.days.includes(dayOfWeek) &&
+      timesOverlap(period.startTime, period.endTime, cls.schedule.startTime, cls.schedule.endTime)
+    );
+    if (scheduledClass) {
+      return { hasConflict: true, reason: `استاد در این بازه کلاس «${scheduledClass.name}» دارد.` };
     }
 
     if (roomNumber && roomNumber.trim()) {

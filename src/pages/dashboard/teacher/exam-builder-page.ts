@@ -31,6 +31,7 @@ import { showToast } from '../../../components/toast';
 export function createExamBuilderPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in pb-12' });
   const orgId = membership.organizationId;
+  const isElementary = membership.organization.type === 'elementary_school';
   const currentUser = authService.getCurrentUser();
 
   const isTeacher = membership.role === 'teacher' || membership.role === 'instructor';
@@ -184,7 +185,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     });
 
     const totalQScore = calculateQuestionsTotalScore();
-    if (totalQScore !== draftData.maxScore) {
+    if (!isElementary && totalQScore !== draftData.maxScore) {
       warnings.push(`مجموع نمرات سوالات (${totalQScore}) با سقف نمره آزمون (${draftData.maxScore}) برابر نیست.`);
     }
 
@@ -208,16 +209,16 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       examDate: draftData.examDate || '۱۴۰۳/۰۱/۱۵',
       startTime: draftData.startTime || '۰۹:۰۰',
       durationMinutes: draftData.durationMinutes || 60,
-      maxScore: draftData.maxScore || totalQScore || 20,
-      passingScore: draftData.passingScore || 10,
+      maxScore: isElementary ? 0 : draftData.maxScore || totalQScore || 20,
+      passingScore: isElementary ? 0 : draftData.passingScore || 10,
       term: 'term_1',
       status,
-      evalType: membership.organization.type==='elementary_school' || draftData.examType === 'descriptive' ? 'descriptive' : 'numeric',
+      evalType: isElementary || draftData.examType === 'descriptive' ? 'descriptive' : 'numeric',
       examType: draftData.examType,
       difficulty: draftData.difficulty,
       attemptLimit: draftData.attemptLimit,
       canReviewAnswers: draftData.canReviewAnswers,
-      resultReleasePolicy: draftData.resultReleasePolicy,
+      resultReleasePolicy: isElementary ? 'manual' : draftData.resultReleasePolicy,
       allowBackNavigation: draftData.allowBackNavigation,
       allowUnansweredSubmission: draftData.allowUnansweredSubmission,
       autoSubmitOnTimeout: draftData.autoSubmitOnTimeout,
@@ -245,6 +246,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     questions.forEach((q) => {
       schoolStore.addExamQuestion({
         ...q,
+        points: isElementary ? 0 : q.points,
         examId: savedExam.id,
       });
     });
@@ -276,7 +278,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           ${draftData.status === 'published' ? 'منتشر شده' : 'پیش‌نویس'}
         </span>
       </div>
-      <p class="text-xs text-gray-600 mr-9">طراحی، تنظیم بارم‌بندی، سوالات متنی/عینی/تشریحی و بازبینی پیش از انتشار آزمون آنلاین.</p>
+      <p class="text-xs text-gray-600 mr-9">${isElementary ? 'طراحی ارزشیابی توصیفی و بازبینی پیش از انتشار.' : 'طراحی سؤال، تنظیم بارم‌بندی و بازبینی پیش از انتشار.'}</p>
     `;
 
     topBar.appendChild(titleArea);
@@ -345,16 +347,16 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       if(questions.length&&!await confirmAction('نمونه سؤال‌ها به انتهای سؤال‌های فعلی افزوده شوند؟'))return;
       const source=selectedSource;
       await runAIDemo(rootWrapper,()=>{sourceName=source.name;reviewed=false;
-      questions.push({id:crypto.randomUUID(),examId:draftData.id||'',type:'descriptive',prompt:'نمونه نمایشی: مفهوم اصلی این درس را با یک مثال توضیح دهید.',points:10,referenceAnswer:'توضیح روشن مفهوم همراه با مثال مرتبط.'},{id:crypto.randomUUID(),examId:draftData.id||'',type:'descriptive',prompt:'نمونه نمایشی: دو کاربرد موضوع درس را شرح دهید.',points:10,referenceAnswer:'دو کاربرد مرتبط همراه با استدلال.'});draftData.maxScore=calculateQuestionsTotalScore();currentStep=3;render();},ai);
+      questions.push({id:crypto.randomUUID(),examId:draftData.id||'',type:'descriptive',prompt:'نمونه نمایشی: مفهوم اصلی این درس را با یک مثال توضیح دهید.',points:isElementary ? 0 : 10,referenceAnswer:'توضیح روشن مفهوم همراه با مثال مرتبط.'},{id:crypto.randomUUID(),examId:draftData.id||'',type:'descriptive',prompt:'نمونه نمایشی: دو کاربرد موضوع درس را شرح دهید.',points:isElementary ? 0 : 10,referenceAnswer:'دو کاربرد مرتبط همراه با استدلال.'});draftData.maxScore=calculateQuestionsTotalScore();currentStep=3;render();},ai);
     })();},true));
-    if(sourceName){const check=input('','checkbox');check.checked=reviewed;check.addEventListener('change',()=>{reviewed=check.checked;});ai.append(field('تمام سؤال‌ها، پاسخ‌های مرجع و بارم‌بندی را بازبینی و تأیید کرده‌ام.',check));}
+    if(sourceName){const check=input('','checkbox');check.checked=reviewed;check.addEventListener('change',()=>{reviewed=check.checked;});ai.append(field(isElementary ? 'تمام سؤال‌ها و پاسخ‌های مرجع را بازبینی و تأیید کرده‌ام.' : 'تمام سؤال‌ها، پاسخ‌های مرجع و بارم‌بندی را بازبینی و تأیید کرده‌ام.',check));}
     rootWrapper.append(ai);
     // Workflow Steps Bar
     const stepsNav = createElement('div', { className: 'bg-white rounded-2xl border border-gray-200/80 p-2 shadow-2xs' });
     const stepsList = [
       { num: 1, title: '۱. اطلاعات آزمون' },
       { num: 2, title: '۲. مخاطبان و امنیت' },
-      { num: 3, title: '۳. سؤالات و بارم‌بندی' },
+      { num: 3, title: isElementary ? '۳. سؤال‌ها' : '۳. سؤالات و بارم‌بندی' },
       { num: 4, title: '۴. بازبینی و انتشار' },
     ];
 
@@ -376,7 +378,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     });
     stepsNav.appendChild(stepsRow);
     rootWrapper.appendChild(stepsNav);
-    const guide=button('راهنمای این مرحله',()=>{new Modal({title:'راهنمای مرحله آزمون‌ساز',content:el('p',{textContent:['نام، درس و زمان آزمون را مشخص کنید؛ تنظیمات تکمیلی را در ادامه بررسی کنید.','کلاس‌های مجاز و شرایط شرکت دانش‌آموزان را انتخاب کنید.','سؤال‌ها، پاسخ مرجع و معیار تصحیح را وارد کنید؛ مجموع بارم را کنترل کنید.','پیش‌نمایش دانش‌آموز و هشدارها را بررسی کنید؛ سپس آزمون را منتشر کنید.'][currentStep - 1] || ''}),confirmText:'متوجه شدم'}).open();});
+    const guide=button('راهنمای این مرحله',()=>{new Modal({title:'راهنمای مرحله آزمون‌ساز',content:el('p',{textContent:['نام، درس و زمان آزمون را مشخص کنید؛ تنظیمات تکمیلی را در ادامه بررسی کنید.','کلاس‌های مجاز و شرایط شرکت دانش‌آموزان را انتخاب کنید.',isElementary ? 'سؤال‌ها و پاسخ مرجع را وارد کنید. نتیجه با ارزشیابی توصیفی معلم ثبت می‌شود.' : 'سؤال‌ها و پاسخ مرجع را وارد کنید و مجموع بارم را کنترل کنید.','پیش‌نمایش دانش‌آموز و هشدارها را بررسی کنید؛ سپس آزمون را منتشر کنید.'][currentStep - 1] || ''}),confirmText:'متوجه شدم'}).open();});
     rootWrapper.appendChild(guide);
 
     // Main 2-Column Grid: Form Content + Persistent Summary Sidebar
@@ -459,7 +461,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
 
         <div class="sm:col-span-2">
           <label class="block font-bold mb-1 text-gray-800">توضیحات و راهنمای شرکت در آزمون</label>
-          <textarea id="bld-instructions" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs focus:bg-white transition-all" placeholder="توضیحات لازم درباره‌ی بارم‌بندی، فرمول‌ها یا نکات کلیدی پیش از شروع آزمون...">${draftData.instructions}</textarea>
+          <textarea id="bld-instructions" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs focus:bg-white transition-all" placeholder="توضیحات لازم برای دانش‌آموز پیش از شروع آزمون...">${draftData.instructions}</textarea>
         </div>
 
         <div>
@@ -496,7 +498,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           <input type="number" id="bld-duration" min="5" max="300" value="${draftData.durationMinutes}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono font-bold" />
         </div>
 
-        <div>
+        ${!isElementary ? `<div>
           <label class="block font-bold mb-1 text-gray-800">سقف نمره کلی آزمون *</label>
           <input type="number" id="bld-maxScore" min="1" max="100" value="${draftData.maxScore}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono font-bold" />
         </div>
@@ -506,18 +508,18 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           <input type="number" id="bld-passingScore" min="0" max="100" value="${draftData.passingScore}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
         </div>
 
-        <div>
+` : ''}        <div>
           <label class="block font-bold mb-1 text-gray-800">تاریخ برگزاری *</label>
           <input type="text" id="bld-date" value="${draftData.examDate}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-mono" />
         </div>
 
-        <div>
+        ${!isElementary ? `<div>
           <label class="block font-bold mb-1 text-gray-800">سیاست انتشار کارنامه</label>
           <select id="bld-release" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs font-bold">
             <option value="immediate" ${draftData.resultReleasePolicy === 'immediate' ? 'selected' : ''}>بلافاصله پس از تحویل</option>
             <option value="manual" ${draftData.resultReleasePolicy === 'manual' ? 'selected' : ''}>بررسی و انتشار دستی توسط معلم</option>
           </select>
-        </div>
+        </div>` : '<p>نتیجه توصیفی پس از ثبت معلم نمایش داده می‌شود.</p>'}
 
         <div class="sm:col-span-2 pt-2 border-t border-gray-100 flex items-center gap-2">
           <input type="checkbox" id="bld-review" ${draftData.canReviewAnswers ? 'checked' : ''} class="w-4 h-4 rounded text-[rgb(var(--theme-primary))]" />
@@ -540,10 +542,12 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
       draftData.examType = (card.querySelector('#bld-examType') as HTMLSelectElement).value as ExamType;
       draftData.difficulty = (card.querySelector('#bld-difficulty') as HTMLSelectElement).value as ExamDifficulty;
       draftData.durationMinutes = parseInt((card.querySelector('#bld-duration') as HTMLInputElement).value, 10) || 60;
-      draftData.maxScore = parseFloat((card.querySelector('#bld-maxScore') as HTMLInputElement).value) || 20;
-      draftData.passingScore = parseFloat((card.querySelector('#bld-passingScore') as HTMLInputElement).value) || 10;
+      if (!isElementary) {
+        draftData.maxScore = parseFloat((card.querySelector('#bld-maxScore') as HTMLInputElement).value) || 20;
+        draftData.passingScore = parseFloat((card.querySelector('#bld-passingScore') as HTMLInputElement).value) || 10;
+      }
       draftData.examDate = (card.querySelector('#bld-date') as HTMLInputElement).value;
-      draftData.resultReleasePolicy = (card.querySelector('#bld-release') as HTMLSelectElement).value as ResultReleasePolicy;
+      if (!isElementary) draftData.resultReleasePolicy = card.querySelector<HTMLSelectElement>('#bld-release')!.value as ResultReleasePolicy;
       draftData.canReviewAnswers = (card.querySelector('#bld-review') as HTMLInputElement).checked;
 
       renderPersistentSummarySidebar();
@@ -671,18 +675,18 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
     header.innerHTML = `
       <div>
         <h3 class="font-semibold text-sm text-[rgb(var(--theme-primary))]">گام ۳ — ویرایشگر سؤالات و پاسخ‌نامه کلید</h3>
-        <p class="text-[11px] text-gray-500">طراحی انواع سؤالات تستی، تشریحی، عددی، صحیح/غلط و کوتاه‌پاسخ همراه با تعیین بارم‌بندی.</p>
+        <p class="text-[11px] text-gray-500">طراحی انواع سؤالات تستی، تشریحی، عددی، صحیح/غلط و کوتاه‌پاسخ ${isElementary ? 'برای ارزشیابی توصیفی' : 'همراه با تعیین بارم‌بندی'}.</p>
       </div>
 
       <div class="flex items-center gap-2">
         <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-xl font-bold font-mono text-xs">
           تعداد: ${questions.length.toLocaleString('fa-IR')}
         </span>
-        <span class="px-3 py-1 ${
+        ${!isElementary ? `<span class="px-3 py-1 ${
           totalQScore === draftData.maxScore ? 'bg-emerald-100 text-emerald-950' : 'bg-amber-100 text-amber-950'
         } rounded-xl font-bold font-mono text-xs">
           بارم سؤالات: ${totalQScore.toLocaleString('fa-IR')} از ${draftData.maxScore.toLocaleString('fa-IR')}
-        </span>
+        </span>` : ''}
       </div>
     `;
 
@@ -713,7 +717,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           examId: draftData.id || 'draft-id',
           type: qtype,
           prompt: 'متن سوال جدید را وارد کنید...',
-          points: 2,
+          points: isElementary ? 0 : 2,
           ...(qtype === 'single_choice' || qtype === 'multiple_select'
             ? {
                 options: [
@@ -768,8 +772,8 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
               <button type="button" class="btn-move-up p-1.5 bg-white border border-gray-300 rounded-lg font-bold hover:bg-gray-100 ${idx === 0 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}" title="انتقال به بالا">⬆️</button>
               <button type="button" class="btn-move-down p-1.5 bg-white border border-gray-300 rounded-lg font-bold hover:bg-gray-100 ${idx === questions.length - 1 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}" title="انتقال به پایین">⬇️</button>
 
-              <label class="font-bold text-[11px] text-gray-600 mr-2">بارم:</label>
-              <input type="number" min="0.5" max="50" step="0.5" value="${q.points}" class="q-points-input w-16 bg-white border border-gray-300 rounded-lg text-center font-mono font-bold py-1 text-xs" />
+              ${!isElementary ? `<label class="font-bold text-[11px] text-gray-600 mr-2">بارم:</label>
+              <input type="number" min="0.5" max="50" step="0.5" value="${q.points}" class="q-points-input w-16 bg-white border border-gray-300 rounded-lg text-center font-mono font-bold py-1 text-xs" />` : ''}
 
               <button type="button" class="btn-dup-q p-1.5 bg-white border border-gray-300 rounded-lg font-bold hover:bg-gray-100 cursor-pointer" title="کپی سوال">📋</button>
               <button type="button" class="btn-del-q p-1.5 bg-rose-50 text-rose-700 border border-rose-200 rounded-lg font-bold hover:bg-rose-100 cursor-pointer" title="حذف سوال">🗑️</button>
@@ -846,8 +850,8 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
         const promptInput = qCard.querySelector('.q-prompt-input') as HTMLTextAreaElement;
         promptInput.addEventListener('input', () => { q.prompt = promptInput.value; });
 
-        const pointsInput = qCard.querySelector('.q-points-input') as HTMLInputElement;
-        pointsInput.addEventListener('input', () => {
+        const pointsInput = qCard.querySelector<HTMLInputElement>('.q-points-input');
+        pointsInput?.addEventListener('input', () => {
           q.points = parseFloat(pointsInput.value) || 1;
           renderPersistentSummarySidebar();
         });
@@ -1009,8 +1013,8 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
         <div><strong>کلاس‌های مخاطب:</strong> ${assignedClassNames || 'هیچ'}</div>
         <div><strong>مدت زمان:</strong> ${draftData.durationMinutes} دقیقه</div>
         <div><strong>تعداد سوالات:</strong> ${questions.length.toLocaleString('fa-IR')} سوال</div>
-        <div><strong>مجموع بارم سوالات:</strong> ${totalQScore.toLocaleString('fa-IR')} از ${draftData.maxScore.toLocaleString('fa-IR')}</div>
-        <div><strong>سیاست کارنامه:</strong> ${draftData.resultReleasePolicy === 'immediate' ? 'انتشار بلافاصله' : 'تأیید دستی معلم'}</div>
+        ${!isElementary ? `<div><strong>مجموع بارم سوالات:</strong> ${totalQScore.toLocaleString('fa-IR')} از ${draftData.maxScore.toLocaleString('fa-IR')}</div>` : ''}
+        <div><strong>سیاست کارنامه:</strong> ${!isElementary && draftData.resultReleasePolicy === 'immediate' ? 'انتشار بلافاصله' : 'تأیید دستی معلم'}</div>
         <div><strong>سیاست قطع خروج:</strong> ${draftData.interruptionPolicy === 'terminate' ? 'توقیف جلسه' : 'هشدار و بررسی معلم'}</div>
       </div>
     `;
@@ -1061,7 +1065,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           </div>
         </div>
 
-        <div class="pt-2 border-t border-gray-100 space-y-1">
+        ${!isElementary ? `<div class="pt-2 border-t border-gray-100 space-y-1">
           <div class="flex items-center justify-between">
             <span class="text-gray-500 text-[10px]">بارم سوالات:</span>
             <span class="font-bold font-mono text-xs ${
@@ -1073,7 +1077,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
             <div class="bg-[rgb(var(--theme-primary))] h-full" style="width: ${Math.min(100, (totalQScore / (draftData.maxScore || 1)) * 100)}%"></div>
           </div>
-        </div>
+        </div>` : ''}
       </div>
     `;
 
@@ -1091,7 +1095,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           <h2 class="font-semibold text-base">${draftData.title || 'عنوان آزمون'} (${draftData.subjectName})</h2>
         </div>
         <div class="bg-indigo-800 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-amber-300">
-          ⏱️ زمان: ${draftData.durationMinutes} دقیقه | بارم: ${draftData.maxScore}
+          ⏱️ زمان: ${draftData.durationMinutes} دقیقه${isElementary ? ' · ارزشیابی توصیفی' : ` | بارم: ${draftData.maxScore}`}
         </div>
       </div>
 
@@ -1112,7 +1116,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
           <div class="p-5 bg-gray-50 rounded-2xl border border-gray-200 space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-gray-200">
               <span class="font-semibold text-xs text-[rgb(var(--theme-primary))]">سوال ${(idx + 1).toLocaleString('fa-IR')} از ${questions.length.toLocaleString('fa-IR')}</span>
-              <span class="font-bold text-xs bg-gray-200 px-2 py-0.5 rounded">${q.points} نمره</span>
+              ${!isElementary ? `<span class="font-bold text-xs bg-gray-200 px-2 py-0.5 rounded">${q.points} نمره</span>` : ''}
             </div>
             <p class="font-bold text-sm text-gray-900">${q.prompt}</p>
 
@@ -1192,7 +1196,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
                 <input type="checkbox" value="${qb.id}" class="qb-modal-chk text-[rgb(var(--theme-primary))] rounded mt-0.5" />
                 <div>
                   <div class="font-bold text-gray-900">${qb.prompt}</div>
-                  <div class="text-[10px] text-gray-500">${qb.subjectName} | بارم: ${qb.points} نمره</div>
+                  <div class="text-[10px] text-gray-500">${qb.subjectName}${isElementary ? '' : ` | بارم: ${qb.points} نمره`}</div>
                 </div>
               </div>
               <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-bold">${qb.type}</span>
@@ -1229,7 +1233,7 @@ export function createExamBuilderPage(membership: OrganizationMembership): HTMLE
               examId: draftData.id || 'draft-id',
               type: b.type,
               prompt: b.prompt,
-              points: b.points,
+              points: isElementary ? 0 : b.points,
               ...(b.options ? { options: JSON.parse(JSON.stringify(b.options)) } : {}),
               ...(b.correctOptionId ? { correctOptionId: b.correctOptionId } : {}),
               ...(b.correctOptionIds ? { correctOptionIds: [...b.correctOptionIds] } : {}),

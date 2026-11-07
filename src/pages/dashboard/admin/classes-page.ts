@@ -1,3 +1,4 @@
+import { formatClassSchedule, weekdayLabels } from '../../../utils/class-schedule';
 import { deleteAction } from '../../../components/dashboard/delete-action';
 /**
  * POLARIS CLASS & GRADE MANAGEMENT PAGE
@@ -6,12 +7,37 @@ import { deleteAction } from '../../../components/dashboard/delete-action';
  */
 
 import { OrganizationMembership } from '../../../types/auth';
-import { SchoolClass } from '../../../types/school';
+import { ClassSchedule, SchoolClass, WeekDay } from '../../../types/school';
 import { createElement } from '../../../utils/dom';
 import { schoolStore } from '../../../services/school-store';
 import { Modal } from '../../../components/modal';
 import { showToast } from '../../../components/toast';
 import { getDashboardIcon } from '../../../components/dashboard/icons';
+
+function scheduleFields(schedule?: ClassSchedule | null): string {
+  return `
+    <fieldset class="space-y-2 border border-gray-200 rounded-xl p-3">
+      <legend class="font-bold px-1">زمان‌بندی هفتگی کلاس</legend>
+      <div class="flex flex-wrap gap-3">
+        ${(Object.entries(weekdayLabels) as [WeekDay, string][]).map(([day, label]) => `
+          <label class="flex items-center gap-1">
+            <input type="checkbox" name="class-day" value="${day}" ${schedule?.days.includes(day) ? 'checked' : ''} /> ${label}
+          </label>`).join('')}
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label>ساعت شروع <input type="time" name="class-start" value="${schedule?.startTime ?? ''}" class="block w-full border border-gray-300 rounded-lg p-2" /></label>
+        <label>ساعت پایان <input type="time" name="class-end" value="${schedule?.endTime ?? ''}" class="block w-full border border-gray-300 rounded-lg p-2" /></label>
+      </div>
+      <p class="text-gray-600">بازه برای همه روزهای انتخاب‌شده اعمال می‌شود. برای کلاس بدون زمان‌بندی، این بخش را خالی بگذارید.</p>
+    </fieldset>`;
+}
+
+function readSchedule(form: HTMLFormElement): ClassSchedule | null {
+  const days = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="class-day"]:checked'), input => input.value as WeekDay);
+  const startTime = form.querySelector<HTMLInputElement>('input[name="class-start"]')!.value;
+  const endTime = form.querySelector<HTMLInputElement>('input[name="class-end"]')!.value;
+  return days.length || startTime || endTime ? { days, startTime, endTime } : null;
+}
 
 export function createClassesPage(membership: OrganizationMembership): HTMLElement {
   const rootWrapper = createElement('div', { className: 'space-y-6 dir-rtl animate-fade-in' });
@@ -97,6 +123,7 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
               </div>
             </div>
 
+            <p class="text-xs text-gray-700">${cls.schedule ? formatClassSchedule(cls.schedule) : 'زمان‌بندی ثبت نشده'}</p>
             <div class="space-y-1">
               <div class="flex justify-between text-[10px] text-gray-500 font-semibold">
                 <span>تکمیل ظرفیت</span>
@@ -163,7 +190,7 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
         </div>
         <div>
           <label class="block font-bold mb-1">معلم/دبیر راهنما</label>
-          <select id="cls-[#teacher]" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
+          <select id="cls-teacher" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs">
             <option value="">انتخاب نشده</option>
             ${staff.map((st) => `<option value="${st.id}">${st.fullName} (${st.roleTitle})</option>`).join('')}
           </select>
@@ -182,6 +209,8 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
       </div>
     `;
 
+    form.insertAdjacentHTML('beforeend', scheduleFields());
+
     const modal = new Modal({
       title: 'ایجاد کلاس جدید',
       content: form,
@@ -193,36 +222,43 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
         const gradeLevel = (form.querySelector('#cls-grade') as HTMLInputElement).value.trim();
         const capacity = parseInt((form.querySelector('#cls-capacity') as HTMLInputElement).value, 10) || 30;
         const roomNumber = (form.querySelector('#cls-room') as HTMLInputElement).value.trim();
-        const teacherSelect = form.querySelector('#cls-\\[teacher\\]') as HTMLSelectElement;
+        const teacherSelect = form.querySelector<HTMLSelectElement>('#cls-teacher');
         const teacherId = teacherSelect ? teacherSelect.value : '';
 
         // Validation for duplicate class code
         const existingClasses = schoolStore.getClasses(orgId);
         if (existingClasses.some((c) => c.code.toLowerCase() === code.toLowerCase())) {
           showToast({ title: 'شناسه تکراری', message: 'کد شناسه‌ی کلاس وارد شده تکراری است.', type: 'error' });
-          return;
+          return false;
         }
 
         if (!code || !name || !gradeLevel) {
           showToast({ title: 'فیلد خالی', message: 'لطفاً مشخصات الزامی را وارد کنید.', type: 'warning' });
-          return;
+          return false;
         }
 
         const teacherObj = staff.find((st) => st.id === teacherId);
 
-        schoolStore.addClass({
-          organizationId: orgId,
-          code,
-          name,
-          gradeLevel,
-          capacity,
-          roomNumber: roomNumber || '۱۰۱',
-          homeroomTeacherId: teacherId,
-          homeroomTeacherName: teacherObj ? teacherObj.fullName : 'تعیین نشده',
-        });
+        try {
+          schoolStore.addClass({
+            organizationId: orgId,
+            code,
+            name,
+            gradeLevel,
+            capacity,
+            roomNumber: roomNumber || '۱۰۱',
+            homeroomTeacherId: teacherId,
+            schedule: readSchedule(form),
+            homeroomTeacherName: teacherObj ? teacherObj.fullName : 'تعیین نشده',
+          });
+        } catch (error) {
+          showToast({ title: 'زمان‌بندی کلاس', message: (error as Error).message, type: 'error' });
+          return false;
+        }
 
         showToast({ title: 'ایجاد کلاس', message: `کلاس «${name}» با موفقیت افزوده شد.`, type: 'success' });
         render();
+        return true;
       },
     });
 
@@ -265,6 +301,8 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
       </div>
     `;
 
+    form.insertAdjacentHTML('beforeend', scheduleFields(cls.schedule));
+
     const modal = new Modal({
       title: 'ویرایش مشخصات کلاس',
       content: form,
@@ -278,16 +316,23 @@ export function createClassesPage(membership: OrganizationMembership): HTMLEleme
 
         const teacherObj = staff.find((st) => st.id === teacherId);
 
-        schoolStore.updateClass(cls.id, {
-          name,
-          gradeLevel,
-          roomNumber,
-          homeroomTeacherId: teacherId,
-          homeroomTeacherName: teacherObj ? teacherObj.fullName : 'تعیین نشده',
-        });
+        try {
+          schoolStore.updateClass(cls.id, {
+            name,
+            gradeLevel,
+            roomNumber,
+            homeroomTeacherId: teacherId,
+            schedule: readSchedule(form),
+            homeroomTeacherName: teacherObj ? teacherObj.fullName : 'تعیین نشده',
+          });
+        } catch (error) {
+          showToast({ title: 'زمان‌بندی کلاس', message: (error as Error).message, type: 'error' });
+          return false;
+        }
 
         showToast({ title: 'بروزرسانی', message: 'اطلاعات کلاس بروزرسانی شد.', type: 'success' });
         render();
+        return true;
       },
     });
 
