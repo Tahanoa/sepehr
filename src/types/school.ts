@@ -44,7 +44,14 @@ export interface StaffMember {
   avatarUrl?: string;
 }
 
+export interface ClassSchedule {
+  days: WeekDay[];
+  startTime: string;
+  endTime: string;
+}
+
 export interface SchoolClass {
+  schedule?: ClassSchedule | null;
   id: string;
   organizationId: string;
   code: string; // e.g. 'CLS-101'

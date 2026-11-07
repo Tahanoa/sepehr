@@ -1,3 +1,4 @@
+import { formatClassSchedule } from '../../../utils/class-schedule';
 import { OrganizationMembership } from '../../../types/auth';
 import { selectedLearner } from '../shared/family-data';
 import { schoolStore } from '../../../services/school-store';
@@ -9,7 +10,8 @@ export function createStudentClasses(m:OrganizationMembership):HTMLElement {
  const cls=schoolStore.getClasses(m.organizationId).find(c=>c.id===student?.classId);
  if(!student||!cls){root.append(el('p',{textContent:'کلاسی به پرونده شما متصل نیست.',className:'sepehr-muted'}));return root;}
  const peers=schoolStore.getStudents(m.organizationId).filter(s=>s.classId===cls.id&&s.status==='active');
- const info=panel();info.append(el('h3',{textContent:cls.name,className:'sepehr-section-title'}),el('p',{textContent:`${cls.gradeLevel} · آموزگار / دبیر راهنما: ${cls.homeroomTeacherName||'تعیین نشده'}`}),el('p',{textContent:`اتاق ${cls.roomNumber||'—'} · ${peers.length.toLocaleString('fa-IR')} دانش‌آموز · سال تحصیلی ${m.organization.academicYear||'—'}`,className:'sepehr-muted'}),button('مشاهده برنامه هفتگی',()=>navigate(m.organizationId,'schedule')));root.append(info);
+ const info=panel();info.append(el('h3',{textContent:cls.name,className:'sepehr-section-title'}),el('p',{textContent:`${cls.gradeLevel} · آموزگار / دبیر راهنما: ${cls.homeroomTeacherName||'تعیین نشده'}`}),el('p',{textContent:`اتاق ${cls.roomNumber||'—'} · ${peers.length.toLocaleString('fa-IR')} دانش‌آموز · سال تحصیلی ${m.organization.academicYear||'—'}`,className:'sepehr-muted'}),button('مشاهده برنامه هفتگی',()=>navigate(m.organizationId,'schedule')));if (cls.schedule) info.append(el('p', { textContent: formatClassSchedule(cls.schedule), className: 'sepehr-muted' }));
+ root.append(info);
  const columns=el('div',{className:'class-columns'}),tasks=panel(),exams=panel();tasks.append(el('h3',{textContent:'تکالیف جاری',className:'sepehr-section-title'}));exams.append(el('h3',{textContent:'آزمون‌های جاری و پیش‌رو',className:'sepehr-section-title'}));
  const submitted=new Set(schoolStore.getSubmissionsForStudent(m.organizationId,student.id).map(s=>s.assignmentId)),pending=schoolStore.getAssignments(m.organizationId).filter(a=>a.classId===cls.id&&!submitted.has(a.id));
  const today=assignmentDateKey(new Date().toLocaleDateString('fa-IR',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}));

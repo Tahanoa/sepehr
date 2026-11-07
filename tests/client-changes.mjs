@@ -14,6 +14,24 @@ try{
  const admin=DEMO_USERS.find(u=>u.memberships.some(m=>m.organizationId==='org-101'&&m.role==='school_admin'));await authService.signIn({demoUserId:admin.id});const m=admin.memberships.find(m=>m.organizationId==='org-101'&&m.role==='school_admin');authService.setActiveMembership(m.id);
  const report=a.buildReport(m,student.id,'۱۴۰۵–۱۴۰۶','ongoing');assert.equal(report.term,'ongoing');assert.equal(report.published,false);assert.throws(()=>a.publishReport(m,report.id,true));
  const empty=s.addClass({organizationId:'org-101',name:'آزمایشی',code:'test',gradeLevel:'دهم',capacity:20,roomNumber:'۱',homeroomTeacherId:'',homeroomTeacherName:''});assert(s.deleteClass(empty.id));assert(!s.getClasses('org-101').some(c=>c.id===empty.id));
+ const course = {
+   organizationId: 'org-103', name: 'دوره زمان‌بندی‌شده', code: 'SCHED-1',
+   gradeLevel: 'پیشرفته', capacity: 20, roomNumber: '۱',
+   homeroomTeacherId: 'stf-inst-01', homeroomTeacherName: 'استاد سعید تهرانی',
+ };
+ const schedule = { days: ['monday'], startTime: '16:00', endTime: '17:00' };
+ const scheduled = s.addClass({ ...course, schedule });
+ assert.throws(() => s.addClass({ ...course, schedule: { ...schedule, startTime: '16:30' } }), /تداخل|در این بازه/);
+ assert.throws(() => s.addClass({ ...course, schedule: { ...schedule, days: ['saturday'] } }), /برنامه هفتگی/);
+ assert.throws(() => s.addClass({ ...course, schedule: { ...schedule, endTime: '15:00' } }), /ساعت پایان/);
+ const adjacent = s.addClass({
+   ...course, name: 'دوره بعدی', schedule: { ...schedule, startTime: '17:00', endTime: '18:00' },
+ });
+ assert.throws(() => s.updateClass(adjacent.id, { schedule }), /در این بازه/);
+ assert.equal(s.getClasses('org-103').find(c => c.id === adjacent.id).schedule.startTime, '17:00');
+ assert.equal(s.checkTimetableConflict('org-103', 'monday', 1, 'cls-inst-101', 'stf-inst-01').hasConflict, true);
+ assert.equal(s.checkTimetableConflict('org-103', 'monday', 1, 'cls-inst-101', 'stf-inst-02').hasConflict, false);
+ assert.equal(s.updateClass(scheduled.id, { schedule: null }).schedule, null);
  const assignment=s.getAssignments('org-102')[0];s.deleteAssignment(assignment.id);assert.equal(s.getSubmissionsForAssignment(assignment.id).length,0);assert(!s.getAssignments('org-102').some(x=>x.id===assignment.id));
  const original=s.getExams('org-101').find(e=>e.id==='ex-s1');const generated=s.addExam({...original,id:undefined,title:'AI demo',status:'draft',aiSourceName:'source.pdf',aiReviewed:false});assert.throws(()=>s.updateExam(generated.id,{status:'published'}));assert.equal(s.updateExam(generated.id,{aiReviewed:true,status:'published'}).status,'published');
  s.deleteExam('ex-s1');assert.equal(s.getExamQuestions('ex-s1').length,0);assert.equal(s.getGradesForExam('org-101','ex-s1').length,0);
